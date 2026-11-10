@@ -3,7 +3,7 @@
 [English](api.md) · **Tiếng Việt**
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
-(`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-9B`). Các ví dụ dùng thư
+(`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-9B`). Các ví dụ dùng thư
 viện `openai` (`pip install openai`):
 
 ```python
@@ -15,15 +15,16 @@ MODEL = "Qwen3-4B"
 
 ## Khác nhau giữa các model
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-9B |
-|---|---|---|
-| Đầu vào | văn bản | văn bản, ảnh, video |
-| Context | 40 960 token | tới 262 144 token |
-| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): nên tự gửi tham số |
-| Khuyên dùng khi có suy nghĩ | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` |
-| Khuyên dùng khi không suy nghĩ | `temperature=0.7, top_p=0.8, top_k=20` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` |
-| `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` |
-| Viết code | chưa thử | tắt suy nghĩ: khi bật, model lặp 30 000 token mà không viết ra code |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B | Qwen3.5-9B |
+|---|---|---|---|
+| Đầu vào | văn bản | văn bản, ảnh, video | văn bản, ảnh, video |
+| Context | 40 960 token | tới 262 144 token | tới 262 144 token |
+| Suy nghĩ mặc định | bật | **tắt**: gửi `enable_thinking: true` để bật | bật |
+| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): nên tự gửi tham số | mặc định của vLLM (temperature 1.0, không top_p/top_k): nên tự gửi tham số |
+| Khuyên dùng khi có suy nghĩ | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` |
+| Khuyên dùng khi không suy nghĩ | `temperature=0.7, top_p=0.8, top_k=20` | văn bản: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` |
+| `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` | không hỗ trợ: dùng `enable_thinking` |
+| Viết code | chưa thử | chưa thử | tắt suy nghĩ: khi bật, model lặp 30 000 token mà không viết ra code |
 
 ## Chat
 
@@ -47,7 +48,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Suy nghĩ và tham số sinh
 
-Qwen3 mặc định suy nghĩ trước khi trả lời. Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
+Qwen3 và Qwen3.5-9B mặc định suy nghĩ trước khi trả lời (Qwen3.5-0.8B thì không). Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
 chứa câu trả lời. Server không đặt tham số nào: nên gửi tường minh (giá trị cho từng model ở mục
 [Khác nhau giữa các model](#khác-nhau-giữa-các-model)). Ví dụ với Qwen3:
 

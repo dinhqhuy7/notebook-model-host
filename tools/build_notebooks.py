@@ -78,6 +78,16 @@ MODELS = [
      "weights_gib": 27.51, "download_gb": 30, **QWEN3, "platforms": ("colab",),
      "unavailable": {"kaggle": ("needs ~35 GB of GPU memory; Kaggle's 2 × T4 have 30 GB in total",
                                 "cần ~35 GB bộ nhớ GPU; Kaggle 2 × T4 chỉ có tổng 30 GB")}},
+    {"slug": "qwen3_5_0_8b", "model_id": "Qwen/Qwen3.5-0.8B", "served_name": "Qwen3.5-0.8B",
+     "weights_gib": 1.63, "download_gb": 2, **QWEN3_5,
+     "notes": "Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the "
+              "full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send "
+              "`chat_template_kwargs: {\"enable_thinking\": true}` to turn it on. On T4 the model runs in "
+              "`float16` instead of its native `bfloat16`.",
+     "notes_vi": "Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ "
+                 "context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi "
+                 "`chat_template_kwargs: {\"enable_thinking\": true}` để bật. Trên T4 model chạy `float16` thay "
+                 "vì `bfloat16` gốc."},
     {"slug": "qwen3_5_9b", "model_id": "Qwen/Qwen3.5-9B", "served_name": "Qwen3.5-9B",
      "weights_gib": 17.98, "download_gb": 20, **QWEN3_5},
 ]

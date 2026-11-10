@@ -13,7 +13,10 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_4b.ipynb](colab_qwen3_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_4b.ipynb) | `Qwen/Qwen3-4B` | 7.5 GiB | ~8 GB | ~13 GB | ✓ T4, 2026-11-10 |
 | [colab_qwen3_8b.ipynb](colab_qwen3_8b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_8b.ipynb) | `Qwen/Qwen3-8B` | 15.3 GiB | ~16 GB | ~21 GB | ✓ A100 40 GB, 2026-11-10 |
 | [colab_qwen3_14b.ipynb](colab_qwen3_14b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_14b.ipynb) | `Qwen/Qwen3-14B` | 27.5 GiB | ~30 GB | ~35 GB | ✓ A100 40 GB, 2026-11-10 |
+| [colab_qwen3_5_0_8b.ipynb](colab_qwen3_5_0_8b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_0_8b.ipynb) | `Qwen/Qwen3.5-0.8B` | 1.6 GiB | ~2 GB | ~10 GB | Not tested yet |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
+
+**Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`.
 
 **Qwen3.5-9B:** Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4, where it takes ~12 minutes to start.
 
@@ -23,13 +26,13 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ## Estimated memory left for context
 
-| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-9B |
-|---|---|---|---|---|---|---|
-| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ✗ not enough memory |
-| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ✗ not enough memory |
-| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~13 GiB |
-| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~49 GiB |
-| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~49 GiB |
+| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-9B |
+|---|---|---|---|---|---|---|---|
+| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ✗ not enough memory |
+| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ~14 GiB | ✗ not enough memory |
+| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~29 GiB | ~13 GiB |
+| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~65 GiB | ~49 GiB |
+| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~65 GiB | ~49 GiB |
 
 ## Test results
 
@@ -98,6 +101,10 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 | Time | server start 3 min 47 s (weights 12 s, torch.compile 35 s, FlashInfer JIT ~1 min 50 s, CUDA graphs 16 s) |
 | Speed | ~44 tokens/second for one request; ~287 tokens/second total with 8 at once |
 | Checked through the public URL | no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on/off; tool calling; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; a secret found in a 27 044-token prompt in 6 s. For the full 40 960 context and several long requests at once, use an 80 GB GPU |
+
+### colab_qwen3_5_0_8b.ipynb
+
+Not tested yet.
 
 ### colab_qwen3_5_9b.ipynb
 
