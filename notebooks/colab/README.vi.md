@@ -1,4 +1,4 @@
-# Notebook cho Google Colab
+# Host model mở trên Google Colab: notebook dựng sẵn
 
 [English](README.md) · **Tiếng Việt**
 

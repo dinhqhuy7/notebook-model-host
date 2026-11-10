@@ -1,4 +1,4 @@
-# Kaggle notebooks
+# Host open models on Kaggle: ready-made notebooks
 
 **English** · [Tiếng Việt](README.vi.md)
 

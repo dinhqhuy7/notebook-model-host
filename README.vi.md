@@ -2,17 +2,17 @@
 
 [English](README.md) · **Tiếng Việt**
 
-Notebook dựng sẵn chạy model mở (Qwen3, Qwen3.5) bằng [vLLM](https://github.com/vllm-project/vllm) trên
-GPU Colab hoặc Kaggle và mở ra Internet thành **API tương thích OpenAI có khoá**. Không cần tự viết code
-host: mở một notebook bên dưới và chạy. Notebook chỉ host model: prompt, tham số và câu trả lời đều ở
-phía người gọi.
+Notebook dựng sẵn chạy model mở bằng [vLLM](https://github.com/vllm-project/vllm) trên GPU Colab hoặc
+Kaggle và mở ra Internet thành **API tương thích OpenAI có khoá**. Không cần tự viết code host: mở một
+notebook bên dưới và chạy. Notebook chỉ host model: prompt, tham số và câu trả lời đều ở phía người
+gọi.
 
 ```
 người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắt key) ──▶ vLLM ──▶ GPU
                       (Cloudflare Tunnel)        └────── trong máy notebook ──────┘
 ```
 
-## Notebook
+## Model có sẵn
 
 | Model | Trọng số | Colab | Kaggle |
 |---|---|---|---|
@@ -40,7 +40,7 @@ Qwen3.5-9B tốn KV cache ít hơn ~4,5 lần mỗi token (attention lai), nên 
 262 144 token. Mọi notebook kèm trạng thái chạy thử: [notebooks/README.vi.md](notebooks/README.vi.md);
 bảng GPU và kết quả chạy thử đầy đủ: [Colab](notebooks/colab/README.vi.md), [Kaggle](notebooks/kaggle/README.vi.md).
 
-## Chạy
+## Cách host model trên Google Colab hoặc Kaggle
 
 **Colab:** mở notebook → Runtime → Change runtime type nếu muốn GPU khác → (nên làm) thêm secret
 `LLM_API_KEY` ở 🔑 Secrets, bật Notebook access → **Run all**.
@@ -52,7 +52,7 @@ số điện thoại) → (nên làm) Add-ons → Secrets: thêm `LLM_API_KEY`, 
 Lần đầu mất khoảng 7–15 phút. Ô bước 8 in **Base URL** và **API key**. Để tab mở trong lúc dùng;
 xong thì chạy ô **Tắt** và trả GPU. Không đặt secret thì key đổi mỗi lần chạy.
 
-## Gọi API
+## Gọi model đã host (API tương thích OpenAI)
 
 ```python
 from openai import OpenAI

@@ -2,8 +2,8 @@
 
 **English** · [Tiếng Việt](README.vi.md)
 
-Pre-built notebooks that serve an open model (Qwen3, Qwen3.5) with [vLLM](https://github.com/vllm-project/vllm)
-on a Colab or Kaggle GPU and expose it to the Internet as a **key-protected, OpenAI-compatible API**. No
+Pre-built notebooks that serve an open model with [vLLM](https://github.com/vllm-project/vllm) on a
+Colab or Kaggle GPU and expose it to the Internet as a **key-protected, OpenAI-compatible API**. No
 hosting code to write: open a notebook below and run it. The notebook only hosts the model: prompts,
 parameters and answers stay on the caller's side.
 
@@ -12,7 +12,7 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
                   (Cloudflare Tunnel)        └─────── inside the notebook ───────┘
 ```
 
-## Notebooks
+## Available models
 
 | Model | Weights | Colab | Kaggle |
 |---|---|---|---|
@@ -41,7 +41,7 @@ checks them. Qwen3.5-9B needs ~4.5× less KV cache per token (hybrid attention),
 native 262 144-token context. Every notebook with its test status: [notebooks/README.md](notebooks/README.md);
 GPU tables and full test results: [Colab](notebooks/colab/README.md), [Kaggle](notebooks/kaggle/README.md).
 
-## Run
+## How to host a model on Google Colab or Kaggle
 
 **Colab:** open the notebook → Runtime → Change runtime type for another GPU → (recommended) add a
 `LLM_API_KEY` secret in 🔑 Secrets and enable Notebook access → **Run all**.
@@ -54,7 +54,7 @@ The first run takes about 7–15 minutes. Step 8 prints the **Base URL** and **A
 open while in use; when done, run the **Shut down** cell and release the GPU. Without the secret,
 the key changes on every run.
 
-## Call the API
+## Call the hosted model (OpenAI-compatible API)
 
 ```python
 from openai import OpenAI

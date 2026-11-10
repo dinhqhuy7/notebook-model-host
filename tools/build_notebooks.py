@@ -802,7 +802,8 @@ def platform_readme(key: str, platform: dict, vi: bool) -> str:
     main_readme = "../../README.vi.md" if vi else "../../README.md"
     models = [m for m in MODELS if available(m, key)]
     lines = [
-        t(f"# {platform['name']} notebooks", f"# Notebook cho {platform['name']}"), "", other, "",
+        t(f"# Host open models on {platform['name']}: ready-made notebooks",
+          f"# Host model mở trên {platform['name']}: notebook dựng sẵn"), "", other, "",
         t(f"Back to the [main README]({main_readme}).", f"Quay lại [README chính]({main_readme})."), "",
         "## Notebook", "",
         t("| Notebook | Model | Weights | Download | Min. total GPU memory | Test status |",

@@ -1,4 +1,4 @@
-# Notebook cho Kaggle
+# Host model mở trên Kaggle: notebook dựng sẵn
 
 [English](README.md) · **Tiếng Việt**
 

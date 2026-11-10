@@ -1,4 +1,4 @@
-# Google Colab notebooks
+# Host open models on Google Colab: ready-made notebooks
 
 **English** · [Tiếng Việt](README.vi.md)
 
