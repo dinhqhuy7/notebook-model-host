@@ -1,10 +1,11 @@
-# Host LLMs on Google Colab and Kaggle
+# Ready-made notebooks to host open models on Google Colab and Kaggle
 
 **English** · [Tiếng Việt](README.vi.md)
 
-Notebooks that start an open model with [vLLM](https://github.com/vllm-project/vllm) on a Colab or
-Kaggle GPU and expose it to the Internet as a **key-protected, OpenAI-compatible API**. The notebook
-only hosts the model: prompts, parameters and answers stay on the caller's side.
+Pre-built notebooks that serve an open model (Qwen3, Qwen3.5) with [vLLM](https://github.com/vllm-project/vllm)
+on a Colab or Kaggle GPU and expose it to the Internet as a **key-protected, OpenAI-compatible API**. No
+hosting code to write: open a notebook below and run it. The notebook only hosts the model: prompts,
+parameters and answers stay on the caller's side.
 
 ```
 caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) ──▶ vLLM ──▶ GPU

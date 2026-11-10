@@ -1,10 +1,11 @@
-# Host LLM trên Google Colab và Kaggle
+# Notebook dựng sẵn để host model mở trên Google Colab và Kaggle
 
 [English](README.md) · **Tiếng Việt**
 
-Notebook bật một model mở bằng [vLLM](https://github.com/vllm-project/vllm) trên GPU của Colab hoặc
-Kaggle, rồi mở ra Internet thành một **API tương thích OpenAI, có khoá**. Notebook chỉ host model:
-prompt, tham số và câu trả lời đều ở phía người gọi.
+Notebook dựng sẵn chạy model mở (Qwen3, Qwen3.5) bằng [vLLM](https://github.com/vllm-project/vllm) trên
+GPU Colab hoặc Kaggle và mở ra Internet thành **API tương thích OpenAI có khoá**. Không cần tự viết code
+host: mở một notebook bên dưới và chạy. Notebook chỉ host model: prompt, tham số và câu trả lời đều ở
+phía người gọi.
 
 ```
 người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắt key) ──▶ vLLM ──▶ GPU
