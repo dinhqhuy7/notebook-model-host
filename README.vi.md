@@ -29,7 +29,7 @@ có nhiều GPU, và chọn context dài nhất bộ nhớ chứa được. Bộ
 | GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-9B |
 |---|---|---|---|---|---|---|---|
 | T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,1 GiB) | ~8 GiB (đo thật: 8,7 GiB) | ~4 GiB (đo thật: 4,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ |
-| T4 x2 | Kaggle | ~22 GiB (đo thật: 23,5 GiB) | ~19 GiB (đo thật: 21,4 GiB) | ~16 GiB (đo thật: 16,8 GiB) | ~8 GiB | ✗ thiếu bộ nhớ | ~2 GiB |
+| T4 x2 | Kaggle | ~22 GiB (đo thật: 23,5 GiB) | ~19 GiB (đo thật: 21,4 GiB) | ~16 GiB (đo thật: 16,8 GiB) | ~8 GiB (đo thật: 9,2 GiB) | ✗ thiếu bộ nhớ | ~2 GiB |
 | L4 (22,5 GB) | Colab | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ |
 | A100 40 GB | Colab | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB (đo thật: 18,5 GiB) | ~6 GiB (đo thật: 5,85 GiB) | ~13 GiB (đo thật: 13,2 GiB) |
 | A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~49 GiB |

@@ -82,6 +82,31 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("kaggle", "qwen3_8b"): {
+        "summary": ("T4 x2, 2026-11-10", "T4 x2, 10/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 2 (tensor parallel)",
+             "0.33.0 / float16 / 2 (tensor parallel)"),
+            ("Context (`auto`)", "Context (`auto`)", "40 960 tokens (the model maximum)", "40 960 token (tối đa của model)"),
+            ("KV cache", "KV cache", "9.2 GiB (4.58 GiB per GPU) = 66 704 tokens, 1.63 full-length requests at once",
+             "9,2 GiB (4,58 GiB mỗi GPU) = 66 704 token, 1,63 request dài tối đa cùng lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)", "weights 7.64 GiB, CUDA graphs 0.42 + 0.23 GiB",
+             "trọng số 7,64 GiB, CUDA graph 0,42 + 0,23 GiB"),
+            ("Time", "Thời gian", "loading weights 52 s, engine start 90 s (torch.compile 33 s, CUDA graphs 26 s)",
+             "nạp trọng số 52 giây, khởi động engine 90 giây (torch.compile 33 giây, CUDA graph 26 giây)"),
+            ("Speed", "Tốc độ", "one request ~8–26 tokens/second, uneven between runs; ~170 tokens/second total with 8 at once",
+             "một request ~8–26 token/giây, không đều giữa các lần; ~170 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on/off; tool calling; JSON schema; "
+             "Anthropic `/v1/messages`; `/tokenize`; streaming. Thinking took 89 s for 1 172 tokens and an "
+             "18 000-token prompt 76 s, close to the 100-second limit: use streaming",
+             "không key/sai key → 401; `/invocations`, `/sleep` → 404; bật/tắt suy nghĩ; gọi hàm; JSON schema; "
+             "Anthropic `/v1/messages`; `/tokenize`; stream. Suy nghĩ 1 172 token mất 89 giây, prompt 18 000 token "
+             "mất 76 giây, sát giới hạn 100 giây: nên dùng stream"),
+        ],
+    },
     ("kaggle", "qwen3_1_7b"): {
         "summary": ("T4 x2, 2026-11-10", "T4 x2, 10/11/2026"),
         "rows": [
