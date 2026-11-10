@@ -109,13 +109,13 @@ TESTED = {
              "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on/off; tool calling via `qwen3_coder`; "
              "JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; base64 image described correctly; "
              "`http(s)` image URL rejected; secret found in an 8 000-token prompt (10 s). One short answer was "
-             "wrong (\"Toàn\" for the capital of Japan with `reasoning_effort=\"none\"`); cause not isolated "
-             "(float16 or sampling)",
+             "wrong (\"Toàn\" for the capital of Japan with `reasoning_effort=\"none\"`). With bfloat16 on an A100 the same "
+             "prompt was answered correctly 10 times out of 10, so float16 on T4 is the likely cause",
              "không key/sai key → 401; `/invocations`, `/sleep` → 404; bật/tắt suy nghĩ; gọi hàm qua `qwen3_coder`; "
              "JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; mô tả đúng ảnh base64; link ảnh "
              "`http(s)` bị từ chối; tìm đúng mã trong prompt 8 000 token (10 giây). Một câu trả lời ngắn bị sai "
-             "(\"Toàn\" cho thủ đô Nhật Bản với `reasoning_effort=\"none\"`); chưa tách được nguyên nhân "
-             "(float16 hay tham số sinh)"),
+             "(\"Toàn\" cho thủ đô Nhật Bản với `reasoning_effort=\"none\"`). Với bfloat16 trên A100, cùng câu "
+             "hỏi trả lời đúng 10/10 lần, nên nhiều khả năng do float16 trên T4"),
         ],
     },
     ("kaggle", "qwen3_8b"): {
@@ -271,8 +271,17 @@ TESTED = {
         ],
     },
     ("colab", "qwen3_5_9b"): {
-        "summary": ("A100 40 GB, 2026-11-10", "A100 40 GB, 10/11/2026"),
+        "summary": ("A100 40 GB 2026-11-10, A100 80 GB 2026-11-11", "A100 40 GB 10/11/2026, A100 80 GB 11/11/2026"),
         "rows": [
+            ("A100 80 GB run", "Lần chạy A100 80 GB",
+             "1 × NVIDIA A100-SXM4-80GB, `--max-num-seqs 128`: context 262 144, KV cache 49.25 GiB = 1 592 668 tokens "
+             "(6.08 full-length requests at once), server start ~5 min 50 s, ~88 tokens/second for one request, "
+             "~505 total with 8 at once; 13/13 checks passed, a 24 000-token prompt in 3.2 s. "
+             "The rows below are from the A100 40 GB run",
+             "1 × NVIDIA A100-SXM4-80GB, `--max-num-seqs 128`: context 262 144, KV cache 49,25 GiB = 1 592 668 token "
+             "(6,08 request dài tối đa cùng lúc), bật server ~5 phút 50 giây, ~88 token/giây cho một request, "
+             "~505 tổng khi 8 request; qua 13/13 phép thử, prompt 24 000 token trong 3,2 giây. "
+             "Các dòng dưới là lần chạy A100 40 GB"),
             ("GPU", "GPU", "1 × NVIDIA A100-SXM4-40GB, driver 580.82.07",
              "1 × NVIDIA A100-SXM4-40GB, driver 580.82.07"),
             ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / bfloat16 / 1", "0.33.0 / bfloat16 / 1"),
