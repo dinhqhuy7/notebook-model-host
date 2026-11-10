@@ -21,7 +21,7 @@ MODEL = "Qwen3-4B"
 | Input | text | text, images, video | text, images, video |
 | Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens |
 | Thinking by default | on | **off**: send `enable_thinking: true` to turn it on | on |
-| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): send parameters yourself | vLLM's defaults (temperature 1.0, no top_p/top_k): send parameters yourself |
+| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** |
 | Recommended with thinking | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` |
 | Recommended without thinking | `temperature=0.7, top_p=0.8, top_k=20` | text: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` |
 | `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` |

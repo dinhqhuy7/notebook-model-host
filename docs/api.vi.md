@@ -20,7 +20,7 @@ MODEL = "Qwen3-4B"
 | Đầu vào | văn bản | văn bản, ảnh, video | văn bản, ảnh, video |
 | Context | 40 960 token | tới 262 144 token | tới 262 144 token |
 | Suy nghĩ mặc định | bật | **tắt**: gửi `enable_thinking: true` để bật | bật |
-| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): nên tự gửi tham số | mặc định của vLLM (temperature 1.0, không top_p/top_k): nên tự gửi tham số |
+| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** |
 | Khuyên dùng khi có suy nghĩ | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` |
 | Khuyên dùng khi không suy nghĩ | `temperature=0.7, top_p=0.8, top_k=20` | văn bản: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` |
 | `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` | không hỗ trợ: dùng `enable_thinking` |

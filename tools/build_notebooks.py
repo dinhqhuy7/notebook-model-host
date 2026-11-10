@@ -56,13 +56,14 @@ QWEN3_5 = {
                 "so callers should send the values Qwen recommends, see docs/api.md",
     "notes": "Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache "
              "costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the "
-             "model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4, where it takes "
-             "~12 minutes to start.",
+             "model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4. On T4 the first "
+             "start takes ~11–12 minutes (kernel compilation): step 5 is not stuck.",
     # Image encoder, encoder cache and linear-attention state (measured: KV cache 13.2 GiB on A100 40 GB).
     "extra_gib": 3.0,
     "notes_vi": "Đa phương thức (văn bản, ảnh, video). Attention lai (24 lớp linear + 8 lớp full): KV cache "
                 "chỉ ~32 KiB mỗi token, nên context gốc 262 144 token vừa GPU 40 GB. Trên T4 model chạy "
-                "`float16` thay vì `bfloat16` gốc: đã thử trên Kaggle 2 × T4, khởi động mất ~12 phút.",
+                "`float16` thay vì `bfloat16` gốc: đã thử trên Kaggle 2 × T4. Trên T4 lần khởi động đầu mất "
+                "~11–12 phút (biên dịch kernel): bước 5 không bị treo.",
 }
 
 MODELS = [
@@ -83,11 +84,12 @@ MODELS = [
      "notes": "Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the "
               "full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send "
               "`chat_template_kwargs: {\"enable_thinking\": true}` to turn it on. On T4 the model runs in "
-              "`float16` instead of its native `bfloat16`.",
+              "`float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel "
+              "compilation): step 5 is not stuck.",
      "notes_vi": "Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ "
                  "context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi "
                  "`chat_template_kwargs: {\"enable_thinking\": true}` để bật. Trên T4 model chạy `float16` thay "
-                 "vì `bfloat16` gốc."},
+                 "vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo."},
     {"slug": "qwen3_5_9b", "model_id": "Qwen/Qwen3.5-9B", "served_name": "Qwen3.5-9B",
      "weights_gib": 17.98, "download_gb": 20, **QWEN3_5},
 ]
@@ -95,6 +97,40 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("colab", "qwen3_5_0_8b"): {
+        "summary": ("T4, 2026-11-11", "T4, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "1 × Tesla T4 (15 GB), driver 580.82.07", "1 × Tesla T4 (15 GB), driver 580.82.07"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 1, `--max-num-seqs 128`",
+             "0.33.0 / float16 / 1, `--max-num-seqs 128`"),
+            ("Context (`auto`)", "Context (`auto`)", "262 144 tokens (the model maximum)", "262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "9.11 GiB = 785 357 tokens, 3.00 full-length requests at once",
+             "9,11 GiB = 785 357 token, 3,00 request dài tối đa cùng lúc"),
+            ("GPU memory", "Bộ nhớ GPU", "weights 1.63 GiB, other non-torch ~1 GiB, CUDA graphs 0.20 + 0.12 GiB",
+             "trọng số 1,63 GiB, non-torch khác ~1 GiB, CUDA graph 0,20 + 0,12 GiB"),
+            ("Time", "Thời gian",
+             "server start ~11 min (weights 15 s, torch.compile 27 s, ~7.5 min of unlogged kernel compilation, "
+             "CUDA graphs 47 s)",
+             "bật server ~11 phút (trọng số 15 giây, torch.compile 27 giây, ~7,5 phút biên dịch kernel không ghi log, "
+             "CUDA graph 47 giây)"),
+            ("Speed", "Tốc độ", "~100 tokens/second for one request (with thinking); ~640 tokens/second total with 8 at once",
+             "~100 token/giây cho một request (có suy nghĩ); ~640 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "no/wrong key → 401; `/invocations`, `/sleep` → 404; no thinking by default, thinking with "
+             "`enable_thinking: true`; tool calling via `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; "
+             "`/tokenize`; streaming; `http(s)` image URL rejected; secret found in a 16 000-token prompt (13.5 s). "
+             "Base64 image: text and red rectangle right, but the blue circle was called green",
+             "không key/sai key → 401; `/invocations`, `/sleep` → 404; mặc định không suy nghĩ, suy nghĩ khi gửi "
+             "`enable_thinking: true`; gọi hàm qua `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; "
+             "`/tokenize`; stream; link ảnh `http(s)` bị từ chối; tìm đúng mã trong prompt 16 000 token (13,5 giây). "
+             "Ảnh base64: đọc đúng chữ và hình chữ nhật đỏ, nhưng nói hình tròn xanh dương là xanh lá"),
+            ("Sampling parameters", "Tham số sinh",
+             "a short factual question was right 9/20 times when the request sent no sampling parameters (vLLM "
+             "defaults) and 20/20 with Qwen's recommended values: always send them",
+             "một câu hỏi ngắn đúng 9/20 lần khi request không gửi tham số sinh (mặc định vLLM) và 20/20 khi gửi "
+             "tham số Qwen khuyên: luôn gửi tham số"),
+        ],
+    },
     ("kaggle", "qwen3_5_9b"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [
@@ -119,13 +155,15 @@ TESTED = {
              "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on/off; tool calling via `qwen3_coder`; "
              "JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; base64 image described correctly; "
              "`http(s)` image URL rejected; secret found in an 8 000-token prompt (10 s). One short answer was "
-             "wrong (\"Toàn\" for the capital of Japan with `reasoning_effort=\"none\"`). With bfloat16 on an A100 the same "
-             "prompt was answered correctly 10 times out of 10, so float16 on T4 is the likely cause",
+             "wrong (\"Toàn\" for the capital of Japan with `reasoning_effort=\"none\"`). That request sent no sampling "
+             "parameters; on Qwen3.5-0.8B the same question was right 9/20 times without them and 20/20 with Qwen's "
+             "recommended values, so the cause is vLLM's default sampling, not float16",
              "không key/sai key → 401; `/invocations`, `/sleep` → 404; bật/tắt suy nghĩ; gọi hàm qua `qwen3_coder`; "
              "JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; mô tả đúng ảnh base64; link ảnh "
              "`http(s)` bị từ chối; tìm đúng mã trong prompt 8 000 token (10 giây). Một câu trả lời ngắn bị sai "
-             "(\"Toàn\" cho thủ đô Nhật Bản với `reasoning_effort=\"none\"`). Với bfloat16 trên A100, cùng câu "
-             "hỏi trả lời đúng 10/10 lần, nên nhiều khả năng do float16 trên T4"),
+             "(\"Toàn\" cho thủ đô Nhật Bản với `reasoning_effort=\"none\"`). Request đó không gửi tham số sinh; "
+             "trên Qwen3.5-0.8B cùng câu hỏi đúng 9/20 lần khi không gửi và 20/20 khi gửi tham số Qwen khuyên, nên "
+             "nguyên nhân là tham số sinh mặc định của vLLM, không phải float16"),
         ],
     },
     ("kaggle", "qwen3_8b"): {
