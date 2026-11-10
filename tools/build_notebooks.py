@@ -101,6 +101,8 @@ MODELS = [
                  "context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi "
                  "`chat_template_kwargs: {\"enable_thinking\": true}` để bật. Trên T4 model chạy `float16` thay "
                  "vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo."},
+    {"slug": "qwen3_5_4b", "model_id": "Qwen/Qwen3.5-4B", "served_name": "Qwen3.5-4B",
+     "weights_gib": 8.68, "download_gb": 9, **QWEN3_5},
     {"slug": "qwen3_5_9b", "model_id": "Qwen/Qwen3.5-9B", "served_name": "Qwen3.5-9B",
      "weights_gib": 17.98, "download_gb": 20, **QWEN3_5},
 ]

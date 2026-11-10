@@ -15,11 +15,14 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_14b.ipynb](colab_qwen3_14b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_14b.ipynb) | `Qwen/Qwen3-14B` | 27.5 GiB | ~30 GB | ~35 GB | ✓ A100 40 GB, 2026-11-10 |
 | [colab_qwen3_5_0_8b.ipynb](colab_qwen3_5_0_8b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_0_8b.ipynb) | `Qwen/Qwen3.5-0.8B` | 1.6 GiB | ~2 GB | ~10 GB | ✓ T4, 2026-11-11 |
 | [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | Not tested yet |
+| [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | Not tested yet |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
 
 **Qwen3.5-2B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
+
+**Qwen3.5-4B:** Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4. On T4 the first start takes ~11–12 minutes (kernel compilation): step 5 is not stuck.
 
 **Qwen3.5-9B:** Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4. On T4 the first start takes ~11–12 minutes (kernel compilation): step 5 is not stuck.
 
@@ -29,13 +32,13 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ## Estimated memory left for context
 
-| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-9B |
-|---|---|---|---|---|---|---|---|---|
-| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ~4 GiB | ✗ not enough memory |
-| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ~14 GiB | ~11 GiB | ✗ not enough memory |
-| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~29 GiB | ~27 GiB | ~13 GiB |
-| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~65 GiB | ~63 GiB | ~49 GiB |
-| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~65 GiB | ~62 GiB | ~49 GiB |
+| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B |
+|---|---|---|---|---|---|---|---|---|---|
+| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory |
+| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ~14 GiB | ~11 GiB | ~7 GiB | ✗ not enough memory |
+| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB |
+| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~65 GiB | ~63 GiB | ~58 GiB | ~49 GiB |
+| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB |
 
 ## Test results
 
@@ -120,6 +123,10 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 | Sampling parameters | a short factual question was right 9/20 times when the request sent no sampling parameters (vLLM defaults) and 20/20 with Qwen's recommended values: always send them |
 
 ### colab_qwen3_5_2b.ipynb
+
+Not tested yet.
+
+### colab_qwen3_5_4b.ipynb
 
 Not tested yet.
 
