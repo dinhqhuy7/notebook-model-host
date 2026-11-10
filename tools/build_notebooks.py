@@ -97,6 +97,40 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("kaggle", "qwen3_5_0_8b"): {
+        "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 2 (tensor parallel), `--max-num-seqs 128`",
+             "0.33.0 / float16 / 2 (tensor parallel), `--max-num-seqs 128`"),
+            ("Context (`auto`)", "Context (`auto`)", "262 144 tokens (the model maximum)", "262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "20.4 GiB (10.19 GiB per GPU) = 1 758 728 tokens, 6.71 full-length requests at once",
+             "20,4 GiB (10,19 GiB mỗi GPU) = 1 758 728 token, 6,71 request dài tối đa cùng lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)",
+             "weights 0.84 GiB, other non-torch ~0.9 GiB, CUDA graphs 0.21 + 0.12 GiB",
+             "trọng số 0,84 GiB, non-torch khác ~0,9 GiB, CUDA graph 0,21 + 0,12 GiB"),
+            ("Time", "Thời gian",
+             "server start ~11.5 min (weights 7 s, torch.compile 30 s, ~7.7 min of unlogged kernel compilation, "
+             "CUDA graphs 33 s)",
+             "bật server ~11,5 phút (trọng số 7 giây, torch.compile 30 giây, ~7,7 phút biên dịch kernel không ghi log, "
+             "CUDA graph 33 giây)"),
+            ("Speed", "Tốc độ",
+             "~120 tokens/second for one request (with thinking); ~289 tokens/second total with 8 at once, slower "
+             "than a single Colab T4 (~640): for a model this small, splitting over 2 GPUs costs more than it saves",
+             "~120 token/giây cho một request (có suy nghĩ); ~289 token/giây tổng khi 8 request, chậm hơn Colab "
+             "1 × T4 (~640): model nhỏ thế này thì chia 2 GPU tốn hơn lợi"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking with `enable_thinking: true`; tool "
+             "calling via `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; `http(s)` "
+             "image URL rejected; secret found in a 16 000-token prompt (7.9 s, faster than a single T4). Base64 "
+             "image: text and red rectangle right, the blue circle called green (same as on Colab)",
+             "không key/sai key → 401; `/invocations`, `/sleep` → 404; suy nghĩ khi gửi `enable_thinking: true`; "
+             "gọi hàm qua `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; link ảnh "
+             "`http(s)` bị từ chối; tìm đúng mã trong prompt 16 000 token (7,9 giây, nhanh hơn 1 × T4). Ảnh base64: "
+             "đúng chữ và hình chữ nhật đỏ, hình tròn xanh dương bị gọi là xanh lá (giống trên Colab)"),
+        ],
+    },
     ("colab", "qwen3_5_0_8b"): {
         "summary": ("T4, 2026-11-11", "T4, 11/11/2026"),
         "rows": [
