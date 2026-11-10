@@ -4,7 +4,7 @@
 
 The notebook prints the **Base URL** (`https://xxxx.trycloudflare.com/v1`), the **API key** and the
 **model** name (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`,
-`Qwen3.5-0.8B`, `Qwen3.5-9B`).
+`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-9B`).
 The examples use the `openai` library (`pip install openai`):
 
 ```python
@@ -16,7 +16,7 @@ MODEL = "Qwen3-4B"
 
 ## Model differences
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B | Qwen3.5-9B |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-9B |
 |---|---|---|---|
 | Input | text | text, images, video | text, images, video |
 | Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens |
@@ -49,7 +49,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Thinking and sampling parameters
 
-Qwen3 and Qwen3.5-9B think before answering by default (Qwen3.5-0.8B does not). The thinking is in `message.reasoning`; `content` holds
+Qwen3 and Qwen3.5-9B think before answering by default (Qwen3.5-0.8B and 2B do not). The thinking is in `message.reasoning`; `content` holds
 only the answer. The server sets no parameters: send them explicitly (values for each model in
 [Model differences](#model-differences)). Qwen3 example:
 

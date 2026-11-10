@@ -3,7 +3,8 @@
 [English](api.md) · **Tiếng Việt**
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
-(`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-9B`). Các ví dụ dùng thư
+(`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-9B`). Các ví
+dụ dùng thư
 viện `openai` (`pip install openai`):
 
 ```python
@@ -15,7 +16,7 @@ MODEL = "Qwen3-4B"
 
 ## Khác nhau giữa các model
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B | Qwen3.5-9B |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-9B |
 |---|---|---|---|
 | Đầu vào | văn bản | văn bản, ảnh, video | văn bản, ảnh, video |
 | Context | 40 960 token | tới 262 144 token | tới 262 144 token |
@@ -48,7 +49,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Suy nghĩ và tham số sinh
 
-Qwen3 và Qwen3.5-9B mặc định suy nghĩ trước khi trả lời (Qwen3.5-0.8B thì không). Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
+Qwen3 và Qwen3.5-9B mặc định suy nghĩ trước khi trả lời (Qwen3.5-0.8B và 2B thì không). Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
 chứa câu trả lời. Server không đặt tham số nào: nên gửi tường minh (giá trị cho từng model ở mục
 [Khác nhau giữa các model](#khác-nhau-giữa-các-model)). Ví dụ với Qwen3:
 

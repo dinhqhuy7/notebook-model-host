@@ -13,9 +13,12 @@ Back to the [main README](../../README.md).
 | [kaggle_qwen3_4b.ipynb](kaggle_qwen3_4b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_4b.ipynb) | `Qwen/Qwen3-4B` | 7.5 GiB | ~8 GB | ~13 GB | ✓ T4 x2, 2026-11-10 |
 | [kaggle_qwen3_8b.ipynb](kaggle_qwen3_8b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_8b.ipynb) | `Qwen/Qwen3-8B` | 15.3 GiB | ~16 GB | ~21 GB | ✓ T4 x2, 2026-11-10 |
 | [kaggle_qwen3_5_0_8b.ipynb](kaggle_qwen3_5_0_8b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_0_8b.ipynb) | `Qwen/Qwen3.5-0.8B` | 1.6 GiB | ~2 GB | ~10 GB | ✓ T4 x2, 2026-11-11 |
+| [kaggle_qwen3_5_2b.ipynb](kaggle_qwen3_5_2b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | Not tested yet |
 | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ T4 x2, 2026-11-11 |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
+
+**Qwen3.5-2B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
 
 **Qwen3.5-9B:** Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4. On T4 the first start takes ~11–12 minutes (kernel compilation): step 5 is not stuck.
 
@@ -27,10 +30,10 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ## Estimated memory left for context
 
-| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3.5-0.8B | Qwen3.5-9B |
-|---|---|---|---|---|---|---|
-| T4 x2 | ~22 GiB | ~19 GiB | ~16 GiB | ~8 GiB | ~18 GiB | ~2 GiB |
-| P100 | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
+| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-9B |
+|---|---|---|---|---|---|---|---|
+| T4 x2 | ~22 GiB | ~19 GiB | ~16 GiB | ~8 GiB | ~18 GiB | ~16 GiB | ~2 GiB |
+| P100 | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
 
 ## Test results
 
@@ -98,6 +101,10 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 | Time | server start ~11.5 min (weights 7 s, torch.compile 30 s, ~7.7 min of unlogged kernel compilation, CUDA graphs 33 s) |
 | Speed | ~120 tokens/second for one request (with thinking); ~289 tokens/second total with 8 at once, slower than a single Colab T4 (~640): for a model this small, splitting over 2 GPUs costs more than it saves |
 | Checked through the public URL | no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking with `enable_thinking: true`; tool calling via `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; `http(s)` image URL rejected; secret found in a 16 000-token prompt (7.9 s, faster than a single T4). Base64 image: text and red rectangle right, the blue circle called green (same as on Colab) |
+
+### kaggle_qwen3_5_2b.ipynb
+
+Not tested yet.
 
 ### kaggle_qwen3_5_9b.ipynb
 

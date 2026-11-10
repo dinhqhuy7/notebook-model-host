@@ -90,6 +90,17 @@ MODELS = [
                  "context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi "
                  "`chat_template_kwargs: {\"enable_thinking\": true}` để bật. Trên T4 model chạy `float16` thay "
                  "vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo."},
+    {"slug": "qwen3_5_2b", "model_id": "Qwen/Qwen3.5-2B", "served_name": "Qwen3.5-2B",
+     "weights_gib": 4.24, "download_gb": 5, **QWEN3_5,
+     "notes": "Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the "
+              "full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send "
+              "`chat_template_kwargs: {\"enable_thinking\": true}` to turn it on. On T4 the model runs in "
+              "`float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel "
+              "compilation): step 5 is not stuck.",
+     "notes_vi": "Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ "
+                 "context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi "
+                 "`chat_template_kwargs: {\"enable_thinking\": true}` để bật. Trên T4 model chạy `float16` thay "
+                 "vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo."},
     {"slug": "qwen3_5_9b", "model_id": "Qwen/Qwen3.5-9B", "served_name": "Qwen3.5-9B",
      "weights_gib": 17.98, "download_gb": 20, **QWEN3_5},
 ]
