@@ -69,6 +69,8 @@ print(reply.choices[0].message.content)                      # answer
   (100-second limit); use streaming for long answers (see below).
 - Empty `content`: `max_tokens` ran out while the model was still thinking. Raise it or disable thinking.
 - Do not use `temperature=0` with thinking: the model tends to loop forever.
+- Small models (Qwen3.5-0.8B, 2B): for short exact answers use a low temperature. In a test, temperature 0 was
+  right 20/20 times, the recommended text values only 9/20.
 - Other ways to disable thinking: `reasoning_effort="none"`; on Qwen3 also `/no_think` at the end of
   a message (`/think` turns it back on for that turn).
 - Other vLLM parameters (`min_p`, `repetition_penalty`, `seed`, `stop`, `logprobs`...) go in `extra_body`.
@@ -85,7 +87,7 @@ for chunk in stream:
         print(chunk.choices[0].delta.content or "", end="", flush=True)
 ```
 
-## Images and video (Qwen3.5-9B)
+## Images and video (Qwen3.5)
 
 The server never downloads URLs itself: send images from your machine as base64 `data:` URLs
 (`http(s)://` image links are rejected).

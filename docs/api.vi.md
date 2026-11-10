@@ -70,6 +70,8 @@ print(reply.choices[0].message.content)                      # câu trả lời
   câu trả lời dài thì dùng stream (xem bên dưới).
 - `content` rỗng: hết `max_tokens` khi model còn đang suy nghĩ. Tăng `max_tokens` hoặc tắt suy nghĩ.
 - Không đặt `temperature=0` khi có suy nghĩ: model dễ lặp vô hạn.
+- Model nhỏ (Qwen3.5-0.8B, 2B): câu trả lời ngắn cần chính xác thì dùng temperature thấp. Khi thử, temperature 0
+  đúng 20/20 lần, còn bộ tham số khuyên cho văn bản chỉ đúng 9/20.
 - Cách khác để tắt suy nghĩ: `reasoning_effort="none"`; riêng Qwen3 còn có `/no_think` ở cuối tin
   nhắn (`/think` bật lại cho lượt đó).
 - Tham số khác của vLLM (`min_p`, `repetition_penalty`, `seed`, `stop`, `logprobs`...) gửi qua
@@ -87,7 +89,7 @@ for chunk in stream:
         print(chunk.choices[0].delta.content or "", end="", flush=True)
 ```
 
-## Ảnh và video (Qwen3.5-9B)
+## Ảnh và video (Qwen3.5)
 
 Server không bao giờ tự tải URL: gửi ảnh từ máy bạn dưới dạng URL `data:` base64 (link ảnh
 `http(s)://` bị từ chối).

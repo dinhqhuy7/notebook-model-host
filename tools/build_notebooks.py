@@ -110,6 +110,44 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("kaggle", "qwen3_5_2b"): {
+        "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 2 (tensor parallel), `--max-num-seqs 128`",
+             "0.33.0 / float16 / 2 (tensor parallel), `--max-num-seqs 128`"),
+            ("Context (`auto`)", "Context (`auto`)", "262 144 tokens (the model maximum)", "262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "17.3 GiB (8.64 GiB per GPU) = 1 490 675 tokens, 5.69 full-length requests at once",
+             "17,3 GiB (8,64 GiB mỗi GPU) = 1 490 675 token, 5,69 request dài tối đa cùng lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)",
+             "weights 2.12 GiB, other non-torch ~0.9 GiB, CUDA graphs 0.22 + 0.12 GiB",
+             "trọng số 2,12 GiB, non-torch khác ~0,9 GiB, CUDA graph 0,22 + 0,12 GiB"),
+            ("Time", "Thời gian",
+             "server start ~10 min (weights 7 s, torch.compile 25 s, ~6.6 min of unlogged kernel compilation, "
+             "CUDA graphs 32 s)",
+             "bật server ~10 phút (trọng số 7 giây, torch.compile 25 giây, ~6,6 phút biên dịch kernel không ghi log, "
+             "CUDA graph 32 giây)"),
+            ("Speed", "Tốc độ", "~86 tokens/second for one request (with thinking); ~272 tokens/second total with 8 at once",
+             "~86 token/giây cho một request (có suy nghĩ); ~272 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking with `enable_thinking: true`; tool "
+             "calling via `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; `http(s)` "
+             "image URL rejected; secret found in a 16 000-token prompt (9.6 s). Base64 image: text right, the "
+             "rectangle called a square",
+             "không key/sai key → 401; `/invocations`, `/sleep` → 404; suy nghĩ khi gửi `enable_thinking: true`; "
+             "gọi hàm qua `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; link ảnh "
+             "`http(s)` bị từ chối; tìm đúng mã trong prompt 16 000 token (9,6 giây). Ảnh base64: đúng chữ, hình "
+             "chữ nhật bị gọi là hình vuông"),
+            ("Sampling parameters", "Tham số sinh",
+             "a short factual question, 20 tries each: temperature 0 right 20/20; Qwen's general values (0.7/0.8, "
+             "top_k 20, presence 1.5) 17/20; Qwen's text values for 0.8B/2B (1.0/1.0, top_k 20, presence 2.0) 9/20. "
+             "Use a low temperature for short exact answers",
+             "một câu hỏi ngắn, 20 lần mỗi cách: temperature 0 đúng 20/20; tham số Qwen chung (0.7/0.8, top_k 20, "
+             "presence 1.5) 17/20; tham số Qwen cho văn bản của 0.8B/2B (1.0/1.0, top_k 20, presence 2.0) 9/20. "
+             "Câu trả lời ngắn cần chính xác thì dùng temperature thấp"),
+        ],
+    },
     ("kaggle", "qwen3_5_0_8b"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [
