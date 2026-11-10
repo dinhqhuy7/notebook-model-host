@@ -4,7 +4,7 @@
 
 Back to the [main README](../README.md).
 
-Each notebook hosts one model on one platform. Pick a model, then a platform where your account has a GPU with enough memory. GPU tables and test results per platform: [Google Colab](colab/README.md), [Kaggle](kaggle/README.md).
+Each notebook hosts one model on one platform. Pick a model, then a platform where your account has a GPU with enough memory. GPU tables and test results per platform: [Google Colab](colab/README.md), [Kaggle](kaggle/README.md). Choose the GPU before Run all; it needs at least the model's "Min. total GPU memory".
 
 | Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|

@@ -23,8 +23,8 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 | Qwen3-14B | 27,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_14b.ipynb) | — (cần ~35 GB bộ nhớ GPU) |
 | Qwen3.5-9B (ảnh, video) | 18,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) |
 
-Chọn GPU mạnh nhất tài khoản có. Notebook tự chọn `bfloat16`/`float16`, chia model ra mọi GPU nếu
-có nhiều GPU, và chọn context dài nhất bộ nhớ chứa được. Bộ nhớ ước tính còn cho context:
+Chọn GPU trước khi bấm **Run all** cho phù hợp nhu cầu; GPU phải đủ bộ nhớ cho model (✗ trong bảng
+dưới là không đủ). Repo mới đo trên các GPU ghi "đo thật". Bộ nhớ ước tính còn cho context:
 
 | GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-9B |
 |---|---|---|---|---|---|---|---|

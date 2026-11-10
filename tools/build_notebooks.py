@@ -872,9 +872,11 @@ def overview_readme(vi: bool) -> str:
         t("# Notebooks", "# Notebook"), "", other, "",
         t(f"Back to the [main README](../README{sfx}).", f"Quay lại [README chính](../README{sfx})."), "",
         t("Each notebook hosts one model on one platform. Pick a model, then a platform where your account has a "
-          f"GPU with enough memory. GPU tables and test results per platform: {platform_links}.",
+          f"GPU with enough memory. GPU tables and test results per platform: {platform_links}. "
+          "Choose the GPU before Run all; it needs at least the model's \"Min. total GPU memory\".",
           "Mỗi notebook host một model trên một nền tảng. Chọn model, rồi chọn nền tảng mà tài khoản của bạn có GPU "
-          f"đủ bộ nhớ. Bảng GPU và kết quả chạy thử theo nền tảng: {platform_links}."), "",
+          f"đủ bộ nhớ. Bảng GPU và kết quả chạy thử theo nền tảng: {platform_links}. "
+          "Chọn GPU trước khi Run all; GPU cần ít nhất \"Tổng bộ nhớ GPU tối thiểu\" của model."), "",
         t("| Model | Input | Weights | Context | Min. total GPU memory | ", "| Model | Đầu vào | Trọng số | Context | "
           "Tổng bộ nhớ GPU tối thiểu | ") + " | ".join(p["name"] for p in PLATFORMS.values()) + " |",
         "|---|---|---|---|---|" + "---|" * len(PLATFORMS),

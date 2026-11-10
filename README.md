@@ -23,9 +23,9 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | Qwen3-14B | 27.5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_14b.ipynb) | — (needs ~35 GB of GPU memory) |
 | Qwen3.5-9B (images, video) | 18.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) |
 
-Pick the strongest GPU your account has. The notebook picks `bfloat16`/`float16`, splits the model
-across all GPUs when there are several, and uses the longest context that fits. Estimated memory
-left for context:
+Choose the GPU before **Run all** to fit your needs; it must have enough memory for the model (✗ in
+the table below means not enough). Only GPUs marked "measured" have been tested. Estimated memory left
+for context:
 
 | GPU | Platform | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-9B |
 |---|---|---|---|---|---|---|---|

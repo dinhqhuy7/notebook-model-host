@@ -4,7 +4,7 @@
 
 Quay lại [README chính](../README.vi.md).
 
-Mỗi notebook host một model trên một nền tảng. Chọn model, rồi chọn nền tảng mà tài khoản của bạn có GPU đủ bộ nhớ. Bảng GPU và kết quả chạy thử theo nền tảng: [Google Colab](colab/README.vi.md), [Kaggle](kaggle/README.vi.md).
+Mỗi notebook host một model trên một nền tảng. Chọn model, rồi chọn nền tảng mà tài khoản của bạn có GPU đủ bộ nhớ. Bảng GPU và kết quả chạy thử theo nền tảng: [Google Colab](colab/README.vi.md), [Kaggle](kaggle/README.vi.md). Chọn GPU trước khi Run all; GPU cần ít nhất "Tổng bộ nhớ GPU tối thiểu" của model.
 
 | Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
