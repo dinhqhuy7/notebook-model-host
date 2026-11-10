@@ -44,12 +44,14 @@ QWEN3_5 = {
     "input": ("text, images, video", "văn bản, ảnh, video"),
     "context": 262144,
     "flags": ["--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "qwen3_coder",
-              "--allowed-media-domains", "none.invalid"],
+              "--allowed-media-domains", "none.invalid", "--max-num-seqs", "128"],
     "flag_notes": """\
 - `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
 - `--enable-auto-tool-choice --tool-call-parser qwen3_coder`: function calls are returned in `tool_calls`.
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
-  callers send media from their machine as base64 `data:` URLs.""",
+  callers send media from their machine as base64 `data:` URLs.
+- `--max-num-seqs 128`: at most 128 requests are generated at once. Each one needs its own
+  linear-attention state, and small GPUs (Kaggle 2 × T4) fit only ~180 of them, below vLLM's default 256.""",
     "sampling": "the model ships no `generation_config.json`: requests that omit them get vLLM's defaults, "
                 "so callers should send the values Qwen recommends, see docs/api.md",
     "notes": "Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache "
@@ -602,7 +604,11 @@ end = time.time() + 30 * 60
 while time.time() < end and server.poll() is None and not healthy():
     time.sleep(5)
 if not healthy():
-    print(open(LOG, errors="replace").read()[-4000:])
+    log = open(LOG, errors="replace").read()
+    print(log[-3000:])
+    errors = [l for l in log.splitlines() if "Error" in l and "Traceback" not in l]
+    if errors:  # the root cause is often far above the last lines
+        print("\\nError lines in the log:\\n" + "\\n".join(errors[-15:]))
     raise RuntimeError("The server did not start; see the log above")
 
 LOCAL = f"http://127.0.0.1:{PORT}"
