@@ -13,4 +13,4 @@ Mỗi notebook host một model trên một nền tảng. Chọn model, rồi ch
 | `Qwen/Qwen3-4B` | văn bản | 7,5 GiB | 40 960 | ~13 GB | [colab_qwen3_4b.ipynb](colab/colab_qwen3_4b.ipynb)<br>✓ T4, 10/11/2026 | [kaggle_qwen3_4b.ipynb](kaggle/kaggle_qwen3_4b.ipynb)<br>✓ T4 x2, 10/11/2026 |
 | `Qwen/Qwen3-8B` | văn bản | 15,3 GiB | 40 960 | ~21 GB | [colab_qwen3_8b.ipynb](colab/colab_qwen3_8b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | [kaggle_qwen3_8b.ipynb](kaggle/kaggle_qwen3_8b.ipynb)<br>✓ T4 x2, 10/11/2026 |
 | `Qwen/Qwen3-14B` | văn bản | 27,5 GiB | 40 960 | ~35 GB | [colab_qwen3_14b.ipynb](colab/colab_qwen3_14b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | — (cần ~35 GB bộ nhớ GPU; Kaggle 2 × T4 chỉ có tổng 30 GB) |
-| `Qwen/Qwen3.5-9B` | văn bản, ảnh, video | 18,0 GiB | 262 144 | ~28 GB | [colab_qwen3_5_9b.ipynb](colab/colab_qwen3_5_9b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | [kaggle_qwen3_5_9b.ipynb](kaggle/kaggle_qwen3_5_9b.ipynb)<br>Chưa thử |
+| `Qwen/Qwen3.5-9B` | văn bản, ảnh, video | 18,0 GiB | 262 144 | ~28 GB | [colab_qwen3_5_9b.ipynb](colab/colab_qwen3_5_9b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | [kaggle_qwen3_5_9b.ipynb](kaggle/kaggle_qwen3_5_9b.ipynb)<br>✓ T4 x2, 11/11/2026 |

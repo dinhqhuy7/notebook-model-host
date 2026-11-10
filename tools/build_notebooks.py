@@ -56,12 +56,13 @@ QWEN3_5 = {
                 "so callers should send the values Qwen recommends, see docs/api.md",
     "notes": "Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache "
              "costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the "
-             "model runs in `float16` instead of its native `bfloat16`; this is untested.",
+             "model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4, where it takes "
+             "~12 minutes to start.",
     # Image encoder, encoder cache and linear-attention state (measured: KV cache 13.2 GiB on A100 40 GB).
     "extra_gib": 3.0,
     "notes_vi": "Đa phương thức (văn bản, ảnh, video). Attention lai (24 lớp linear + 8 lớp full): KV cache "
                 "chỉ ~32 KiB mỗi token, nên context gốc 262 144 token vừa GPU 40 GB. Trên T4 model chạy "
-                "`float16` thay vì `bfloat16` gốc; chưa thử.",
+                "`float16` thay vì `bfloat16` gốc: đã thử trên Kaggle 2 × T4, khởi động mất ~12 phút.",
 }
 
 MODELS = [
@@ -84,6 +85,39 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("kaggle", "qwen3_5_9b"): {
+        "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 2 (tensor parallel), --max-num-seqs 128",
+             "0.33.0 / float16 / 2 (tensor parallel), --max-num-seqs 128"),
+            ("Context (`auto`)", "Context (`auto`)", "109 824 tokens (reduced from 262 144 to fit)",
+             "109 824 token (tự giảm từ 262 144 cho vừa)"),
+            ("KV cache", "KV cache", "3.5 GiB (1.74 GiB per GPU) = 110 337 tokens: one full-length request at a time",
+             "3,5 GiB (1,74 GiB mỗi GPU) = 110 337 token: một request dài tối đa mỗi lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)",
+             "weights 8.83 GiB, other non-torch ~0.9 GiB, peak activations 1.63 GiB, CUDA graphs 0.28 + 0.14 GiB",
+             "trọng số 8,83 GiB, non-torch khác ~0,9 GiB, activation đỉnh 1,63 GiB, CUDA graph 0,28 + 0,14 GiB"),
+            ("Time", "Thời gian",
+             "server start ~12 min (weights 76 s, torch.compile 32 s, ~7 min of unlogged warm-up, CUDA graphs 62 s)",
+             "bật server ~12 phút (trọng số 76 giây, torch.compile 32 giây, ~7 phút khởi động không ghi log, "
+             "CUDA graph 62 giây)"),
+            ("Speed", "Tốc độ", "~17–19 tokens/second for one request; ~167 tokens/second total with 8 at once",
+             "~17–19 token/giây cho một request; ~167 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on/off; tool calling via `qwen3_coder`; "
+             "JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; base64 image described correctly; "
+             "`http(s)` image URL rejected; secret found in an 8 000-token prompt (10 s). One short answer was "
+             "wrong (\"Toàn\" for the capital of Japan with `reasoning_effort=\"none\"`); cause not isolated "
+             "(float16 or sampling)",
+             "không key/sai key → 401; `/invocations`, `/sleep` → 404; bật/tắt suy nghĩ; gọi hàm qua `qwen3_coder`; "
+             "JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; mô tả đúng ảnh base64; link ảnh "
+             "`http(s)` bị từ chối; tìm đúng mã trong prompt 8 000 token (10 giây). Một câu trả lời ngắn bị sai "
+             "(\"Toàn\" cho thủ đô Nhật Bản với `reasoning_effort=\"none\"`); chưa tách được nguyên nhân "
+             "(float16 hay tham số sinh)"),
+        ],
+    },
     ("kaggle", "qwen3_8b"): {
         "summary": ("T4 x2, 2026-11-10", "T4 x2, 10/11/2026"),
         "rows": [
