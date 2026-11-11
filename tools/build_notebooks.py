@@ -193,6 +193,45 @@ TESTED = {
              "mốc video giây 2 và trộn ảnh + video qua hai lần; trên T4, hai phép chất lượng này thay đổi giữa các lần"),
         ],
     },
+    ("colab", "qwen3_vl_2b_thinking"): {
+        "summary": ("T4, 2026-11-11", "T4, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "1 × Tesla T4 (15 GB), driver 580.82.07",
+             "1 × Tesla T4 (15 GB), driver 580.82.07"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU",
+             "0.33.0 / float16 / 1, reasoning parser `qwen3`", "0.33.0 / float16 / 1, reasoning parser `qwen3`"),
+            ("Context (`auto`)", "Context (`auto`)", "61 808 tokens (reduced from the model maximum 262 144)",
+             "61 808 token (giảm từ tối đa 262 144 của model)"),
+            ("KV cache", "KV cache", "6.6 GiB = 61 823 tokens, 1.00 full-length request at once",
+             "6,6 GiB = 61 823 token, 1,00 request dài tối đa cùng lúc"),
+            ("GPU memory", "Bộ nhớ GPU",
+             "weights + non-torch 4.38 GiB, peak activation 2.12 GiB, CUDA graphs 0.30 + 0.18 GiB",
+             "trọng số + non-torch 4,38 GiB, activation đỉnh 2,12 GiB, CUDA graph 0,30 + 0,18 GiB"),
+            ("Time", "Thời gian", "server start 4 min 2 s (weights 17 s, multimodal warmup 28 s, "
+             "torch.compile 45 s, CUDA graphs ~23 s)", "bật server 4 phút 2 giây (trọng số 17 giây, "
+             "warmup đa phương thức 28 giây, torch.compile 45 giây, CUDA graph ~23 giây)"),
+            ("Speed", "Tốc độ", "~42 tokens/second for one request; ~185–357 tokens/second total with 8 at once",
+             "~42 token/giây cho một request; ~185–357 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "24/26 checks passed. Reasoning is always on and is separated into `message.reasoning`; tool calls via "
+             "`hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; image base64 and multiple "
+             "images; document/table OCR to JSON; counting and spatial reasoning; chart reasoning; visual coding; "
+             "tool call from image content; Responses API with an image; video OCR/order/timestamp and streaming; "
+             "image + video; `http(s)` media URLs rejected; secret found in an 18 046-token prompt (17–75 s, "
+             "depending on reasoning length). Limitations: 2D grounding returned pixel coordinates or exhausted "
+             "the reasoning budget before a box; image multi-turn was correct in 2/4 runs and otherwise confused "
+             "the visible code with HTML or repeated until the token limit. It also sometimes copied a requested "
+             "answer placeholder literally. Deterministic sampling is used for capability checks",
+             "24/26 phép thử qua. Luôn suy nghĩ và reasoning được tách vào `message.reasoning`; gọi hàm qua "
+             "`hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; ảnh base64 và nhiều ảnh; OCR tài "
+             "liệu/bảng sang JSON; đếm và suy luận không gian; hiểu biểu đồ; visual coding; tool call từ nội dung "
+             "ảnh; Responses API với ảnh; OCR/thứ tự/timestamp và stream video; trộn ảnh + video; link media "
+             "`http(s)` bị từ chối; tìm đúng mã trong prompt 18 046 token (17–75 giây tuỳ độ dài reasoning). Giới "
+             "hạn: grounding 2D trả tọa độ pixel hoặc hết ngân sách reasoning trước bbox; multi-turn có ảnh đúng "
+             "2/4 lần, các lần khác nhầm mã nhìn thấy thành HTML hoặc lặp tới giới hạn token. Model cũng có lúc chép "
+             "nguyên placeholder câu trả lời. Phép thử chức năng dùng sampling xác định"),
+        ],
+    },
     ("kaggle", "qwen3_vl_2b_instruct"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [

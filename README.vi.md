@@ -36,7 +36,7 @@ context:
 
 | GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,1 GiB) | ~8 GiB (đo thật: 8,7 GiB) | ~4 GiB (đo thật: 4,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ~7 GiB (đo thật: 9,1 GiB) | ~4 GiB (đo thật: 6,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ~7 GiB (đo thật: 6,6 GiB) | ~7 GiB |
+| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,1 GiB) | ~8 GiB (đo thật: 8,7 GiB) | ~4 GiB (đo thật: 4,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ~7 GiB (đo thật: 9,1 GiB) | ~4 GiB (đo thật: 6,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ~7 GiB (đo thật: 6,6 GiB) | ~7 GiB (đo thật: 6,6 GiB) |
 | T4 x2 | Kaggle | ~22 GiB (đo thật: 23,5 GiB) | ~19 GiB (đo thật: 21,4 GiB) | ~16 GiB (đo thật: 16,8 GiB) | ~8 GiB (đo thật: 9,2 GiB) | ✗ thiếu bộ nhớ | ~18 GiB (đo thật: 20,4 GiB) | ~16 GiB (đo thật: 17,3 GiB) | ~11 GiB (đo thật: 11,9 GiB) | ~2 GiB (đo thật: 3,5 GiB) | ~18 GiB (đo thật: 18,2 GiB) | ~18 GiB |
 | L4 (22,5 GB) | Colab | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ thiếu bộ nhớ | ~14 GiB | ~11 GiB | ~7 GiB (đo thật: 9,2 GiB) | ✗ thiếu bộ nhớ | ~13 GiB | ~13 GiB |
 | A100 40 GB | Colab | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB (đo thật: 18,5 GiB) | ~6 GiB (đo thật: 5,85 GiB) | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB (đo thật: 13,2 GiB) | ~29 GiB (đo thật: 29,03 GiB) | ~29 GiB |

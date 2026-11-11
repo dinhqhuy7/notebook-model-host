@@ -18,7 +18,7 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | ✓ L4, 2026-11-11 |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
 | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4.0 GiB | ~5 GB | ~10 GB | ✓ T4 & A100 40 GB, 2026-11-11 |
-| [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
+| [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | ✓ T4, 2026-11-11 |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
 
@@ -187,4 +187,13 @@ Speeds come from the GPU used for each run, often a modest one; a stronger GPU i
 
 ### colab_qwen3_vl_2b_thinking.ipynb
 
-Not tested yet.
+| Item | Result |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB), driver 580.82.07 |
+| vLLM / dtype / GPUs | 0.33.0 / float16 / 1, reasoning parser `qwen3` |
+| Context (`auto`) | 61 808 tokens (reduced from the model maximum 262 144) |
+| KV cache | 6.6 GiB = 61 823 tokens, 1.00 full-length request at once |
+| GPU memory | weights + non-torch 4.38 GiB, peak activation 2.12 GiB, CUDA graphs 0.30 + 0.18 GiB |
+| Time | server start 4 min 2 s (weights 17 s, multimodal warmup 28 s, torch.compile 45 s, CUDA graphs ~23 s) |
+| Speed | ~42 tokens/second for one request; ~185–357 tokens/second total with 8 at once |
+| Checked through the public URL | 24/26 checks passed. Reasoning is always on and is separated into `message.reasoning`; tool calls via `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; image base64 and multiple images; document/table OCR to JSON; counting and spatial reasoning; chart reasoning; visual coding; tool call from image content; Responses API with an image; video OCR/order/timestamp and streaming; image + video; `http(s)` media URLs rejected; secret found in an 18 046-token prompt (17–75 s, depending on reasoning length). Limitations: 2D grounding returned pixel coordinates or exhausted the reasoning budget before a box; image multi-turn was correct in 2/4 runs and otherwise confused the visible code with HTML or repeated until the token limit. It also sometimes copied a requested answer placeholder literally. Deterministic sampling is used for capability checks |

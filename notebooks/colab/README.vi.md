@@ -18,7 +18,7 @@ Quay lại [README chính](../../README.vi.md).
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8,7 GiB | ~9 GB | ~17 GB | ✓ L4, 11/11/2026 |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18,0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 10/11/2026, A100 80 GB 11/11/2026 |
 | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4,0 GiB | ~5 GB | ~10 GB | ✓ T4 & A100 40 GB, 11/11/2026 |
-| [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4,0 GiB | ~5 GB | ~10 GB | Chưa thử |
+| [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4,0 GiB | ~5 GB | ~10 GB | ✓ T4, 11/11/2026 |
 
 **Qwen3.5-0.8B:** Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi `chat_template_kwargs: {"enable_thinking": true}` để bật. Trên T4 model chạy `float16` thay vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo.
 
@@ -187,4 +187,13 @@ Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU m
 
 ### colab_qwen3_vl_2b_thinking.ipynb
 
-Chưa thử.
+| Mục | Kết quả |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB), driver 580.82.07 |
+| vLLM / dtype / số GPU | 0.33.0 / float16 / 1, reasoning parser `qwen3` |
+| Context (`auto`) | 61 808 token (giảm từ tối đa 262 144 của model) |
+| KV cache | 6,6 GiB = 61 823 token, 1,00 request dài tối đa cùng lúc |
+| Bộ nhớ GPU | trọng số + non-torch 4,38 GiB, activation đỉnh 2,12 GiB, CUDA graph 0,30 + 0,18 GiB |
+| Thời gian | bật server 4 phút 2 giây (trọng số 17 giây, warmup đa phương thức 28 giây, torch.compile 45 giây, CUDA graph ~23 giây) |
+| Tốc độ | ~42 token/giây cho một request; ~185–357 token/giây tổng khi 8 request cùng lúc |
+| Đã kiểm qua URL công khai | 24/26 phép thử qua. Luôn suy nghĩ và reasoning được tách vào `message.reasoning`; gọi hàm qua `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; ảnh base64 và nhiều ảnh; OCR tài liệu/bảng sang JSON; đếm và suy luận không gian; hiểu biểu đồ; visual coding; tool call từ nội dung ảnh; Responses API với ảnh; OCR/thứ tự/timestamp và stream video; trộn ảnh + video; link media `http(s)` bị từ chối; tìm đúng mã trong prompt 18 046 token (17–75 giây tuỳ độ dài reasoning). Giới hạn: grounding 2D trả tọa độ pixel hoặc hết ngân sách reasoning trước bbox; multi-turn có ảnh đúng 2/4 lần, các lần khác nhầm mã nhìn thấy thành HTML hoặc lặp tới giới hạn token. Model cũng có lúc chép nguyên placeholder câu trả lời. Phép thử chức năng dùng sampling xác định |
