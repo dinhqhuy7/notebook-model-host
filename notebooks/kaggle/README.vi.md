@@ -14,7 +14,7 @@ Quay lại [README chính](../../README.vi.md).
 | [kaggle_qwen3_8b.ipynb](kaggle_qwen3_8b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_8b.ipynb) | `Qwen/Qwen3-8B` | 15,3 GiB | ~16 GB | ~21 GB | ✓ T4 x2, 10/11/2026 |
 | [kaggle_qwen3_5_0_8b.ipynb](kaggle_qwen3_5_0_8b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_0_8b.ipynb) | `Qwen/Qwen3.5-0.8B` | 1,6 GiB | ~2 GB | ~10 GB | ✓ T4 x2, 11/11/2026 |
 | [kaggle_qwen3_5_2b.ipynb](kaggle_qwen3_5_2b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4,2 GiB | ~5 GB | ~12 GB | ✓ T4 x2, 11/11/2026 |
-| [kaggle_qwen3_5_4b.ipynb](kaggle_qwen3_5_4b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8,7 GiB | ~9 GB | ~17 GB | Chưa thử |
+| [kaggle_qwen3_5_4b.ipynb](kaggle_qwen3_5_4b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8,7 GiB | ~9 GB | ~17 GB | ✓ T4 x2, 11/11/2026 |
 | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18,0 GiB | ~20 GB | ~28 GB | ✓ T4 x2, 11/11/2026 |
 
 **Qwen3.5-0.8B:** Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi `chat_template_kwargs: {"enable_thinking": true}` để bật. Trên T4 model chạy `float16` thay vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo.
@@ -123,7 +123,16 @@ Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU m
 
 ### kaggle_qwen3_5_4b.ipynb
 
-Chưa thử.
+| Mục | Kết quả |
+|---|---|
+| GPU | 2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13 |
+| vLLM / dtype / số GPU | 0.33.0 / float16 / 2 (tensor parallel), `--max-num-seqs 128` |
+| Context (`auto`) | 262 144 token (tối đa của model) |
+| KV cache | 11,9 GiB (5,96 GiB mỗi GPU) = 385 659 token, 1,47 request dài tối đa cùng lúc |
+| Bộ nhớ GPU (mỗi GPU) | trọng số 4,38 GiB, CUDA graph 0,58 + 0,22 GiB |
+| Thời gian | bật server ~11 phút (trọng số 25 giây, torch.compile 31 giây, ~7 phút biên dịch kernel không ghi log, CUDA graph 55 giây) |
+| Tốc độ | ~44 token/giây cho một request (có suy nghĩ); ~258 token/giây tổng khi 8 request cùng lúc |
+| Đã kiểm qua URL công khai | không key/sai key → 401; `/invocations`, `/sleep` → 404; mặc định có suy nghĩ (791 token, 18 giây); gọi hàm qua `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; link ảnh `http(s)` bị từ chối; tìm đúng mã trong prompt 16 000 token (~20 giây). Ảnh base64: đúng chữ và cả hai màu, hình chữ nhật bị gọi là hình vuông |
 
 ### kaggle_qwen3_5_9b.ipynb
 
