@@ -34,6 +34,7 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | [Qwen3.5-9B](notebooks/vision-language/qwen3_5_9b/README.md) (images, video) | 18.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_9b/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_9b/kaggle_qwen3_5_9b.ipynb) |
 | [Qwen3-VL-2B-Instruct](notebooks/vision-language/qwen3_vl_2b_instruct/README.md) (images, video) | 4.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb) |
 | [Qwen3-VL-2B-Thinking](notebooks/vision-language/qwen3_vl_2b_thinking/README.md) (images, video) | 4.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb) |
+| [Qwen2.5-VL-7B-Instruct](notebooks/vision-language/qwen2_5_vl_7b_instruct/README.md) (images, video) | 15.4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) |
 
 Choose the GPU before **Run all** to fit your needs; it must have enough memory for the model (✗ in
 the table below means not enough). Only GPUs marked "measured" have been tested. Each model was tested on
@@ -54,14 +55,14 @@ available. Estimated memory left for context:
 
 **Vision-language models**
 
-| GPU | Platform | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking |
-|---|---|---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~7 GiB (measured: 9.1 GiB) | ~4 GiB (measured: 6.2 GiB) | ✗ not enough memory | ✗ not enough memory | ~7 GiB (measured: 6.6 GiB) | ~7 GiB (measured: 6.6 GiB) |
-| T4 x2 | Kaggle | ~18 GiB (measured: 20.4 GiB) | ~16 GiB (measured: 17.3 GiB) | ~11 GiB (measured: 11.9 GiB) | ~2 GiB (measured: 3.5 GiB) | ~18 GiB (measured: 18.2 GiB) | ~18 GiB (measured: 18.2 GiB) |
-| L4 (22.5 GB) | Colab | ~14 GiB | ~11 GiB | ~7 GiB (measured: 9.2 GiB) | ✗ not enough memory | ~13 GiB | ~13 GiB |
-| A100 40 GB | Colab | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB (measured: 13.2 GiB) | ~29 GiB (measured: 29.03 GiB) | ~29 GiB |
-| A100 / H100 80 GB | Colab | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB (measured A100 80 GB: 49.3 GiB) | ~65 GiB | ~65 GiB |
-| P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
+| GPU | Platform | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct |
+|---|---|---|---|---|---|---|---|---|
+| T4 (15 GB) | Colab | ~7 GiB (measured: 9.1 GiB) | ~4 GiB (measured: 6.2 GiB) | ✗ not enough memory | ✗ not enough memory | ~7 GiB (measured: 6.6 GiB) | ~7 GiB (measured: 6.6 GiB) | ✗ not enough memory |
+| T4 x2 | Kaggle | ~18 GiB (measured: 20.4 GiB) | ~16 GiB (measured: 17.3 GiB) | ~11 GiB (measured: 11.9 GiB) | ~2 GiB (measured: 3.5 GiB) | ~18 GiB (measured: 18.2 GiB) | ~18 GiB (measured: 18.2 GiB) | ~7 GiB |
+| L4 (22.5 GB) | Colab | ~14 GiB | ~11 GiB | ~7 GiB (measured: 9.2 GiB) | ✗ not enough memory | ~13 GiB | ~13 GiB | ~2 GiB |
+| A100 40 GB | Colab | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB (measured: 13.2 GiB) | ~29 GiB (measured: 29.03 GiB) | ~29 GiB | ~18 GiB |
+| A100 / H100 80 GB | Colab | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB (measured A100 80 GB: 49.3 GiB) | ~65 GiB | ~65 GiB | ~54 GiB |
+| P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
 
 "measured" values come from real runs; the rest are estimates. Other GPUs: step 1 of the notebook
 checks them. Qwen3.5-9B needs ~4.5× less KV cache per token (hybrid attention), so 13 GiB fits its
