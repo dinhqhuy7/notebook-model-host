@@ -1,0 +1,26 @@
+{
+ "_comment": "SHA-256 of each notebook that has a recorded test run. tools/build_notebooks.py never overwrites these; see its docstring. Edit only with --freeze / --promote.",
+ "notebooks": {
+  "colab_qwen3_0_6b": "sha256:52b1c9841b1c10340e4e244ce3579b56ac6eced1c2690965dc7f355bee54321e",
+  "colab_qwen3_14b": "sha256:036343d10c8ce0a45ebac6baa3b586b471ffc72b39c6caa3ac91f950bb1f72a2",
+  "colab_qwen3_1_7b": "sha256:d1ad6ba57dc1c31a14f72e9c43b038b6aba005c04eda6a1f680dcf18ab96ed5a",
+  "colab_qwen3_4b": "sha256:c74ca54fcc641828876867603944219c929dbd622d23d45c8ac41568f9e27c38",
+  "colab_qwen3_5_0_8b": "sha256:c06ae64ade638a1b7e63bcfd34f17a4c2d3397b02f465e02eea557fd7ba4b50e",
+  "colab_qwen3_5_2b": "sha256:edc139e5c66cf9b2090c1a1cc6353503d9f89af599a17a1f69081ddbed729b22",
+  "colab_qwen3_5_4b": "sha256:94265a6bcbe0b08b053df2e9dd3b00d30f70c2163aad62c3a2da58dd7c3ae77c",
+  "colab_qwen3_5_9b": "sha256:c6bf690ff8ff0eec448228760ac2ea532452709e50a5c8de9f7b2098d1cec9a2",
+  "colab_qwen3_8b": "sha256:da18fcac7c7eabc808ac0301886c33a555a8f4ba36577a8f55cca3ed010d68c4",
+  "colab_qwen3_vl_2b_instruct": "sha256:6e4fcc4515f43f083dcd84e218e88d78ecaf2f4962f08fb9b59dea0169625f2f",
+  "colab_qwen3_vl_2b_thinking": "sha256:0a9c5155b946582f8aed696b1998db712eefbd55500790a217ca5a92b8dda5a8",
+  "kaggle_qwen3_0_6b": "sha256:2ffe7283fbbc9c6be60424853018a8087f3688f2a9a0f58c9b2f4c6030872489",
+  "kaggle_qwen3_1_7b": "sha256:850985b9dd27d75f2a61fd3b196ae86bd943ee41a4baab18b7b5ef6ec0278184",
+  "kaggle_qwen3_4b": "sha256:9947cc35ef9288e7ce4c522e4ebfbb3febf41f681b3f264924fb5eaea3f7845e",
+  "kaggle_qwen3_5_0_8b": "sha256:c8308abe1e5daa147674f749ec8e850eb4da6d9724c41ec803a3bbde78db5ea5",
+  "kaggle_qwen3_5_2b": "sha256:8ff02bfd16cc9859e467671a93ea0ddcf7c02a86ef69b5b5ecc6ce574dd0ff08",
+  "kaggle_qwen3_5_4b": "sha256:5b9d398445b803bc2f0253586955d94a88c7119b29bf64d8ee50b99766604955",
+  "kaggle_qwen3_5_9b": "sha256:e487fa7d2adf0a0c03ff1a744b9a05062126167e97ab1f96515675b489a47a7e",
+  "kaggle_qwen3_8b": "sha256:4469b76b6f1212b2d0f30df3c579ea64a37c8b0ff3cf991cde23c2fbf6bdb5fc",
+  "kaggle_qwen3_vl_2b_instruct": "sha256:cba3f453eac9ad76c21eac37ab02ccdb80d83fb2a9c63f50060237c7f00a5f88",
+  "kaggle_qwen3_vl_2b_thinking": "sha256:89f70020d9fed7b8ba235995f0c1b7f79a03ca0ef5b958e15c6ba1a1eb7b0fea"
+ }
+}

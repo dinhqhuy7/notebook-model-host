@@ -7,17 +7,34 @@ notebooks/<platform>/README(.vi).md (notebook specs, GPU table and test results)
 
 Add a model: add an entry to MODELS and rerun; the GPU table and minimum memory are computed. A model that
 cannot run on a platform sets "platforms" (where it runs) and "unavailable" (reason, English and Vietnamese).
-Record a test run: add an entry to TESTED and rerun.
+Record a test run: add an entry to TESTED, rerun, then freeze the notebook (below).
+
+Tested notebooks are frozen. A notebook that has a recorded test run is listed in notebooks.lock.json with the
+SHA-256 of its content, and this script never overwrites it. When the template would now produce different
+content, the new content goes to <platform>_<slug>_update.ipynb instead, with a banner saying it is not tested.
+The update lives next to the official notebook until it is tested; then promote it:
+
+    python tools/build_notebooks.py                       build; locked notebooks are never overwritten
+    python tools/build_notebooks.py --check               verify the locked notebooks are unchanged
+    python tools/build_notebooks.py --freeze-tested       lock every notebook that has a TESTED entry
+    python tools/build_notebooks.py --freeze NAME...      lock notebooks (NAME = colab_qwen3_8b)
+    python tools/build_notebooks.py --promote NAME...     replace the official notebook by its tested update
 """
 
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 import math
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+LOCK_FILE = ROOT / "notebooks.lock.json"  # {"notebooks": {"colab_qwen3_8b": "sha256:..."}}
+UPDATE_SUFFIX = "_update"  # colab_qwen3_8b_update.ipynb: an updated notebook that is not tested yet
+BANNER_ID = "update-banner"
 
 REPO = "dinhqhuy7/notebook-model-host"  # GitHub repo, used by the "Open in Colab/Kaggle" badges
 VLLM_VERSION = "0.33.0"
@@ -1224,10 +1241,14 @@ def render(text: str, values: dict) -> str:
     return text
 
 
-def build(platform: dict, model: dict, proxy_src: str) -> dict:
+def build(key: str, platform: dict, model: dict, proxy_src: str, update: bool = False) -> dict:
     default_gpu = next(gpu[0] for gpu in platform["gpus"] if runnable(model, gpu))
+    badge = platform["badge"]
+    if update:  # the badge must open the update notebook, not the tested one
+        assert "{{SLUG}}.ipynb" in badge
+        badge = badge.replace("{{SLUG}}.ipynb", "{{SLUG}}" + UPDATE_SUFFIX + ".ipynb")
     values = {
-        "BADGE": platform["badge"], "SETUP": platform["setup"], "GPU_TABLE": gpu_table(model, platform),
+        "BADGE": badge, "SETUP": platform["setup"], "GPU_TABLE": gpu_table(model, platform),
         "SECRET_CODE": platform["secret_code"], "SHARE_WARNING": platform["share_warning"],
         "SHUTDOWN": platform["shutdown"], "GPU_FAIL": platform["gpu_fail"], "NO_INTERNET": platform["no_internet"],
         "PLATFORM_NAME": platform["name"], "BASE": platform["base"], "DEFAULT_GPU": default_gpu,
@@ -1247,6 +1268,12 @@ def build(platform: dict, model: dict, proxy_src: str) -> dict:
         if kind == "code":
             cell.update(execution_count=None, outputs=[])
         cells.append(cell)
+    if update:
+        official = notebook_name(key, model)
+        text = (f"> ⚠ **Updated version, not tested yet.** It sits next to `{official}`, the version that was run "
+                f"and measured. Use `{official}` unless you want to try this one. Once this version is tested it "
+                "replaces the official notebook.")
+        cells.insert(0, {"cell_type": "markdown", "id": BANNER_ID, "metadata": {}, "source": [text]})
     metadata = platform["metadata"](default_gpu)
     metadata["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
     return {"cells": cells, "metadata": metadata, "nbformat": 4, "nbformat_minor": 5}
@@ -1254,6 +1281,40 @@ def build(platform: dict, model: dict, proxy_src: str) -> dict:
 
 def notebook_name(key: str, model: dict) -> str:
     return f"{key}_{model['slug']}.ipynb"
+
+
+def update_name(key: str, model: dict) -> str:
+    return f"{key}_{model['slug']}{UPDATE_SUFFIX}.ipynb"
+
+
+def serialize(notebook: dict) -> str:
+    return json.dumps(notebook, ensure_ascii=False, indent=1) + "\n"
+
+
+def digest(text: str) -> str:
+    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def load_lock() -> dict:
+    if not LOCK_FILE.exists():
+        return {}
+    return json.loads(LOCK_FILE.read_text(encoding="utf-8"))["notebooks"]
+
+
+def save_lock(lock: dict) -> None:
+    data = {"_comment": "SHA-256 of each notebook that has a recorded test run. tools/build_notebooks.py never "
+                        "overwrites these; see its docstring. Edit only with --freeze / --promote.",
+            "notebooks": dict(sorted(lock.items()))}
+    LOCK_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+
+def stem_of(key: str, model: dict) -> str:
+    return notebook_name(key, model)[: -len(".ipynb")]
+
+
+def pending_update(key: str, model: dict) -> bool:
+    """Whether an update notebook (not tested yet) exists next to the official one."""
+    return (ROOT / "notebooks" / key / update_name(key, model)).exists()
 
 
 def available(model: dict, key: str) -> bool:
@@ -1289,6 +1350,22 @@ def platform_readme(key: str, platform: dict, vi: bool) -> str:
         lines.append(f"| [{name}]({name}) {badge.replace('SLUG', model['slug'])} | `{model['model_id']}` | "
                      f"{num(model['weights_gib'])} GiB | ~{model['download_gb']} GB | "
                      f"~{math.ceil(min_gpu_mib(model) / 1024)} GB | {status} |")
+    updates = [m for m in models if pending_update(key, m)]
+    if updates:
+        lines += ["", t("## Updates not yet tested", "## Bản cập nhật chưa chạy thử"), "",
+                  t("These notebooks are newer than the tested ones next to them. They have not been run yet, so "
+                    "no measurement applies to them. Use the tested notebook unless you want to try the update; "
+                    "once an update is tested it replaces the tested notebook.",
+                    "Các notebook này mới hơn bản đã chạy thử đứng cạnh. Chúng chưa được chạy nên chưa có số đo. "
+                    "Dùng bản đã chạy thử, trừ khi bạn muốn thử bản cập nhật; khi bản cập nhật được chạy thử, nó "
+                    "thay cho bản đã chạy thử."), "",
+                  t("| Update (not tested) | Replaces |", "| Bản cập nhật (chưa chạy thử) | Thay cho |"),
+                  "|---|---|"]
+        for model in updates:
+            name = update_name(key, model)
+            badge_update = badge.replace("SLUG.ipynb", "SLUG" + UPDATE_SUFFIX + ".ipynb")
+            lines.append(f"| ⚠ [{name}]({name}) {badge_update.replace('SLUG', model['slug'])} | "
+                         f"[{notebook_name(key, model)}]({notebook_name(key, model)}) |")
     for model in models:
         note = model["notes_vi"] if vi else model["notes"]
         if note:
@@ -1364,33 +1441,153 @@ def overview_readme(vi: bool) -> str:
         for key in PLATFORMS:
             if available(model, key):
                 name = notebook_name(key, model)
-                cells.append(f"[{name}]({key}/{name})<br>{test_status(key, model, vi)}")
+                cell = f"[{name}]({key}/{name})<br>{test_status(key, model, vi)}"
+                if pending_update(key, model):
+                    cell += f"<br>⚠ [{update_name(key, model)}]({key}/{update_name(key, model)}) " + t(
+                        "(update, not tested)", "(bản cập nhật, chưa chạy thử)")
+                cells.append(cell)
             else:
                 cells.append(f"— ({model['unavailable'][key][1 if vi else 0]})")
         context = f"{model['context']:,}".replace(",", " ")
         lines.append(f"| `{model['model_id']}` | {model['input'][1 if vi else 0]} | {num(model['weights_gib'])} GiB | "
                      f"{context} | ~{math.ceil(min_gpu_mib(model) / 1024)} GB | " + " | ".join(cells) + " |")
+    if any(pending_update(k, m) for m in MODELS for k in PLATFORMS if available(m, k)):
+        lines += ["", t("⚠ marks an updated notebook that has not been tested yet. The tested notebook next to it "
+                        "stays the official one until the update is tested and replaces it.",
+                        "⚠ đánh dấu notebook bản cập nhật chưa chạy thử. Notebook đã chạy thử đứng cạnh vẫn là bản "
+                        "chính thức cho tới khi bản cập nhật được chạy thử và thay thế.")]
     return "\n".join(lines) + "\n"
 
 
-def main() -> None:
+def all_notebooks():
+    """Every (platform key, platform, model) that gets a notebook."""
+    for key, platform in PLATFORMS.items():
+        for model in (m for m in MODELS if available(m, key)):
+            yield key, platform, model
+
+
+def find_notebook(name: str):
+    """'colab_qwen3_8b' -> (key, platform, model)."""
+    for key, platform, model in all_notebooks():
+        if stem_of(key, model) == name:
+            return key, platform, model
+    sys.exit(f"unknown notebook: {name}")
+
+
+def locked_problems(lock: dict) -> list:
+    problems = []
+    for key, _, model in all_notebooks():
+        stem = stem_of(key, model)
+        if stem not in lock:
+            continue
+        path = ROOT / "notebooks" / key / (stem + ".ipynb")
+        if not path.exists():
+            problems.append(f"{path.relative_to(ROOT)}: locked but missing")
+        elif digest(path.read_text(encoding="utf-8")) != lock[stem]:
+            problems.append(f"{path.relative_to(ROOT)}: changed since it was locked")
+    return problems
+
+
+def read_proxy() -> str:
     proxy_src = (ROOT / "proxy" / "proxy.py").read_text()
     assert "'''" not in proxy_src, "proxy.py must not contain ''' (it is embedded in r'''...''')"
-    for key, platform in PLATFORMS.items():
+    return proxy_src
+
+
+def freeze(names: list) -> None:
+    lock = load_lock()
+    for name in names:
+        key, _, model = find_notebook(name)
+        if (key, model["slug"]) not in TESTED:
+            sys.exit(f"{name}: no TESTED entry; record the test run first")
+        path = ROOT / "notebooks" / key / (name + ".ipynb")
+        lock[name] = digest(path.read_text(encoding="utf-8"))
+        print("locked", path.relative_to(ROOT))
+    save_lock(lock)
+
+
+def promote(names: list) -> None:
+    """Replace the official notebook by its tested update (delete the old one, keep the official name)."""
+    proxy_src = read_proxy()
+    lock = load_lock()
+    for name in names:
+        key, platform, model = find_notebook(name)
+        out = ROOT / "notebooks" / key
+        update = out / update_name(key, model)
+        if not update.exists():
+            sys.exit(f"{name}: no update notebook {update.name}")
+        if (key, model["slug"]) not in TESTED:
+            sys.exit(f"{name}: no TESTED entry; record the test run of the update first")
+        notebook = json.loads(update.read_text(encoding="utf-8"))
+        notebook["cells"] = [c for c in notebook["cells"] if c.get("id") != BANNER_ID]
+        tested = serialize(notebook).replace(UPDATE_SUFFIX + ".ipynb", ".ipynb")
+        wanted = serialize(build(key, platform, model, proxy_src))
+        if tested != wanted:
+            sys.exit(f"{name}: the update differs from what the template builds now, so the tested content would "
+                     "not be what is promoted. Regenerate the update and test it again")
+        (out / (name + ".ipynb")).write_text(wanted, encoding="utf-8")
+        update.unlink()
+        lock[name] = digest(wanted)
+        print(f"promoted {update.name} -> {name}.ipynb (old notebook replaced, now locked)")
+    save_lock(lock)
+
+
+def build_all() -> None:
+    proxy_src = read_proxy()
+    lock = load_lock()
+    problems = locked_problems(lock)
+    if problems:
+        sys.exit("locked notebooks were modified, nothing written:\n  " + "\n  ".join(problems))
+    for key, platform, model in all_notebooks():
         out = ROOT / "notebooks" / key
         out.mkdir(parents=True, exist_ok=True)
-        for model in (m for m in MODELS if available(m, key)):
-            path = out / notebook_name(key, model)
-            path.write_text(json.dumps(build(platform, model, proxy_src), ensure_ascii=False, indent=1) + "\n")
-            print("wrote", path.relative_to(ROOT))
+        stem = stem_of(key, model)
+        text = serialize(build(key, platform, model, proxy_src))
+        if stem in lock and digest(text) != lock[stem]:
+            # tested notebook: leave it alone; the new content goes to an update file marked as not tested
+            path = out / update_name(key, model)
+            update_text = serialize(build(key, platform, model, proxy_src, update=True))
+            if path.exists() and path.read_text(encoding="utf-8") != update_text:
+                print(f"WARNING: {path.relative_to(ROOT)} is replaced by newer content (it was not promoted)")
+            path.write_text(update_text, encoding="utf-8")
+            print(f"locked {stem}.ipynb kept; wrote UPDATE (not tested) {path.relative_to(ROOT)}")
+            continue
+        path = out / (stem + ".ipynb")
+        path.write_text(text, encoding="utf-8")
+        print("wrote", path.relative_to(ROOT))
+        if pending_update(key, model):
+            print(f"note: {update_name(key, model)} is now identical to the official notebook; delete it")
+    for key, platform in PLATFORMS.items():
         for vi in (False, True):
-            path = out / ("README.vi.md" if vi else "README.md")
+            path = ROOT / "notebooks" / key / ("README.vi.md" if vi else "README.md")
             path.write_text(platform_readme(key, platform, vi))
             print("wrote", path.relative_to(ROOT))
     for vi in (False, True):
         path = ROOT / "notebooks" / ("README.vi.md" if vi else "README.md")
         path.write_text(overview_readme(vi))
         print("wrote", path.relative_to(ROOT))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Build the notebooks and READMEs; tested notebooks are never overwritten.")
+    parser.add_argument("--check", action="store_true", help="verify the locked notebooks are unchanged and exit")
+    parser.add_argument("--freeze", nargs="+", metavar="NAME", help="lock notebooks that have a TESTED entry")
+    parser.add_argument("--freeze-tested", action="store_true", help="lock every notebook that has a TESTED entry")
+    parser.add_argument("--promote", nargs="+", metavar="NAME", help="replace a notebook by its tested update")
+    args = parser.parse_args()
+    if args.check:
+        problems = locked_problems(load_lock())
+        print("\n".join(problems) if problems else f"OK: {len(load_lock())} locked notebooks unchanged")
+        sys.exit(1 if problems else 0)
+    if args.freeze_tested:
+        freeze([stem_of(k, m) for k, _, m in all_notebooks() if (k, m["slug"]) in TESTED])
+        return
+    if args.freeze:
+        freeze(args.freeze)
+        return
+    if args.promote:
+        promote(args.promote)
+    build_all()
 
 
 if __name__ == "__main__":
