@@ -31,3 +31,11 @@ Multimodal models that also read images and video. The server never downloads me
 | [Qwen3-VL-2B-Instruct](vision-language/qwen3_vl_2b_instruct/README.md) | text, images, video | 4.0 GiB | 262 144 | ~10 GB | [colab_qwen3_vl_2b_instruct.ipynb](vision-language/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb)<br>✓ T4 & A100 40 GB, 2026-11-11 | [kaggle_qwen3_vl_2b_instruct.ipynb](vision-language/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb)<br>✓ T4 x2, 2026-11-11 |
 | [Qwen3-VL-2B-Thinking](vision-language/qwen3_vl_2b_thinking/README.md) | text, images, video | 4.0 GiB | 262 144 | ~10 GB | [colab_qwen3_vl_2b_thinking.ipynb](vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb)<br>✓ T4, 2026-11-11 | [kaggle_qwen3_vl_2b_thinking.ipynb](vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb)<br>✓ T4 x2, 2026-11-11 |
 | [Qwen2.5-VL-7B-Instruct](vision-language/qwen2_5_vl_7b_instruct/README.md) | text, images, video | 15.4 GiB | 128 000 | ~23 GB | [colab_qwen2_5_vl_7b_instruct.ipynb](vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb)<br>Not tested yet | [kaggle_qwen2_5_vl_7b_instruct.ipynb](vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb)<br>Not tested yet |
+
+## [Omni models](omni/README.md)
+
+Models that hear and speak as well as read: text, images, audio and video in, text and speech out. They run on vLLM-Omni (a vLLM extension) in several stages, so they need more GPU memory than their size suggests. The server never downloads media itself: send images, audio and video as base64 `data:` URLs.
+
+| Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
+|---|---|---|---|---|---|---|
+| [Qwen2.5-Omni-3B](omni/qwen2_5_omni_3b/README.md) | text, images, audio, video (answers in text and speech) | 11.2 GiB | 32 768 | ~20 GB | [colab_qwen2_5_omni_3b.ipynb](omni/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb)<br>Not tested yet | [kaggle_qwen2_5_omni_3b.ipynb](omni/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb)<br>Not tested yet |

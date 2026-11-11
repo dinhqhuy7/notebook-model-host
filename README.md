@@ -36,6 +36,12 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | [Qwen3-VL-2B-Thinking](notebooks/vision-language/qwen3_vl_2b_thinking/README.md) (images, video) | 4.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb) |
 | [Qwen2.5-VL-7B-Instruct](notebooks/vision-language/qwen2_5_vl_7b_instruct/README.md) (images, video) | 15.4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) |
 
+### Omni models
+
+| Model | Weights | Colab | Kaggle |
+|---|---|---|---|
+| [Qwen2.5-Omni-3B](notebooks/omni/qwen2_5_omni_3b/README.md) (images, audio, video; speech out) | 11.2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) |
+
 Choose the GPU before **Run all** to fit your needs; it must have enough memory for the model (✗ in
 the table below means not enough). Only GPUs marked "measured" have been tested. Each model was tested on
 the GPU that happened to be used, often a modest one (T4, 2 × T4), so the speeds in the test results are
@@ -63,6 +69,17 @@ available. Estimated memory left for context:
 | A100 40 GB | Colab | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB (measured: 13.2 GiB) | ~29 GiB (measured: 29.03 GiB) | ~29 GiB | ~18 GiB |
 | A100 / H100 80 GB | Colab | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB (measured A100 80 GB: 49.3 GiB) | ~65 GiB | ~65 GiB | ~54 GiB |
 | P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
+
+**Omni models**
+
+| GPU | Platform | Qwen2.5-Omni-3B |
+|---|---|---|
+| T4 (15 GB) | Colab | ✗ not enough memory |
+| T4 x2 | Kaggle | ~9 GiB |
+| L4 (22.5 GB) | Colab | ~4 GiB |
+| A100 40 GB | Colab | ~20 GiB |
+| A100 / H100 80 GB | Colab | ~56 GiB |
+| P100 | Kaggle | ✗ not supported by vLLM |
 
 "measured" values come from real runs; the rest are estimates. Other GPUs: step 1 of the notebook
 checks them. Qwen3.5-9B needs ~4.5× less KV cache per token (hybrid attention), so 13 GiB fits its
@@ -99,7 +116,7 @@ print(reply.choices[0].message.content)
 
 The server exposes `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages`
 (Anthropic-style), `/v1/models`, `/tokenize`, `/detokenize`, and supports thinking, function calling,
-JSON schemas and (Qwen3.5) images and video. Full examples: [docs/api.md](docs/api.md).
+JSON schemas, (Qwen3.5, Qwen2.5-VL) images and video, and (Qwen2.5-Omni) audio in and speech out. Full examples: [docs/api.md](docs/api.md).
 
 ## Security and data
 
@@ -169,4 +186,4 @@ python -m unittest discover -s tests
 
 ## License
 
-Code: [MIT](LICENSE). Models have their own licenses (Qwen3, Qwen3.5: Apache 2.0).
+Code: [MIT](LICENSE). Models have their own licenses (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B: Qwen Research License, read its terms before use).

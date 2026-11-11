@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 import re
 from .catalog import gpu_table, min_gpu_mib, runnable
-from .config import CLOUDFLARED_VERSION, GPU_MEMORY, REPO, VLLM_VERSION
+from .config import CLOUDFLARED_VERSION, GPU_MEMORY, REPO
+from .engines import cells_for, pip_packages, vllm_version
 
 
 # Notebook template: ("md" | "code", text). {{NAME}} is substituted at build time.
@@ -102,7 +103,7 @@ preinstalled packages (google-colab, gradio...): this is expected and harmless, 
 own process. The install succeeded if the last line shows the vLLM version."""),
 
     ("code", """\
-!pip install -q "vllm=={{VLLM_VERSION}}"
+!pip install -q {{PIP_PACKAGES}}
 !vllm --version"""),
 
     ("md", """\
@@ -329,7 +330,8 @@ def build(key: str, platform: dict, model: dict, proxy_src: str, badge: str | No
         "SECRET_CODE": platform["secret_code"], "SHARE_WARNING": platform["share_warning"],
         "SHUTDOWN": platform["shutdown"], "GPU_FAIL": platform["gpu_fail"], "NO_INTERNET": platform["no_internet"],
         "PLATFORM_NAME": platform["name"], "BASE": platform["base"], "DEFAULT_GPU": default_gpu,
-        "REPO": REPO, "VLLM_VERSION": VLLM_VERSION, "CLOUDFLARED_VERSION": CLOUDFLARED_VERSION,
+        "REPO": REPO, "VLLM_VERSION": vllm_version(model), "PIP_PACKAGES": pip_packages(model),
+        "CLOUDFLARED_VERSION": CLOUDFLARED_VERSION,
         "SLUG": model["slug"], "MODEL_ID": model["model_id"], "SERVED_NAME": model["served_name"],
         "WEIGHTS_GIB": f"{model['weights_gib']:.1f}", "FLAG_NOTES": model["flag_notes"],
         "SAMPLING": model["sampling"], "SERVE_FLAGS": ", ".join(json.dumps(f) for f in model["flags"]),
@@ -338,7 +340,7 @@ def build(key: str, platform: dict, model: dict, proxy_src: str, badge: str | No
         "PROXY_SRC": proxy_src,  # last: nothing inside the proxy source gets substituted
     }
     cells = []
-    for i, (kind, text) in enumerate(CELLS):
+    for i, (kind, text) in enumerate(cells_for(model, CELLS)):
         if i == 0 and not badge:
             text = text.replace("{{BADGE}}\n\n", "")
         source = render(text, values).split("\n")

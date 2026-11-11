@@ -4,7 +4,7 @@
 
 The notebook prints the **Base URL** (`https://xxxx.trycloudflare.com/v1`), the **API key** and the
 **model** name (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`,
-`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`).
+`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`).
 The examples use the `openai` library (`pip install openai`):
 
 ```python
@@ -16,17 +16,17 @@ MODEL = "Qwen3-4B"
 
 ## Model differences
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct |
-|---|---|---|---|---|---|---|
-| Input | text | text, images, video | text, images, video | text, images, video | text, images, video | text, images, video |
-| Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens | up to 262 144 tokens (needs ~28 GiB of KV cache: smaller GPUs get less) | same as Instruct | up to 128 000 tokens (~7 GiB of KV cache) |
-| Thinking by default | on | **off**: send `enable_thinking: true` to turn it on | on | **never** | **always**, no switch | **never** |
-| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | the model's `generation_config.json` (temperature 0.7, top_p 0.8, top_k 20) | the model's `generation_config.json` (temperature 1.0, top_p 0.95, top_k 20) | the model's `generation_config.json` (temperature 0.000001, repetition_penalty 1.05): almost greedy |
-| Recommended with thinking | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | n/a | `temperature=1.0, top_p=0.95, top_k=20` | n/a |
-| Recommended without thinking | `temperature=0.7, top_p=0.8, top_k=20` | text: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; text: `temperature=1.0, top_p=1.0, top_k=40, presence_penalty=2.0` | n/a | none published by Qwen; the defaults above suit factual answers |
-| `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` | n/a | n/a | n/a |
-| Function calling | supported (`hermes`) | supported (`qwen3_coder`) | supported (`qwen3_coder`) | supported (`hermes`) | supported (`hermes`) | **not supported**: its chat template has no tools, use a JSON schema |
-| Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested | not tested | not tested | not tested |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct | Qwen2.5-Omni-3B |
+|---|---|---|---|---|---|---|---|
+| Input | text | text, images, video | text, images, video | text, images, video | text, images, video | text, images, video | text, images, audio, video; output text **and speech** |
+| Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens | up to 262 144 tokens (needs ~28 GiB of KV cache: smaller GPUs get less) | same as Instruct | up to 128 000 tokens (~7 GiB of KV cache) | 32 768 tokens |
+| Thinking by default | on | **off**: send `enable_thinking: true` to turn it on | on | **never** | **always**, no switch | **never** | **never** |
+| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | the model's `generation_config.json` (temperature 0.7, top_p 0.8, top_k 20) | the model's `generation_config.json` (temperature 1.0, top_p 0.95, top_k 20) | the model's `generation_config.json` (temperature 0.000001, repetition_penalty 1.05): almost greedy | the defaults of its vLLM-Omni config (Thinker: temperature 0, repetition_penalty 1.1) |
+| Recommended with thinking | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | n/a | `temperature=1.0, top_p=0.95, top_k=20` | n/a | n/a |
+| Recommended without thinking | `temperature=0.7, top_p=0.8, top_k=20` | text: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; text: `temperature=1.0, top_p=1.0, top_k=40, presence_penalty=2.0` | n/a | none published by Qwen; the defaults above suit factual answers | none published by Qwen; the defaults above apply |
+| `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` | n/a | n/a | n/a | n/a |
+| Function calling | supported (`hermes`) | supported (`qwen3_coder`) | supported (`qwen3_coder`) | supported (`hermes`) | supported (`hermes`) | **not supported**: its chat template has no tools, use a JSON schema | **not supported**: its chat template has no tools, use a JSON schema |
+| Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested | not tested | not tested | not tested | not tested |
 
 ## Chat
 
@@ -50,7 +50,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Thinking and sampling parameters
 
-Qwen3, Qwen3.5-4B and 9B think before answering by default (Qwen3.5-0.8B and 2B do not; Qwen3-VL-2B-Instruct and Qwen2.5-VL-7B-Instruct never think, Qwen3-VL-2B-Thinking always does and has no switch). The thinking is in `message.reasoning`; `content` holds
+Qwen3, Qwen3.5-4B and 9B think before answering by default (Qwen3.5-0.8B and 2B do not; Qwen3-VL-2B-Instruct, Qwen2.5-VL-7B-Instruct and Qwen2.5-Omni-3B never think, Qwen3-VL-2B-Thinking always does and has no switch). The thinking is in `message.reasoning`; `content` holds
 only the answer. The server sets no parameters: send them explicitly (values for each model in
 [Model differences](#model-differences)). Qwen3 example:
 
@@ -114,9 +114,43 @@ print(reply.choices[0].message.content)
 Videos work the same way with `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`.
 A request body is limited to 32 MiB, so keep images and videos small.
 
+## Audio and speech (Qwen2.5-Omni)
+
+Qwen2.5-Omni-3B also hears audio and can answer with speech. Send audio as a base64 `data:` URL (the server never
+downloads URLs), and ask for speech with `modalities`. The speech comes back as a WAV in base64, in the second choice.
+
+```python
+import base64
+
+with open("question.wav", "rb") as f:
+    audio = "data:audio/wav;base64," + base64.b64encode(f.read()).decode()
+
+reply = client.chat.completions.create(
+    model="Qwen2.5-Omni-3B",
+    messages=[{"role": "user", "content": [
+        {"type": "audio_url", "audio_url": {"url": audio}},
+        {"type": "text", "text": "What does the speaker say? Answer in one sentence."},
+    ]}],
+    modalities=["text", "audio"],          # ["text"] for the text only (faster)
+    extra_body={"speaker": "Chelsie"},     # or "Ethan"
+    max_tokens=256, temperature=0.2,
+)
+print(reply.choices[0].message.content)    # the answer as text
+with open("answer.wav", "wb") as f:        # the answer as speech
+    f.write(base64.b64decode(reply.choices[1].message.audio.data))
+```
+
+- **Streaming** works for the text only. An answer with speech arrives whole, after the text, speech codes and waveform
+  are generated: keep such answers short, because a request without streaming is cut after 100 seconds.
+- **A video with its own sound:** send only the video and add `extra_body={"mm_processor_kwargs": {"use_audio_in_video": True}}`;
+  do not send the audio separately.
+- Each stage handles one request at a time by default, so parallel requests queue.
+
+This section follows vLLM-Omni's documentation; the notebook has not been tested yet.
+
 ## Function calling
 
-Not available with Qwen2.5-VL-7B-Instruct: its chat template has no tool support, so the server enables no tool parser. Use a [JSON schema](#json-schema) instead.
+Not available with Qwen2.5-VL-7B-Instruct and Qwen2.5-Omni-3B: their chat templates have no tool support, so the server enables no tool parser. Use a [JSON schema](#json-schema) instead.
 
 ```python
 import json

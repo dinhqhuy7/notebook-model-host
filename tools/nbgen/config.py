@@ -27,6 +27,16 @@ TYPES = {
                   "Model đa phương thức, đọc được cả ảnh và video. Server không tự tải media: hãy gửi ảnh và video "
                   "dạng `data:` base64."),
     },
+    "omni": {
+        "name": ("Omni models", "Model đa phương thức đầy đủ"),
+        "intro": ("Models that hear and speak as well as read: text, images, audio and video in, text and speech out. "
+                  "They run on vLLM-Omni (a vLLM extension) in several stages, so they need more GPU memory than their "
+                  "size suggests. The server never downloads media itself: send images, audio and video as base64 "
+                  "`data:` URLs.",
+                  "Model nghe và nói được, không chỉ đọc: vào là văn bản, ảnh, âm thanh, video; ra là văn bản và giọng "
+                  "nói. Chạy trên vLLM-Omni (phần mở rộng của vLLM) qua nhiều giai đoạn nên cần nhiều bộ nhớ GPU hơn "
+                  "kích thước model. Server không tự tải media: hãy gửi ảnh, âm thanh, video dạng `data:` base64."),
+    },
 }
 
 # gpus: (name, GPU count, MiB per GPU, compute capability) commonly offered on the platform.

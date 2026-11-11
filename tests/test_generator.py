@@ -59,6 +59,30 @@ class GeneratorTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit):
             generate(Path(tmp), ["no_such_model"])
 
+    def test_omni_model_runs_on_vllm_omni_and_others_on_plain_vllm(self) -> None:
+        def source(path: Path) -> str:
+            nb = json.loads(path.read_text(encoding="utf-8"))
+            return "\n".join("".join(c["source"]) for c in nb["cells"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            omni = source(generate(Path(tmp), ["qwen2_5_omni_3b"], ["kaggle"])[0])
+            plain = source(generate(Path(tmp), ["qwen3_4b"], ["kaggle"])[0])
+        self.assertIn('pip install -q "vllm==0.32.0" "vllm-omni==0.32.0"', omni)
+        self.assertIn('"--omni"', omni)
+        self.assertIn("--stage-overrides", omni)
+        self.assertIn('"--allowed-media-domains", "none.invalid"', omni)
+        self.assertIn('"modalities": ["text"]', omni)  # the speed test must not generate speech
+        self.assertNotIn("--omni", plain)
+        self.assertNotIn("vllm-omni", plain)
+        self.assertIn('pip install -q "vllm==0.33.0"', plain)
+
+    def test_omni_needs_more_than_one_t4(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            nb = json.loads(generate(Path(tmp), ["qwen2_5_omni_3b"], ["colab"])[0].read_text(encoding="utf-8"))
+        intro = "".join(nb["cells"][0]["source"])
+        row = next(l for l in intro.split("\n") if l.startswith("| T4 |"))
+        self.assertIn("not enough memory", row)
+
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())
         for model in MODELS:

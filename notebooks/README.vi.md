@@ -31,3 +31,11 @@ Model đa phương thức, đọc được cả ảnh và video. Server không t
 | [Qwen3-VL-2B-Instruct](vision-language/qwen3_vl_2b_instruct/README.vi.md) | văn bản, ảnh, video | 4,0 GiB | 262 144 | ~10 GB | [colab_qwen3_vl_2b_instruct.ipynb](vision-language/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb)<br>✓ T4 & A100 40 GB, 11/11/2026 | [kaggle_qwen3_vl_2b_instruct.ipynb](vision-language/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb)<br>✓ T4 x2, 11/11/2026 |
 | [Qwen3-VL-2B-Thinking](vision-language/qwen3_vl_2b_thinking/README.vi.md) | văn bản, ảnh, video | 4,0 GiB | 262 144 | ~10 GB | [colab_qwen3_vl_2b_thinking.ipynb](vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb)<br>✓ T4, 11/11/2026 | [kaggle_qwen3_vl_2b_thinking.ipynb](vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb)<br>✓ T4 x2, 11/11/2026 |
 | [Qwen2.5-VL-7B-Instruct](vision-language/qwen2_5_vl_7b_instruct/README.vi.md) | văn bản, ảnh, video | 15,4 GiB | 128 000 | ~23 GB | [colab_qwen2_5_vl_7b_instruct.ipynb](vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb)<br>Chưa thử | [kaggle_qwen2_5_vl_7b_instruct.ipynb](vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb)<br>Chưa thử |
+
+## [Model đa phương thức đầy đủ](omni/README.vi.md)
+
+Model nghe và nói được, không chỉ đọc: vào là văn bản, ảnh, âm thanh, video; ra là văn bản và giọng nói. Chạy trên vLLM-Omni (phần mở rộng của vLLM) qua nhiều giai đoạn nên cần nhiều bộ nhớ GPU hơn kích thước model. Server không tự tải media: hãy gửi ảnh, âm thanh, video dạng `data:` base64.
+
+| Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
+|---|---|---|---|---|---|---|
+| [Qwen2.5-Omni-3B](omni/qwen2_5_omni_3b/README.vi.md) | văn bản, ảnh, âm thanh, video (trả lời bằng văn bản và giọng nói) | 11,2 GiB | 32 768 | ~20 GB | [colab_qwen2_5_omni_3b.ipynb](omni/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb)<br>Chưa thử | [kaggle_qwen2_5_omni_3b.ipynb](omni/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb)<br>Chưa thử |

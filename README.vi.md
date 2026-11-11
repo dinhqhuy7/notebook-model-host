@@ -36,6 +36,12 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 | [Qwen3-VL-2B-Thinking](notebooks/vision-language/qwen3_vl_2b_thinking/README.vi.md) (ảnh, video) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb) |
 | [Qwen2.5-VL-7B-Instruct](notebooks/vision-language/qwen2_5_vl_7b_instruct/README.vi.md) (ảnh, video) | 15,4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) |
 
+### Model đa phương thức đầy đủ
+
+| Model | Trọng số | Colab | Kaggle |
+|---|---|---|---|
+| [Qwen2.5-Omni-3B](notebooks/omni/qwen2_5_omni_3b/README.vi.md) (ảnh, âm thanh, video; giọng nói ra) | 11,2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) |
+
 Chọn GPU trước khi bấm **Run all** cho phù hợp nhu cầu; GPU phải đủ bộ nhớ cho model (✗ trong bảng
 dưới là không đủ). Repo mới đo trên các GPU ghi "đo thật". Mỗi model được đo trên GPU tại thời điểm chạy
 thử, thường là loại khiêm tốn (T4, 2 × T4), nên tốc độ ghi trong kết quả chưa phải mức tốt nhất: GPU mạnh
@@ -63,6 +69,17 @@ context:
 | A100 40 GB | Colab | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB (đo thật: 13,2 GiB) | ~29 GiB (đo thật: 29,03 GiB) | ~29 GiB | ~18 GiB |
 | A100 / H100 80 GB | Colab | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB (đo thật A100 80 GB: 49,3 GiB) | ~65 GiB | ~65 GiB | ~54 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
+
+**Model đa phương thức đầy đủ**
+
+| GPU | Nền tảng | Qwen2.5-Omni-3B |
+|---|---|---|
+| T4 (15 GB) | Colab | ✗ thiếu bộ nhớ |
+| T4 x2 | Kaggle | ~9 GiB |
+| L4 (22,5 GB) | Colab | ~4 GiB |
+| A100 40 GB | Colab | ~20 GiB |
+| A100 / H100 80 GB | Colab | ~56 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ |
 
 Số ghi "đo thật" lấy từ lần chạy thật; còn lại là ước tính. GPU khác: bước 1 của notebook tự kiểm.
 Qwen3.5-9B tốn KV cache ít hơn ~4,5 lần mỗi token (attention lai), nên 13 GiB đủ cho context gốc
@@ -98,7 +115,7 @@ print(reply.choices[0].message.content)
 
 Server mở `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages` (kiểu
 Anthropic), `/v1/models`, `/tokenize`, `/detokenize`; hỗ trợ suy nghĩ (thinking), gọi hàm, JSON
-schema và (Qwen3.5) ảnh, video. Ví dụ đầy đủ: [docs/api.vi.md](docs/api.vi.md).
+schema, (Qwen3.5, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, giọng nói ra. Ví dụ đầy đủ: [docs/api.vi.md](docs/api.vi.md).
 
 ## Bảo mật và dữ liệu
 
@@ -168,4 +185,4 @@ python -m unittest discover -s tests
 
 ## Giấy phép
 
-Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5: Apache 2.0).
+Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B: Qwen Research License, đọc điều khoản trước khi dùng).
