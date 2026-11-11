@@ -42,6 +42,8 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ## Kết quả chạy thử
 
+Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU mạnh hơn sẽ nhanh hơn.
+
 ### colab_qwen3_0_6b.ipynb
 
 | Mục | Kết quả |

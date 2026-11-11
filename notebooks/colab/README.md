@@ -42,6 +42,8 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ## Test results
 
+Speeds come from the GPU used for each run, often a modest one; a stronger GPU is faster.
+
 ### colab_qwen3_0_6b.ipynb
 
 | Item | Result |

@@ -1063,7 +1063,9 @@ def platform_readme(key: str, platform: dict, vi: bool) -> str:
             else:
                 cells.append(t("✗ not enough memory", "✗ thiếu bộ nhớ"))
         lines.append(f"| {gpu[0]} | " + " | ".join(cells) + " |")
-    lines += ["", t("## Test results", "## Kết quả chạy thử")]
+    lines += ["", t("## Test results", "## Kết quả chạy thử"), "",
+              t("Speeds come from the GPU used for each run, often a modest one; a stronger GPU is faster.",
+                "Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU mạnh hơn sẽ nhanh hơn.")]
     for model in models:
         name = notebook_name(key, model)
         run = TESTED.get((key, model["slug"]))
@@ -1088,10 +1090,12 @@ def overview_readme(vi: bool) -> str:
         t(f"Back to the [main README](../README{sfx}).", f"Quay lại [README chính](../README{sfx})."), "",
         t("Each notebook hosts one model on one platform. Pick a model, then a platform where your account has a "
           f"GPU with enough memory. GPU tables and test results per platform: {platform_links}. "
-          "Choose the GPU before Run all; it needs at least the model's \"Min. total GPU memory\".",
+          "Choose the GPU before Run all; it needs at least the model's \"Min. total GPU memory\". "
+          "Speeds in the test results come from the GPU used for each run, often a modest one; a stronger GPU is faster.",
           "Mỗi notebook host một model trên một nền tảng. Chọn model, rồi chọn nền tảng mà tài khoản của bạn có GPU "
           f"đủ bộ nhớ. Bảng GPU và kết quả chạy thử theo nền tảng: {platform_links}. "
-          "Chọn GPU trước khi Run all; GPU cần ít nhất \"Tổng bộ nhớ GPU tối thiểu\" của model."), "",
+          "Chọn GPU trước khi Run all; GPU cần ít nhất \"Tổng bộ nhớ GPU tối thiểu\" của model. "
+          "Tốc độ trong kết quả chạy thử là của GPU dùng lúc đó, thường khiêm tốn; GPU mạnh hơn sẽ nhanh hơn."), "",
         t("| Model | Input | Weights | Context | Min. total GPU memory | ", "| Model | Đầu vào | Trọng số | Context | "
           "Tổng bộ nhớ GPU tối thiểu | ") + " | ".join(p["name"] for p in PLATFORMS.values()) + " |",
         "|---|---|---|---|---|" + "---|" * len(PLATFORMS),

@@ -27,7 +27,10 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 | Qwen3.5-9B (ảnh, video) | 18,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) |
 
 Chọn GPU trước khi bấm **Run all** cho phù hợp nhu cầu; GPU phải đủ bộ nhớ cho model (✗ trong bảng
-dưới là không đủ). Repo mới đo trên các GPU ghi "đo thật". Bộ nhớ ước tính còn cho context:
+dưới là không đủ). Repo mới đo trên các GPU ghi "đo thật". Mỗi model được đo trên GPU tại thời điểm chạy
+thử, thường là loại khiêm tốn (T4, 2 × T4), nên tốc độ ghi trong kết quả chưa phải mức tốt nhất: GPU mạnh
+hơn sẽ trả lời nhanh hơn, và một số model chưa được đo trên GPU tốt nhất hiện có. Bộ nhớ ước tính còn cho
+context:
 
 | GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B |
 |---|---|---|---|---|---|---|---|---|---|---|

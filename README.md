@@ -27,8 +27,10 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | Qwen3.5-9B (images, video) | 18.0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) |
 
 Choose the GPU before **Run all** to fit your needs; it must have enough memory for the model (✗ in
-the table below means not enough). Only GPUs marked "measured" have been tested. Estimated memory left
-for context:
+the table below means not enough). Only GPUs marked "measured" have been tested. Each model was tested on
+the GPU that happened to be used, often a modest one (T4, 2 × T4), so the speeds in the test results are
+not the best you can get: a stronger GPU answers faster, and some models were not tested on the best GPU
+available. Estimated memory left for context:
 
 | GPU | Platform | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B |
 |---|---|---|---|---|---|---|---|---|---|---|
