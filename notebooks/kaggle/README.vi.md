@@ -17,7 +17,7 @@ Quay lại [README chính](../../README.vi.md).
 | [kaggle_qwen3_5_4b.ipynb](kaggle_qwen3_5_4b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8,7 GiB | ~9 GB | ~17 GB | ✓ T4 x2, 11/11/2026 |
 | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18,0 GiB | ~20 GB | ~28 GB | ✓ T4 x2, 11/11/2026 |
 | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4,0 GiB | ~5 GB | ~10 GB | ✓ T4 x2, 11/11/2026 |
-| [kaggle_qwen3_vl_2b_thinking.ipynb](kaggle_qwen3_vl_2b_thinking.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4,0 GiB | ~5 GB | ~10 GB | Chưa thử |
+| [kaggle_qwen3_vl_2b_thinking.ipynb](kaggle_qwen3_vl_2b_thinking.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4,0 GiB | ~5 GB | ~10 GB | ✓ T4 x2, 11/11/2026 |
 
 **Qwen3.5-0.8B:** Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi `chat_template_kwargs: {"enable_thinking": true}` để bật. Trên T4 model chạy `float16` thay vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo.
 
@@ -168,4 +168,13 @@ Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU m
 
 ### kaggle_qwen3_vl_2b_thinking.ipynb
 
-Chưa thử.
+| Mục | Kết quả |
+|---|---|
+| GPU | 2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13 |
+| vLLM / dtype / số GPU | 0.33.0 / float16 / 2 (tensor parallel), reasoning parser `qwen3` |
+| Context (`auto`) | 170 256 token (giảm từ tối đa 262 144 của model) |
+| KV cache | 18,2 GiB tổng (9,09 GiB mỗi GPU) = 170 272 token, 1,00 request dài tối đa cùng lúc |
+| Bộ nhớ GPU (mỗi GPU) | trọng số + non-torch 2,29 GiB, activation đỉnh 1,72 GiB, CUDA graph 0,30 + 0,18 GiB |
+| Thời gian | bật server ~3 phút 35 giây, hai lần chạy như nhau (trọng số 7 giây, warmup đa phương thức 15 giây, torch.compile 41 giây, CUDA graph ~21 giây) |
+| Tốc độ | ~71–74 token/giây cho một request; ~452 token/giây tổng khi 8 request cùng lúc |
+| Đã kiểm qua URL công khai | 24/26 phép thử qua. Luôn suy nghĩ và reasoning được tách vào `message.reasoning`; gọi hàm qua `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; ảnh base64 và nhiều ảnh; OCR tài liệu/bảng sang JSON; đếm và suy luận không gian; hiểu biểu đồ; visual coding; tool call từ nội dung ảnh; Responses API với ảnh; OCR/thứ tự/timestamp và stream video; trộn ảnh + video; link media `http(s)` bị từ chối; tìm đúng mã trong prompt 18 046 token (38,9 giây). Giới hạn: grounding 2D trả sai tọa độ (`0,0,200,200` thay vì khoảng `100,200,350,533`); multi-turn có ảnh trả sai; model cũng có lúc chép nguyên placeholder câu trả lời. Phép thử chức năng dùng sampling xác định |

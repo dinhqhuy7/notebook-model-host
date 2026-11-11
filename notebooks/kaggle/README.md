@@ -17,7 +17,7 @@ Back to the [main README](../../README.md).
 | [kaggle_qwen3_5_4b.ipynb](kaggle_qwen3_5_4b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | ✓ T4 x2, 2026-11-11 |
 | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ T4 x2, 2026-11-11 |
 | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4.0 GiB | ~5 GB | ~10 GB | ✓ T4 x2, 2026-11-11 |
-| [kaggle_qwen3_vl_2b_thinking.ipynb](kaggle_qwen3_vl_2b_thinking.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
+| [kaggle_qwen3_vl_2b_thinking.ipynb](kaggle_qwen3_vl_2b_thinking.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/kaggle/kaggle_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | ✓ T4 x2, 2026-11-11 |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
 
@@ -168,4 +168,13 @@ Speeds come from the GPU used for each run, often a modest one; a stronger GPU i
 
 ### kaggle_qwen3_vl_2b_thinking.ipynb
 
-Not tested yet.
+| Item | Result |
+|---|---|
+| GPU | 2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13 |
+| vLLM / dtype / GPUs | 0.33.0 / float16 / 2 (tensor parallel), reasoning parser `qwen3` |
+| Context (`auto`) | 170 256 tokens (reduced from the model maximum 262 144) |
+| KV cache | 18.2 GiB total (9.09 GiB per GPU) = 170 272 tokens, 1.00 full-length request at once |
+| GPU memory (per GPU) | weights + non-torch 2.29 GiB, peak activation 1.72 GiB, CUDA graphs 0.30 + 0.18 GiB |
+| Time | server start ~3 min 35 s, same in two runs (weights 7 s, multimodal warmup 15 s, torch.compile 41 s, CUDA graphs ~21 s) |
+| Speed | ~71–74 tokens/second for one request; ~452 tokens/second total with 8 at once |
+| Checked through the public URL | 24/26 checks passed. Reasoning is always on and is separated into `message.reasoning`; tool calls via `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; image base64 and multiple images; document/table OCR to JSON; counting and spatial reasoning; chart reasoning; visual coding; tool call from image content; Responses API with an image; video OCR/order/timestamp and streaming; image + video; `http(s)` media URLs rejected; secret found in an 18 046-token prompt (38.9 s). Limitations: 2D grounding returned wrong coordinates (`0,0,200,200` instead of about `100,200,350,533`); image multi-turn gave the wrong answer; it also sometimes copied a requested answer placeholder literally. Deterministic sampling is used for capability checks |

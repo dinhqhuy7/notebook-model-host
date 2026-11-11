@@ -267,6 +267,45 @@ TESTED = {
              "`http(s)` bị từ chối. Câu hỏi video quá ngắn nhầm màu cuối, prompt đủ ba đoạn trả đúng"),
         ],
     },
+    ("kaggle", "qwen3_vl_2b_thinking"): {
+        "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU",
+             "0.33.0 / float16 / 2 (tensor parallel), reasoning parser `qwen3`",
+             "0.33.0 / float16 / 2 (tensor parallel), reasoning parser `qwen3`"),
+            ("Context (`auto`)", "Context (`auto`)", "170 256 tokens (reduced from the model maximum 262 144)",
+             "170 256 token (giảm từ tối đa 262 144 của model)"),
+            ("KV cache", "KV cache", "18.2 GiB total (9.09 GiB per GPU) = 170 272 tokens, "
+             "1.00 full-length request at once", "18,2 GiB tổng (9,09 GiB mỗi GPU) = 170 272 token, "
+             "1,00 request dài tối đa cùng lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)",
+             "weights + non-torch 2.29 GiB, peak activation 1.72 GiB, CUDA graphs 0.30 + 0.18 GiB",
+             "trọng số + non-torch 2,29 GiB, activation đỉnh 1,72 GiB, CUDA graph 0,30 + 0,18 GiB"),
+            ("Time", "Thời gian", "server start ~3 min 35 s, same in two runs (weights 7 s, multimodal warmup "
+             "15 s, torch.compile 41 s, CUDA graphs ~21 s)", "bật server ~3 phút 35 giây, hai lần chạy như nhau "
+             "(trọng số 7 giây, warmup đa phương thức 15 giây, torch.compile 41 giây, CUDA graph ~21 giây)"),
+            ("Speed", "Tốc độ", "~71–74 tokens/second for one request; ~452 tokens/second total with 8 at once",
+             "~71–74 token/giây cho một request; ~452 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "24/26 checks passed. Reasoning is always on and is separated into `message.reasoning`; tool calls via "
+             "`hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; image base64 and multiple "
+             "images; document/table OCR to JSON; counting and spatial reasoning; chart reasoning; visual coding; "
+             "tool call from image content; Responses API with an image; video OCR/order/timestamp and streaming; "
+             "image + video; `http(s)` media URLs rejected; secret found in an 18 046-token prompt (38.9 s). "
+             "Limitations: 2D grounding returned wrong coordinates (`0,0,200,200` instead of about "
+             "`100,200,350,533`); image multi-turn gave the wrong answer; it also sometimes copied a requested "
+             "answer placeholder literally. Deterministic sampling is used for capability checks",
+             "24/26 phép thử qua. Luôn suy nghĩ và reasoning được tách vào `message.reasoning`; gọi hàm qua "
+             "`hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; ảnh base64 và nhiều ảnh; OCR tài "
+             "liệu/bảng sang JSON; đếm và suy luận không gian; hiểu biểu đồ; visual coding; tool call từ nội dung "
+             "ảnh; Responses API với ảnh; OCR/thứ tự/timestamp và stream video; trộn ảnh + video; link media "
+             "`http(s)` bị từ chối; tìm đúng mã trong prompt 18 046 token (38,9 giây). Giới hạn: grounding 2D trả "
+             "sai tọa độ (`0,0,200,200` thay vì khoảng `100,200,350,533`); multi-turn có ảnh trả sai; model cũng có "
+             "lúc chép nguyên placeholder câu trả lời. Phép thử chức năng dùng sampling xác định"),
+        ],
+    },
     ("colab", "qwen3_5_4b"): {
         "summary": ("L4, 2026-11-11", "L4, 11/11/2026"),
         "rows": [
