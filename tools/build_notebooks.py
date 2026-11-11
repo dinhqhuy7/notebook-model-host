@@ -66,6 +66,44 @@ QWEN3_5 = {
                 "~11–12 phút (biên dịch kernel): bước 5 không bị treo.",
 }
 
+# Qwen3-VL (dense attention, vision): the full 262 144 context needs ~28 GiB of KV cache, so small GPUs get less.
+_VL_FLAGS = ["--enable-auto-tool-choice", "--tool-call-parser", "hermes", "--allowed-media-domains", "none.invalid"]
+_VL_NOTES = {
+    "input": ("text, images, video", "văn bản, ảnh, video"),
+    "context": 262144,
+    "sampling": "requests that omit sampling parameters get the model's `generation_config.json`",
+    "extra_gib": 1.0,  # estimate, not measured yet (the vision encoder is already inside the weights)
+}
+QWEN3_VL_INSTRUCT = {
+    **_VL_NOTES,
+    "flags": _VL_FLAGS,
+    "flag_notes": """\
+- `--enable-auto-tool-choice --tool-call-parser hermes`: function calls are returned in `tool_calls`.
+- `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
+  callers send media from their machine as base64 `data:` URLs.""",
+    "notes": "Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB per token, so the full "
+             "262 144-token context needs ~28 GiB of KV cache and fits only on A100-class GPUs; on smaller GPUs "
+             "vLLM lowers the context to what fits (see the memory table). **It never thinks** (no reasoning).",
+    "notes_vi": "Đa phương thức (văn bản, ảnh, video), attention thuần: KV cache tốn 112 KiB mỗi token, nên đủ "
+                "context 262 144 token cần ~28 GiB KV cache và chỉ vừa GPU cỡ A100; GPU nhỏ hơn thì vLLM tự giảm "
+                "context cho vừa (xem bảng bộ nhớ). **Không bao giờ suy nghĩ** (không có reasoning).",
+}
+QWEN3_VL_THINKING = {
+    **_VL_NOTES,
+    "flags": ["--reasoning-parser", "qwen3", *_VL_FLAGS],
+    "flag_notes": """\
+- `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
+""" + QWEN3_VL_INSTRUCT["flag_notes"],
+    "notes": "Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB per token, so the full "
+             "262 144-token context needs ~28 GiB of KV cache and fits only on A100-class GPUs; on smaller GPUs "
+             "vLLM lowers the context to what fits (see the memory table). **It always thinks**: the chat template "
+             "has no switch, so `enable_thinking` changes nothing; give `max_tokens` room for the thinking.",
+    "notes_vi": "Đa phương thức (văn bản, ảnh, video), attention thuần: KV cache tốn 112 KiB mỗi token, nên đủ "
+                "context 262 144 token cần ~28 GiB KV cache và chỉ vừa GPU cỡ A100; GPU nhỏ hơn thì vLLM tự giảm "
+                "context cho vừa (xem bảng bộ nhớ). **Luôn suy nghĩ**: chat template không có công tắc nên "
+                "`enable_thinking` không đổi gì; hãy để `max_tokens` đủ chỗ cho phần suy nghĩ.",
+}
+
 MODELS = [
     {"slug": "qwen3_0_6b", "model_id": "Qwen/Qwen3-0.6B", "served_name": "Qwen3-0.6B",
      "weights_gib": 1.40, "download_gb": 2, **QWEN3},
@@ -105,6 +143,10 @@ MODELS = [
      "weights_gib": 8.68, "download_gb": 9, **QWEN3_5},
     {"slug": "qwen3_5_9b", "model_id": "Qwen/Qwen3.5-9B", "served_name": "Qwen3.5-9B",
      "weights_gib": 17.98, "download_gb": 20, **QWEN3_5},
+    {"slug": "qwen3_vl_2b_instruct", "model_id": "Qwen/Qwen3-VL-2B-Instruct", "served_name": "Qwen3-VL-2B-Instruct",
+     "weights_gib": 3.96, "download_gb": 5, **QWEN3_VL_INSTRUCT},
+    {"slug": "qwen3_vl_2b_thinking", "model_id": "Qwen/Qwen3-VL-2B-Thinking", "served_name": "Qwen3-VL-2B-Thinking",
+     "weights_gib": 3.96, "download_gb": 5, **QWEN3_VL_THINKING},
 ]
 
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).

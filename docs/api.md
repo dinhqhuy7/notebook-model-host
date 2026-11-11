@@ -4,7 +4,7 @@
 
 The notebook prints the **Base URL** (`https://xxxx.trycloudflare.com/v1`), the **API key** and the
 **model** name (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`,
-`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`).
+`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`).
 The examples use the `openai` library (`pip install openai`):
 
 ```python
@@ -16,16 +16,16 @@ MODEL = "Qwen3-4B"
 
 ## Model differences
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B |
-|---|---|---|---|
-| Input | text | text, images, video | text, images, video |
-| Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens |
-| Thinking by default | on | **off**: send `enable_thinking: true` to turn it on | on |
-| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** |
-| Recommended with thinking | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` |
-| Recommended without thinking | `temperature=0.7, top_p=0.8, top_k=20` | text: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` |
-| `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` |
-| Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking |
+|---|---|---|---|---|---|
+| Input | text | text, images, video | text, images, video | text, images, video | text, images, video |
+| Context | 40 960 tokens | up to 262 144 tokens | up to 262 144 tokens | up to 262 144 tokens (needs ~28 GiB of KV cache: smaller GPUs get less) | same as Instruct |
+| Thinking by default | on | **off**: send `enable_thinking: true` to turn it on | on | **never** | **always**, no switch |
+| Defaults when a request omits sampling parameters | the model's `generation_config.json` (temperature 0.6, top_p 0.95, top_k 20) | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | vLLM's defaults (temperature 1.0, no top_p/top_k): answers are unreliable (a test question was right 9/20 times vs 20/20 with the recommended values), **always send parameters** | the model's `generation_config.json` (temperature 0.7, top_p 0.8, top_k 20) | the model's `generation_config.json` (temperature 1.0, top_p 0.95, top_k 20) |
+| Recommended with thinking | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | n/a | `temperature=1.0, top_p=0.95, top_k=20` |
+| Recommended without thinking | `temperature=0.7, top_p=0.8, top_k=20` | text: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | images: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; text: `temperature=1.0, top_p=1.0, top_k=40, presence_penalty=2.0` | n/a |
+| `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` | n/a | n/a |
+| Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested | not tested | not tested |
 
 ## Chat
 
@@ -49,7 +49,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Thinking and sampling parameters
 
-Qwen3, Qwen3.5-4B and 9B think before answering by default (Qwen3.5-0.8B and 2B do not). The thinking is in `message.reasoning`; `content` holds
+Qwen3, Qwen3.5-4B and 9B think before answering by default (Qwen3.5-0.8B and 2B do not; Qwen3-VL-2B-Instruct never thinks, Qwen3-VL-2B-Thinking always does and has no switch). The thinking is in `message.reasoning`; `content` holds
 only the answer. The server sets no parameters: send them explicitly (values for each model in
 [Model differences](#model-differences)). Qwen3 example:
 
@@ -87,7 +87,7 @@ for chunk in stream:
         print(chunk.choices[0].delta.content or "", end="", flush=True)
 ```
 
-## Images and video (Qwen3.5)
+## Images and video (Qwen3.5 and Qwen3-VL)
 
 The server never downloads URLs itself: send images from your machine as base64 `data:` URLs
 (`http(s)://` image links are rejected).

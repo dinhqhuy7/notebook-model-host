@@ -17,6 +17,8 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | ✓ T4, 2026-11-11 |
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | Not tested yet |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
+| [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
+| [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
 
@@ -26,19 +28,23 @@ Back to the [main README](../../README.md).
 
 **Qwen3.5-9B:** Multimodal (text, images, video). Hybrid attention (24 linear + 8 full layers): the KV cache costs ~32 KiB per token, so the native 262 144-token context fits on 40 GB GPUs. On T4 the model runs in `float16` instead of its native `bfloat16`: tested on Kaggle 2 × T4. On T4 the first start takes ~11–12 minutes (kernel compilation): step 5 is not stuck.
 
+**Qwen3-VL-2B-Instruct:** Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB per token, so the full 262 144-token context needs ~28 GiB of KV cache and fits only on A100-class GPUs; on smaller GPUs vLLM lowers the context to what fits (see the memory table). **It never thinks** (no reasoning).
+
+**Qwen3-VL-2B-Thinking:** Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB per token, so the full 262 144-token context needs ~28 GiB of KV cache and fits only on A100-class GPUs; on smaller GPUs vLLM lowers the context to what fits (see the memory table). **It always thinks**: the chat template has no switch, so `enable_thinking` changes nothing; give `max_tokens` room for the thinking.
+
 ## Shared settings
 
 vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utilization 0.9`, `--enable-prefix-caching`; dtype `bfloat16` (`float16` on T4); the model is split across all GPUs; per-model parser flags are listed in step 5 of each notebook. The server sets no sampling parameters and logs no prompts or answers.
 
 ## Estimated memory left for context
 
-| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B |
-|---|---|---|---|---|---|---|---|---|---|
-| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory |
-| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ~14 GiB | ~11 GiB | ~7 GiB | ✗ not enough memory |
-| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB |
-| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~65 GiB | ~63 GiB | ~58 GiB | ~49 GiB |
-| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB |
+| GPU | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| T4 | ~10 GiB | ~8 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ~4 GiB | ✗ not enough memory | ✗ not enough memory | ~7 GiB | ~7 GiB |
+| L4 | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ not enough memory | ~14 GiB | ~11 GiB | ~7 GiB | ✗ not enough memory | ~13 GiB | ~13 GiB |
+| A100 40 GB | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB | ~6 GiB | ~29 GiB | ~27 GiB | ~22 GiB | ~13 GiB | ~29 GiB | ~29 GiB |
+| A100 80 GB | ~69 GiB | ~66 GiB | ~63 GiB | ~55 GiB | ~42 GiB | ~65 GiB | ~63 GiB | ~58 GiB | ~49 GiB | ~65 GiB | ~65 GiB |
+| H100 80 GB | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB | ~65 GiB | ~65 GiB |
 
 ## Test results
 
@@ -156,3 +162,11 @@ Not tested yet.
 | Checked through the public URL | no key → 401; `/invocations` → 404; thinking on/off (`enable_thinking`, `reasoning_effort="none"`); tool calling via `qwen3_coder`; JSON schema; base64 image correctly described; `http(s)` image URL rejected (HTTP 400); Anthropic `/v1/messages`; streaming; a secret found in the middle of a 57 242-token prompt (6 s) |
 | 11 Wikimedia images | all served (10 in parallel in 8.7 s; 3 images in one request, 2 125 tokens, 3.9 s). Scenes, food, landmarks and a handwritten blackboard formula read correctly; on a folded receipt the amounts were right but the shop name and date were not; a Vietnamese no-overtaking sign was misread |
 | 13 text tasks (auto-graded) | correct: multi-step math and a logic puzzle (with thinking), summary, spelling fixes, JSON extraction, multi-turn memory, two-step tool calling. Wrong: an idiom translated literally with a typo, "longest river in Vietnam" answered as the Red River, a lục bát poem with the wrong 6-8 pattern. Code without thinking: 11/14 tests in 8 s; with thinking the model looped for 30 000 tokens (7 min) and never wrote the code, so disable thinking for coding |
+
+### colab_qwen3_vl_2b_instruct.ipynb
+
+Not tested yet.
+
+### colab_qwen3_vl_2b_thinking.ipynb
+
+Not tested yet.
