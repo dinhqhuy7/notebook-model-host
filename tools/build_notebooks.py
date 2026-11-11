@@ -152,6 +152,41 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("kaggle", "qwen3_vl_2b_instruct"): {
+        "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13",
+             "2 × Tesla T4 (15 GB), driver 580.178.04, Python 3.13"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 2 (tensor parallel)",
+             "0.33.0 / float16 / 2 (tensor parallel)"),
+            ("Context (`auto`)", "Context (`auto`)", "170 256 tokens (reduced from the model maximum 262 144)",
+             "170 256 token (giảm từ tối đa 262 144 của model)"),
+            ("KV cache", "KV cache", "18.2 GiB total (9.09 GiB per GPU) = 170 272 tokens, "
+             "1.00 full-length request at once", "18,2 GiB tổng (9,09 GiB mỗi GPU) = 170 272 token, "
+             "1,00 request dài tối đa cùng lúc"),
+            ("GPU memory (per GPU)", "Bộ nhớ GPU (mỗi GPU)",
+             "weights + non-torch 2.29 GiB, peak activation 1.72 GiB, CUDA graphs 0.30 + 0.18 GiB",
+             "trọng số + non-torch 2,29 GiB, activation đỉnh 1,72 GiB, CUDA graph 0,30 + 0,18 GiB"),
+            ("Time", "Thời gian", "server start 3 min 39 s (weights 8 s, multimodal warmup 16 s, "
+             "torch.compile 45 s, CUDA graphs ~23 s)", "bật server 3 phút 39 giây (trọng số 8 giây, "
+             "warmup đa phương thức 16 giây, torch.compile 45 giây, CUDA graph ~23 giây)"),
+            ("Speed", "Tốc độ", "~71 tokens/second for one request; ~498 tokens/second total with 8 at once",
+             "~71 token/giây cho một request; ~498 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "12/12 standard checks: no reasoning; tool calls via `hermes`; JSON schema; Anthropic `/v1/messages`; "
+             "`/tokenize`; streaming; image base64; `http(s)` image URL rejected; secret found in an 18 000-token "
+             "prompt (29.5 s). Extended checks passed: multiple images, document OCR to JSON, 2D grounding, spatial "
+             "reasoning, visual coding, multi-turn with an image, tool call from image content, Responses API with "
+             "text and images, video OCR/order/timestamp, image + video, and video streaming; `http(s)` video URL "
+             "rejected. A short video question confused the last colour, while the full three-segment prompt was correct",
+             "12/12 phép thử chuẩn: không có reasoning; gọi hàm qua `hermes`; JSON schema; Anthropic "
+             "`/v1/messages`; `/tokenize`; stream; ảnh base64; link ảnh `http(s)` bị từ chối; tìm đúng mã "
+             "trong prompt 18 000 token (29,5 giây). Phép thử mở rộng qua: nhiều ảnh, OCR tài liệu sang "
+             "JSON, grounding 2D, không gian, visual coding, đa lượt có ảnh, tool call từ nội dung ảnh, Responses "
+             "API với văn bản và ảnh, OCR/thứ tự/timestamp video, trộn ảnh + video và stream video; link video "
+             "`http(s)` bị từ chối. Câu hỏi video quá ngắn nhầm màu cuối, prompt đủ ba đoạn trả đúng"),
+        ],
+    },
     ("colab", "qwen3_5_4b"): {
         "summary": ("L4, 2026-11-11", "L4, 11/11/2026"),
         "rows": [
