@@ -3,11 +3,8 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-LOCK_FILE = ROOT / "notebooks.lock.json"  # {"notebooks": {"colab_qwen3_8b": "sha256:..."}}
-UPDATE_SUFFIX = "_update"  # colab_qwen3_8b_update.ipynb: an updated notebook that is not tested yet
-BANNER_ID = "update-banner"
 
-REPO = "dinhqhuy7/notebook-model-host"  # GitHub repo, used by the "Open in Colab/Kaggle" badges
+REPO = "dinhqhuy7/notebook-model-host"  # GitHub repo: the notebooks link to its docs/api.md and proxy/proxy.py
 VLLM_VERSION = "0.33.0"
 CLOUDFLARED_VERSION = "2026.10.7"
 
@@ -36,8 +33,6 @@ TYPES = {
 PLATFORMS = {
     "colab": {
         "name": "Google Colab",
-        "badge": "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]"
-                 "(https://colab.research.google.com/github/{{REPO}}/blob/main/notebooks/{{KIND}}/{{SLUG}}/colab_{{SLUG}}.ipynb)",
         "gpus": [("T4", 1, 15360, 7.5), ("L4", 1, 23034, 8.9), ("A100 40 GB", 1, 40960, 8.0),
                  ("A100 80 GB", 1, 81920, 8.0), ("H100 80 GB", 1, 81559, 9.0)],
         "setup": """\
@@ -59,8 +54,6 @@ except Exception:
     },
     "kaggle": {
         "name": "Kaggle",
-        "badge": "[![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)]"
-                 "(https://kaggle.com/kernels/welcome?src=https://github.com/{{REPO}}/blob/main/notebooks/{{KIND}}/{{SLUG}}/kaggle_{{SLUG}}.ipynb)",
         "gpus": [("T4 x2", 2, 15360, 7.5), ("P100", 1, 16384, 6.0)],
         "setup": """\
 1. **Settings → Accelerator:** a GPU with enough memory per the table above (not P100).

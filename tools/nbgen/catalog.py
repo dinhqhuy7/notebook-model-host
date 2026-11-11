@@ -1,12 +1,11 @@
-"""Models, platforms and file locations: what exists, what fits, where it lives."""
+"""Models and platforms: what exists, what fits."""
 
 from __future__ import annotations
 
-from pathlib import Path
 import math
 import sys
-from .config import GPU_MEMORY, MIN_KV_GIB, OVERHEAD_GIB, PLATFORMS, ROOT, UPDATE_SUFFIX
-from .kinds import MODELS, TESTED
+from .config import GPU_MEMORY, MIN_KV_GIB, OVERHEAD_GIB, PLATFORMS
+from .kinds import MODELS
 
 
 def kv_gib(model: dict, count: int, mib: int) -> float:
@@ -40,39 +39,13 @@ def notebook_name(key: str, model: dict) -> str:
     return f"{key}_{model['slug']}.ipynb"
 
 
-def update_name(key: str, model: dict) -> str:
-    return f"{key}_{model['slug']}{UPDATE_SUFFIX}.ipynb"
-
-
 def stem_of(key: str, model: dict) -> str:
     return notebook_name(key, model)[: -len(".ipynb")]
-
-
-def model_dir(model: dict) -> Path:
-    return ROOT / "notebooks" / model["kind"] / model["slug"]
-
-
-def notebook_path(key: str, model: dict) -> Path:
-    return model_dir(model) / notebook_name(key, model)
-
-
-def update_path(key: str, model: dict) -> Path:
-    return model_dir(model) / update_name(key, model)
-
-
-def pending_update(key: str, model: dict) -> bool:
-    """Whether an update notebook (not tested yet) exists next to the official one."""
-    return update_path(key, model).exists()
 
 
 def available(model: dict, key: str) -> bool:
     """Whether the model gets a notebook on this platform (default: every platform)."""
     return key in model.get("platforms", PLATFORMS)
-
-
-def test_status(key: str, model: dict, vi: bool) -> str:
-    run = TESTED.get((key, model["slug"]))
-    return f"✓ {run['summary'][1 if vi else 0]}" if run else ("Chưa thử" if vi else "Not tested yet")
 
 
 def all_notebooks():

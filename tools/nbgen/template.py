@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import json
 import re
-from .catalog import gpu_table, min_gpu_mib, notebook_name, runnable
-from .config import BANNER_ID, CLOUDFLARED_VERSION, GPU_MEMORY, PLATFORMS, REPO, UPDATE_SUFFIX, VLLM_VERSION
+from .catalog import gpu_table, min_gpu_mib, runnable
+from .config import CLOUDFLARED_VERSION, GPU_MEMORY, REPO, VLLM_VERSION
 
 
 # Notebook template: ("md" | "code", text). {{NAME}} is substituted at build time.
@@ -317,19 +317,15 @@ def render(text: str, values: dict) -> str:
     return text
 
 
-def badge_for(key: str, model: dict, update: bool = False) -> str:
-    """The 'Open in Colab/Kaggle' badge; for an update it opens the update notebook, not the tested one."""
-    badge = PLATFORMS[key]["badge"]
-    if update:
-        assert "{{SLUG}}.ipynb" in badge
-        badge = badge.replace("{{SLUG}}.ipynb", "{{SLUG}}" + UPDATE_SUFFIX + ".ipynb")
-    return render(badge, {"REPO": REPO, "KIND": model["kind"], "SLUG": model["slug"]})
+def serialize(notebook: dict) -> str:
+    return json.dumps(notebook, ensure_ascii=False, indent=1) + "\n"
 
 
-def build(key: str, platform: dict, model: dict, proxy_src: str, update: bool = False) -> dict:
+def build(key: str, platform: dict, model: dict, proxy_src: str, badge: str | None = None) -> dict:
+    """One notebook as a dict. `badge` is the 'Open in Colab/Kaggle' markdown line; without it the line is left out."""
     default_gpu = next(gpu[0] for gpu in platform["gpus"] if runnable(model, gpu))
     values = {
-        "BADGE": badge_for(key, model, update), "SETUP": platform["setup"], "GPU_TABLE": gpu_table(model, platform),
+        "BADGE": badge or "", "SETUP": platform["setup"], "GPU_TABLE": gpu_table(model, platform),
         "SECRET_CODE": platform["secret_code"], "SHARE_WARNING": platform["share_warning"],
         "SHUTDOWN": platform["shutdown"], "GPU_FAIL": platform["gpu_fail"], "NO_INTERNET": platform["no_internet"],
         "PLATFORM_NAME": platform["name"], "BASE": platform["base"], "DEFAULT_GPU": default_gpu,
@@ -343,18 +339,14 @@ def build(key: str, platform: dict, model: dict, proxy_src: str, update: bool = 
     }
     cells = []
     for i, (kind, text) in enumerate(CELLS):
+        if i == 0 and not badge:
+            text = text.replace("{{BADGE}}\n\n", "")
         source = render(text, values).split("\n")
         cell = {"cell_type": "markdown" if kind == "md" else "code", "id": f"c{i:02d}", "metadata": {},
                 "source": [line + "\n" for line in source[:-1]] + source[-1:]}
         if kind == "code":
             cell.update(execution_count=None, outputs=[])
         cells.append(cell)
-    if update:
-        official = notebook_name(key, model)
-        text = (f"> ⚠ **Updated version, not tested yet.** It sits next to `{official}`, the version that was run "
-                f"and measured. Use `{official}` unless you want to try this one. Once this version is tested it "
-                "replaces the official notebook.")
-        cells.insert(0, {"cell_type": "markdown", "id": BANNER_ID, "metadata": {}, "source": [text]})
     metadata = platform["metadata"](default_gpu)
     metadata["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
     return {"cells": cells, "metadata": metadata, "nbformat": 4, "nbformat_minor": 5}

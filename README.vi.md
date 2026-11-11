@@ -132,30 +132,38 @@ Colab và Kaggle giới hạn việc chạy dịch vụ web hay proxy tuỳ gói
 [Kaggle Terms](https://www.kaggle.com/terms)). Tự đọc điều khoản của gói bạn dùng trước khi mở API
 ra Internet.
 
+## Tự sinh notebook của riêng bạn
+
+Các notebook trong `notebooks/` là bản mẫu dựng sẵn đã chạy thử. `tools/build_notebooks.py` là script riêng để sinh
+notebook của bạn, cho bất kỳ model và nền tảng nào trong danh sách của nó, vào thư mục bạn chọn. Script không bao giờ
+ghi vào `notebooks/`.
+
+```bash
+python tools/build_notebooks.py --list                                   # model, loại, bộ nhớ GPU tối thiểu
+python tools/build_notebooks.py --model qwen3_8b --platform colab        # -> generated/colab_qwen3_8b.ipynb
+python tools/build_notebooks.py --model qwen3_4b qwen3_8b --out my_notebooks
+```
+
+Upload file lên Colab hoặc Kaggle rồi chạy tất cả ô, như với bản mẫu. Thêm model: thêm một mục vào `MODELS` trong
+`tools/nbgen/kinds/<loại>.py` (`kind` quyết định loại, xem `TYPES` trong `tools/nbgen/config.py`) rồi sinh. Model không
+vừa một nền tảng thì đặt `platforms` và `unavailable` (lý do). Model không phải Qwen3 có thể cần `--reasoning-parser` /
+`--tool-call-parser` khác.
+
 ## Phát triển
 
 ```
-notebooks/   gom theo loại model (text/, vision-language/), mỗi model một thư mục chứa notebook và
-             README; sinh tự động, đừng sửa tay
-notebooks.lock.json   notebook đã có kết quả chạy thử bị khoá: bộ sinh không bao giờ ghi đè
+notebooks/   notebook mẫu gom theo loại model (text/, vision-language/), mỗi model một thư mục chứa notebook
+             và README có bảng GPU, kết quả chạy thử
 proxy/       proxy bắt key (được nhúng vào mọi notebook)
-tools/       build_notebooks.py và nbgen/: khuôn notebook, nền tảng, và model cùng kết quả chạy thử
-             của từng loại (nbgen/kinds/<loại>.py)
-tests/       test proxy và test khoá notebook, không cần GPU
+tools/       build_notebooks.py và nbgen/: khuôn notebook, nền tảng và model
+tests/       test proxy và test bộ sinh, không cần GPU
 docs/        hướng dẫn gọi API (api.md, api.vi.md)
 ```
 
 ```bash
 pip install aiohttp
 python -m unittest discover -s tests
-python tools/build_notebooks.py
 ```
-
-Thêm model: thêm một dòng vào `MODELS` trong `tools/nbgen/kinds/<loại>.py` (`kind` quyết định thư mục loại,
-xem `TYPES` trong `tools/nbgen/config.py`), sinh lại, chạy thử trên GPU thật, ghi kết quả vào `TESTED` rồi khoá bằng
-`python tools/build_notebooks.py --freeze <notebook>`. Thay đổi vào notebook đã khoá được ghi ra file riêng
-`<notebook>_update.ipynb`, đánh dấu chưa chạy thử, đặt cạnh nó; `--promote` thay bản cũ sau khi chạy thử. Model không vừa một nền tảng thì đặt `platforms` và `unavailable`
-(lý do). Model không phải Qwen3 có thể cần `--reasoning-parser` / `--tool-call-parser` khác.
 
 ## Giấy phép
 

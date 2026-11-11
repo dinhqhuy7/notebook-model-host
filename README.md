@@ -133,31 +133,38 @@ Colab and Kaggle restrict running web services or proxies, depending on the acco
 [Kaggle Terms](https://www.kaggle.com/terms)). Read the terms for your plan before exposing an API
 to the Internet.
 
+## Generate your own notebook
+
+The notebooks in `notebooks/` are ready-made, tested samples. `tools/build_notebooks.py` is a separate script for
+generating notebooks of your own, for any model and platform in its list, into a folder you choose. It never writes
+into `notebooks/`.
+
+```bash
+python tools/build_notebooks.py --list                                   # models, types, minimum GPU memory
+python tools/build_notebooks.py --model qwen3_8b --platform colab        # -> generated/colab_qwen3_8b.ipynb
+python tools/build_notebooks.py --model qwen3_4b qwen3_8b --out my_notebooks
+```
+
+Upload the file to Colab or Kaggle and run all cells, as with the samples. To add a model, add an entry to `MODELS`
+in `tools/nbgen/kinds/<type>.py` (its `kind` picks the type, see `TYPES` in `tools/nbgen/config.py`) and generate.
+A model that does not fit a platform sets `platforms` and `unavailable` (the reason). Models other than Qwen3 may need
+a different `--reasoning-parser` / `--tool-call-parser`.
+
 ## Development
 
 ```
-notebooks/   grouped by model type (text/, vision-language/), one folder per model with its notebooks
-             and READMEs; generated, do not edit by hand
-notebooks.lock.json   notebooks that have test results are frozen: the generator never overwrites them
+notebooks/   sample notebooks grouped by model type (text/, vision-language/), one folder per model with its
+             notebooks and a README with the GPU table and test results
 proxy/       key-checking proxy (embedded in every notebook)
-tools/       build_notebooks.py and nbgen/: notebook template, platforms, and the models and
-             test results of each type (nbgen/kinds/<type>.py)
-tests/       proxy and notebook-lock tests, no GPU needed
+tools/       build_notebooks.py and nbgen/: notebook template, platforms and models
+tests/       proxy and generator tests, no GPU needed
 docs/        API guide (api.md, api.vi.md)
 ```
 
 ```bash
 pip install aiohttp
 python -m unittest discover -s tests
-python tools/build_notebooks.py
 ```
-
-To add a model: add a line to `MODELS` in `tools/nbgen/kinds/<type>.py` (its `kind` picks the type folder, see
-`TYPES` in `tools/nbgen/config.py`), regenerate, test it on a real GPU, record the result in `TESTED` and freeze it with
-`python tools/build_notebooks.py --freeze <notebook>`. A change to a frozen notebook is written to a separate
-`<notebook>_update.ipynb`, marked as not tested, next to it; `--promote` replaces the old one after a test. A model that does not fit a platform sets `platforms` and
-`unavailable` (the reason). Models other than Qwen3 may need a different `--reasoning-parser` /
-`--tool-call-parser`.
 
 ## License
 
