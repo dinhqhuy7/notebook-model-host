@@ -18,7 +18,7 @@ import build_notebooks as nb  # noqa: E402
 
 
 def notebooks() -> dict:
-    return {p.stem: p for p in (ROOT / "notebooks").glob("*/*.ipynb")}
+    return {p.stem: p for p in (ROOT / "notebooks").glob("*/*/*.ipynb")}
 
 
 class NotebookLockTest(unittest.TestCase):
