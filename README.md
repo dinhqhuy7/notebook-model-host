@@ -140,7 +140,8 @@ notebooks/   grouped by model type (text/, vision-language/), one folder per mod
              and READMEs; generated, do not edit by hand
 notebooks.lock.json   notebooks that have test results are frozen: the generator never overwrites them
 proxy/       key-checking proxy (embedded in every notebook)
-tools/       build_notebooks.py: notebook template, model and platform lists
+tools/       build_notebooks.py and nbgen/: notebook template, platforms, and the models and
+             test results of each type (nbgen/kinds/<type>.py)
 tests/       proxy and notebook-lock tests, no GPU needed
 docs/        API guide (api.md, api.vi.md)
 ```
@@ -151,8 +152,8 @@ python -m unittest discover -s tests
 python tools/build_notebooks.py
 ```
 
-To add a model: add a line to `MODELS` in `tools/build_notebooks.py` (its `kind` picks the type folder, see
-`TYPES`), regenerate, test it on a real GPU, record the result in `TESTED` and freeze it with
+To add a model: add a line to `MODELS` in `tools/nbgen/kinds/<type>.py` (its `kind` picks the type folder, see
+`TYPES` in `tools/nbgen/config.py`), regenerate, test it on a real GPU, record the result in `TESTED` and freeze it with
 `python tools/build_notebooks.py --freeze <notebook>`. A change to a frozen notebook is written to a separate
 `<notebook>_update.ipynb`, marked as not tested, next to it; `--promote` replaces the old one after a test. A model that does not fit a platform sets `platforms` and
 `unavailable` (the reason). Models other than Qwen3 may need a different `--reasoning-parser` /

@@ -139,7 +139,8 @@ notebooks/   gom theo loại model (text/, vision-language/), mỗi model một 
              README; sinh tự động, đừng sửa tay
 notebooks.lock.json   notebook đã có kết quả chạy thử bị khoá: bộ sinh không bao giờ ghi đè
 proxy/       proxy bắt key (được nhúng vào mọi notebook)
-tools/       build_notebooks.py: khuôn notebook, danh sách model và nền tảng
+tools/       build_notebooks.py và nbgen/: khuôn notebook, nền tảng, và model cùng kết quả chạy thử
+             của từng loại (nbgen/kinds/<loại>.py)
 tests/       test proxy và test khoá notebook, không cần GPU
 docs/        hướng dẫn gọi API (api.md, api.vi.md)
 ```
@@ -150,8 +151,8 @@ python -m unittest discover -s tests
 python tools/build_notebooks.py
 ```
 
-Thêm model: thêm một dòng vào `MODELS` trong `tools/build_notebooks.py` (`kind` quyết định thư mục loại,
-xem `TYPES`), sinh lại, chạy thử trên GPU thật, ghi kết quả vào `TESTED` rồi khoá bằng
+Thêm model: thêm một dòng vào `MODELS` trong `tools/nbgen/kinds/<loại>.py` (`kind` quyết định thư mục loại,
+xem `TYPES` trong `tools/nbgen/config.py`), sinh lại, chạy thử trên GPU thật, ghi kết quả vào `TESTED` rồi khoá bằng
 `python tools/build_notebooks.py --freeze <notebook>`. Thay đổi vào notebook đã khoá được ghi ra file riêng
 `<notebook>_update.ipynb`, đánh dấu chưa chạy thử, đặt cạnh nó; `--promote` thay bản cũ sau khi chạy thử. Model không vừa một nền tảng thì đặt `platforms` và `unavailable`
 (lý do). Model không phải Qwen3 có thể cần `--reasoning-parser` / `--tool-call-parser` khác.
