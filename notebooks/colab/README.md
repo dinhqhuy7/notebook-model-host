@@ -17,7 +17,7 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | ✓ T4, 2026-11-11 |
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | ✓ L4, 2026-11-11 |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
-| [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
+| [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4.0 GiB | ~5 GB | ~10 GB | ✓ T4 & A100 40 GB, 2026-11-11 |
 | [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4.0 GiB | ~5 GB | ~10 GB | Not tested yet |
 
 **Qwen3.5-0.8B:** Multimodal (text, images, video), hybrid attention: the KV cache costs ~12 KiB per token, so the full 262 144-token context fits on every listed GPU. **Thinking is off by default**: send `chat_template_kwargs: {"enable_thinking": true}` to turn it on. On T4 the model runs in `float16` instead of its native `bfloat16`, and the first start takes ~11 minutes (kernel compilation): step 5 is not stuck.
@@ -174,7 +174,16 @@ Speeds come from the GPU used for each run, often a modest one; a stronger GPU i
 
 ### colab_qwen3_vl_2b_instruct.ipynb
 
-Not tested yet.
+| Item | Result |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB) and 1 × NVIDIA A100-SXM4-40GB, driver 580.82.07 |
+| vLLM / dtype / GPUs | 0.33.0 / float16 (T4), bfloat16 (A100) / 1 |
+| Context (`auto`) | T4: 61 808 tokens; A100: 262 144 tokens (model maximum) |
+| KV cache | T4: 6.6 GiB = 61 823 tokens, 1.00×; A100: 29.03 GiB = 271 808 tokens, 1.04× |
+| GPU memory | T4: weights + non-torch 4.38 GiB, peak activation 2.12 GiB, CUDA graphs 0.30 + 0.18 GiB; A100: 4.37 GiB, 2.15 GiB, 0.30 + 0.20 GiB |
+| Time | T4: server start 4 min 5 s; A100: 3 min 47 s (weights 1.3 s, multimodal warmup 14.5 s, torch.compile 40.9 s, first FlashInfer JIT ~1 min 46 s, CUDA graphs ~11 s) |
+| Speed | T4: ~44 tokens/s single, ~318–335 tokens/s with 8; A100: ~216 single, ~1 165–1 365 with 8 |
+| Checked through the public URL | 26/26 on both GPUs: no reasoning; tool calls via `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; 8 concurrent requests; image base64 and multiple images; document/table OCR to JSON; 2D grounding; counting and spatial reasoning; chart reasoning; visual coding; multi-turn with an image; tool call from image content; Responses API with an image; video OCR/order/approximate timestamp and streaming; image + video; `http(s)` media URLs rejected; secret found in an 18 044-token prompt (T4: 56.6 s uncached; A100: 0.9 s on the first test). On A100, the final run located the 2-second video boundary exactly and mixed image + video passed twice; on T4, these two quality checks varied across runs |
 
 ### colab_qwen3_vl_2b_thinking.ipynb
 

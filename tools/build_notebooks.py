@@ -152,6 +152,47 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("colab", "qwen3_vl_2b_instruct"): {
+        "summary": ("T4 & A100 40 GB, 2026-11-11", "T4 & A100 40 GB, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "1 × Tesla T4 (15 GB) and 1 × NVIDIA A100-SXM4-40GB, driver 580.82.07",
+             "1 × Tesla T4 (15 GB) và 1 × NVIDIA A100-SXM4-40GB, driver 580.82.07"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 (T4), bfloat16 (A100) / 1",
+             "0.33.0 / float16 (T4), bfloat16 (A100) / 1"),
+            ("Context (`auto`)", "Context (`auto`)", "T4: 61 808 tokens; A100: 262 144 tokens (model maximum)",
+             "T4: 61 808 token; A100: 262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "T4: 6.6 GiB = 61 823 tokens, 1.00×; A100: 29.03 GiB = 271 808 tokens, 1.04×",
+             "T4: 6,6 GiB = 61 823 token, 1,00×; A100: 29,03 GiB = 271 808 token, 1,04×"),
+            ("GPU memory", "Bộ nhớ GPU",
+             "T4: weights + non-torch 4.38 GiB, peak activation 2.12 GiB, CUDA graphs 0.30 + 0.18 GiB; "
+             "A100: 4.37 GiB, 2.15 GiB, 0.30 + 0.20 GiB",
+             "T4: trọng số + non-torch 4,38 GiB, activation đỉnh 2,12 GiB, CUDA graph 0,30 + 0,18 GiB; "
+             "A100: 4,37 GiB, 2,15 GiB, 0,30 + 0,20 GiB"),
+            ("Time", "Thời gian", "T4: server start 4 min 5 s; A100: 3 min 47 s (weights 1.3 s, multimodal "
+             "warmup 14.5 s, torch.compile 40.9 s, first FlashInfer JIT ~1 min 46 s, CUDA graphs ~11 s)",
+             "T4: bật server 4 phút 5 giây; A100: 3 phút 47 giây (trọng số 1,3 giây, warmup đa phương thức "
+             "14,5 giây, torch.compile 40,9 giây, FlashInfer JIT lần đầu ~1 phút 46 giây, CUDA graph ~11 giây)"),
+            ("Speed", "Tốc độ", "T4: ~44 tokens/s single, ~318–335 tokens/s with 8; A100: ~216 single, "
+             "~1 165–1 365 with 8", "T4: ~44 token/s một request, ~318–335 token/s với 8; A100: ~216 một request, "
+             "~1 165–1 365 với 8"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "26/26 on both GPUs: no reasoning; tool calls via `hermes`; JSON schema; "
+             "Anthropic `/v1/messages`; `/tokenize`; streaming; 8 concurrent requests; image base64 and multiple "
+             "images; document/table OCR to JSON; 2D grounding; counting and spatial reasoning; chart reasoning; "
+             "visual coding; multi-turn with an image; tool call from image content; Responses API with an image; "
+             "video OCR/order/approximate timestamp and streaming; image + video; `http(s)` media URLs rejected; "
+             "secret found in an 18 044-token prompt (T4: 56.6 s uncached; A100: 0.9 s on the first test). On A100, "
+             "the final run located the 2-second video boundary exactly and mixed image + video passed twice; on T4, "
+             "these two quality checks varied across runs",
+             "26/26 trên cả hai GPU: không có reasoning; gọi hàm qua `hermes`; JSON schema; "
+             "Anthropic `/v1/messages`; `/tokenize`; stream; 8 request song song; ảnh base64 và nhiều ảnh; OCR tài "
+             "liệu/bảng sang JSON; grounding 2D; đếm và suy luận không gian; hiểu biểu đồ; visual coding; đa lượt "
+             "có ảnh; tool call từ nội dung ảnh; Responses API với ảnh; OCR/thứ tự/timestamp gần đúng và stream "
+             "video; trộn ảnh + video; link media `http(s)` bị từ chối; tìm đúng mã trong prompt 18 044 token "
+             "(T4: 56,6 giây khi chưa cache; A100: 0,9 giây ở lần thử đầu). Trên A100, lần xác nhận cuối định vị đúng "
+             "mốc video giây 2 và trộn ảnh + video qua hai lần; trên T4, hai phép chất lượng này thay đổi giữa các lần"),
+        ],
+    },
     ("kaggle", "qwen3_vl_2b_instruct"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [

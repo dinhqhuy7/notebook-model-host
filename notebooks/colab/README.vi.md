@@ -17,7 +17,7 @@ Quay lại [README chính](../../README.vi.md).
 | [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4,2 GiB | ~5 GB | ~12 GB | ✓ T4, 11/11/2026 |
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8,7 GiB | ~9 GB | ~17 GB | ✓ L4, 11/11/2026 |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18,0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 10/11/2026, A100 80 GB 11/11/2026 |
-| [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4,0 GiB | ~5 GB | ~10 GB | Chưa thử |
+| [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_instruct.ipynb) | `Qwen/Qwen3-VL-2B-Instruct` | 4,0 GiB | ~5 GB | ~10 GB | ✓ T4 & A100 40 GB, 11/11/2026 |
 | [colab_qwen3_vl_2b_thinking.ipynb](colab_qwen3_vl_2b_thinking.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_vl_2b_thinking.ipynb) | `Qwen/Qwen3-VL-2B-Thinking` | 4,0 GiB | ~5 GB | ~10 GB | Chưa thử |
 
 **Qwen3.5-0.8B:** Đa phương thức (văn bản, ảnh, video), attention lai: KV cache chỉ ~12 KiB mỗi token, nên đủ context 262 144 token trên mọi GPU trong bảng. **Mặc định không suy nghĩ**: gửi `chat_template_kwargs: {"enable_thinking": true}` để bật. Trên T4 model chạy `float16` thay vì `bfloat16` gốc, và lần khởi động đầu mất ~11 phút (biên dịch kernel): bước 5 không bị treo.
@@ -174,7 +174,16 @@ Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU m
 
 ### colab_qwen3_vl_2b_instruct.ipynb
 
-Chưa thử.
+| Mục | Kết quả |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB) và 1 × NVIDIA A100-SXM4-40GB, driver 580.82.07 |
+| vLLM / dtype / số GPU | 0.33.0 / float16 (T4), bfloat16 (A100) / 1 |
+| Context (`auto`) | T4: 61 808 token; A100: 262 144 token (tối đa của model) |
+| KV cache | T4: 6,6 GiB = 61 823 token, 1,00×; A100: 29,03 GiB = 271 808 token, 1,04× |
+| Bộ nhớ GPU | T4: trọng số + non-torch 4,38 GiB, activation đỉnh 2,12 GiB, CUDA graph 0,30 + 0,18 GiB; A100: 4,37 GiB, 2,15 GiB, 0,30 + 0,20 GiB |
+| Thời gian | T4: bật server 4 phút 5 giây; A100: 3 phút 47 giây (trọng số 1,3 giây, warmup đa phương thức 14,5 giây, torch.compile 40,9 giây, FlashInfer JIT lần đầu ~1 phút 46 giây, CUDA graph ~11 giây) |
+| Tốc độ | T4: ~44 token/s một request, ~318–335 token/s với 8; A100: ~216 một request, ~1 165–1 365 với 8 |
+| Đã kiểm qua URL công khai | 26/26 trên cả hai GPU: không có reasoning; gọi hàm qua `hermes`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; 8 request song song; ảnh base64 và nhiều ảnh; OCR tài liệu/bảng sang JSON; grounding 2D; đếm và suy luận không gian; hiểu biểu đồ; visual coding; đa lượt có ảnh; tool call từ nội dung ảnh; Responses API với ảnh; OCR/thứ tự/timestamp gần đúng và stream video; trộn ảnh + video; link media `http(s)` bị từ chối; tìm đúng mã trong prompt 18 044 token (T4: 56,6 giây khi chưa cache; A100: 0,9 giây ở lần thử đầu). Trên A100, lần xác nhận cuối định vị đúng mốc video giây 2 và trộn ảnh + video qua hai lần; trên T4, hai phép chất lượng này thay đổi giữa các lần |
 
 ### colab_qwen3_vl_2b_thinking.ipynb
 
