@@ -14,7 +14,7 @@ Back to the [main README](../../README.md).
 | [colab_qwen3_8b.ipynb](colab_qwen3_8b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_8b.ipynb) | `Qwen/Qwen3-8B` | 15.3 GiB | ~16 GB | ~21 GB | ✓ A100 40 GB, 2026-11-10 |
 | [colab_qwen3_14b.ipynb](colab_qwen3_14b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_14b.ipynb) | `Qwen/Qwen3-14B` | 27.5 GiB | ~30 GB | ~35 GB | ✓ A100 40 GB, 2026-11-10 |
 | [colab_qwen3_5_0_8b.ipynb](colab_qwen3_5_0_8b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_0_8b.ipynb) | `Qwen/Qwen3.5-0.8B` | 1.6 GiB | ~2 GB | ~10 GB | ✓ T4, 2026-11-11 |
-| [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | Not tested yet |
+| [colab_qwen3_5_2b.ipynb](colab_qwen3_5_2b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_2b.ipynb) | `Qwen/Qwen3.5-2B` | 4.2 GiB | ~5 GB | ~12 GB | ✓ T4, 2026-11-11 |
 | [colab_qwen3_5_4b.ipynb](colab_qwen3_5_4b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_4b.ipynb) | `Qwen/Qwen3.5-4B` | 8.7 GiB | ~9 GB | ~17 GB | Not tested yet |
 | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/colab/colab_qwen3_5_9b.ipynb) | `Qwen/Qwen3.5-9B` | 18.0 GiB | ~20 GB | ~28 GB | ✓ A100 40 GB 2026-11-10, A100 80 GB 2026-11-11 |
 
@@ -124,7 +124,16 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 ### colab_qwen3_5_2b.ipynb
 
-Not tested yet.
+| Item | Result |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB), driver 580.82.07 |
+| vLLM / dtype / GPUs | 0.33.0 / float16 / 1, `--max-num-seqs 128` |
+| Context (`auto`) | 262 144 tokens (the model maximum) |
+| KV cache | 6.15 GiB = 530 734 tokens, 2.02 full-length requests at once (same in both runs) |
+| GPU memory | weights 4.18 GiB, CUDA graphs 0.20 + 0.12 GiB |
+| Time | server start 12 min 53 s and 11 min 50 s (two runs 8.5 hours apart), of which ~8 min is unlogged kernel compilation after torch.compile |
+| Speed | ~300–332 tokens/second total with 8 requests at once |
+| Checked through the public URL | 12/13 checks, twice. no/wrong key → 401; `/invocations`, `/sleep` → 404; tool calling via `qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; `http(s)` image URL rejected; secret found in a 16 000-token prompt (~16 s). The thinking check failed only because this model sometimes thinks past the check's 4 000-token budget: through streaming with 12 000 tokens it answered correctly 3 times out of 3 (1 300–2 100 tokens). Base64 image: text right, the rectangle called a square |
 
 ### colab_qwen3_5_4b.ipynb
 

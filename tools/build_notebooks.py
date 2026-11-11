@@ -110,6 +110,38 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("colab", "qwen3_5_2b"): {
+        "summary": ("T4, 2026-11-11", "T4, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "1 × Tesla T4 (15 GB), driver 580.82.07", "1 × Tesla T4 (15 GB), driver 580.82.07"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / float16 / 1, `--max-num-seqs 128`",
+             "0.33.0 / float16 / 1, `--max-num-seqs 128`"),
+            ("Context (`auto`)", "Context (`auto`)", "262 144 tokens (the model maximum)", "262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "6.15 GiB = 530 734 tokens, 2.02 full-length requests at once (same in both runs)",
+             "6,15 GiB = 530 734 token, 2,02 request dài tối đa cùng lúc (giống nhau ở cả hai lần chạy)"),
+            ("GPU memory", "Bộ nhớ GPU", "weights 4.18 GiB, CUDA graphs 0.20 + 0.12 GiB",
+             "trọng số 4,18 GiB, CUDA graph 0,20 + 0,12 GiB"),
+            ("Time", "Thời gian",
+             "server start 12 min 53 s and 11 min 50 s (two runs 8.5 hours apart), of which ~8 min is unlogged "
+             "kernel compilation after torch.compile",
+             "bật server 12 phút 53 giây và 11 phút 50 giây (hai lần cách nhau 8,5 tiếng), trong đó ~8 phút là biên "
+             "dịch kernel không ghi log sau torch.compile"),
+            ("Speed", "Tốc độ", "~300–332 tokens/second total with 8 requests at once",
+             "~300–332 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "12/13 checks, twice. no/wrong key → 401; `/invocations`, `/sleep` → 404; tool calling via "
+             "`qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; streaming; `http(s)` image URL "
+             "rejected; secret found in a 16 000-token prompt (~16 s). The thinking check failed only because this "
+             "model sometimes thinks past the check's 4 000-token budget: through streaming with 12 000 tokens it "
+             "answered correctly 3 times out of 3 (1 300–2 100 tokens). Base64 image: text right, the rectangle "
+             "called a square",
+             "12/13 phép thử, hai lần. không key/sai key → 401; `/invocations`, `/sleep` → 404; gọi hàm qua "
+             "`qwen3_coder`; JSON schema; Anthropic `/v1/messages`; `/tokenize`; stream; link ảnh `http(s)` bị từ "
+             "chối; tìm đúng mã trong prompt 16 000 token (~16 giây). Phép thử suy nghĩ trượt chỉ vì model này đôi "
+             "khi nghĩ quá ngân sách 4 000 token của phép thử: qua stream với 12 000 token thì trả lời đúng 3/3 lần "
+             "(1 300–2 100 token). Ảnh base64: đúng chữ, hình chữ nhật bị gọi là hình vuông"),
+        ],
+    },
     ("kaggle", "qwen3_5_2b"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [
