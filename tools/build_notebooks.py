@@ -152,6 +152,39 @@ MODELS = [
 # Real test runs, shown in notebooks/<platform>/README*.md. Key: (platform, model slug).
 # Rows: (English label, Vietnamese label, English value, Vietnamese value).
 TESTED = {
+    ("colab", "qwen3_5_4b"): {
+        "summary": ("L4, 2026-11-11", "L4, 11/11/2026"),
+        "rows": [
+            ("GPU", "GPU", "1 × NVIDIA L4 (22.5 GB), driver 580.82.07",
+             "1 × NVIDIA L4 (22,5 GB), driver 580.82.07"),
+            ("vLLM / dtype / GPUs", "vLLM / dtype / số GPU", "0.33.0 / bfloat16 / 1, `--max-num-seqs 128`",
+             "0.33.0 / bfloat16 / 1, `--max-num-seqs 128`"),
+            ("Context (`auto`)", "Context (`auto`)", "262 144 tokens (the model maximum)", "262 144 token (tối đa của model)"),
+            ("KV cache", "KV cache", "9.19 GiB = 297 061 tokens, 1.13 full-length requests at once",
+             "9,19 GiB = 297 061 token, 1,13 request dài tối đa cùng lúc"),
+            ("GPU memory", "Bộ nhớ GPU",
+             "weights + non-torch 8.73 GiB, peak activation 1.91 GiB, CUDA graphs 0.27 + 0.14 GiB",
+             "trọng số + non-torch 8,73 GiB, activation đỉnh 1,91 GiB, CUDA graph 0,27 + 0,14 GiB"),
+            ("Time", "Thời gian",
+             "server start 5 min 53 s (weights 7 s, torch.compile 32 s, initial profiling/warmup 94 s, "
+             "FlashInfer JIT ~1 min 50 s, CUDA graphs 24 s)",
+             "bật server 5 phút 53 giây (trọng số 7 giây, torch.compile 32 giây, profiling/warmup ban đầu "
+             "94 giây, FlashInfer JIT ~1 phút 50 giây, CUDA graph 24 giây)"),
+            ("Speed", "Tốc độ", "~29 tokens/second for one request (with thinking); ~194 tokens/second total with 8 at once",
+             "~29 token/giây cho một request (có suy nghĩ); ~194 token/giây tổng khi 8 request cùng lúc"),
+            ("Checked through the public URL", "Đã kiểm qua URL công khai",
+             "13/13 checks. no/wrong key → 401; `/invocations`, `/sleep` → 404; thinking on by default (911 tokens, "
+             "32 s); thinking off via both switches; tool calling via `qwen3_coder`; JSON schema; Anthropic "
+             "`/v1/messages`; `/tokenize`; streaming; 8 concurrent requests; `http(s)` image URL rejected; secret "
+             "found in a 16 000-token prompt (3.7 s). Base64 image: text and both colours right, the rectangle "
+             "called a square",
+             "13/13 phép thử. không key/sai key → 401; `/invocations`, `/sleep` → 404; mặc định có suy nghĩ "
+             "(911 token, 32 giây); tắt suy nghĩ bằng cả hai cách; gọi hàm qua `qwen3_coder`; JSON schema; Anthropic "
+             "`/v1/messages`; `/tokenize`; stream; 8 request song song; link ảnh `http(s)` bị từ chối; tìm đúng mã "
+             "trong prompt 16 000 token (3,7 giây). Ảnh base64: đúng chữ và cả hai màu, hình chữ nhật bị gọi là "
+             "hình vuông"),
+        ],
+    },
     ("kaggle", "qwen3_5_4b"): {
         "summary": ("T4 x2, 2026-11-11", "T4 x2, 11/11/2026"),
         "rows": [
