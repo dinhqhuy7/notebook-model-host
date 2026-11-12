@@ -4,7 +4,7 @@
 
 The notebook prints the **Base URL** (`https://xxxx.trycloudflare.com/v1`), the **API key** and the
 **model** name (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`,
-`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`, `Qwen3-Reranker-4B`).
+`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`, `Qwen3-Reranker-4B`, `Qwen3-VL-Reranker-2B`).
 The examples use the `openai` library (`pip install openai`):
 
 ```python
@@ -28,7 +28,7 @@ MODEL = "Qwen3-4B"
 | Function calling | supported (`hermes`) | supported (`qwen3_coder`) | supported (`qwen3_coder`) | supported (`hermes`) | supported (`hermes`) | **not supported**: its chat template has no tools, use a JSON schema | **not supported**: its chat template has no tools, use a JSON schema | supported (`hermes`) | not meant for it: base model, use `/v1/completions` |
 | Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested | not tested | not tested | not tested | not tested | not tested | not tested |
 
-Qwen3-Reranker-0.6B and 4B are not in this table because they write no text: see [Rerank and score](#rerank-and-score-qwen3-reranker).
+The Qwen3 rerankers (0.6B, 4B, VL-2B) are not in this table because they write no text: see [Rerank and score](#rerank-and-score-qwen3-reranker).
 
 ## Chat
 
@@ -175,7 +175,7 @@ print(prefix + reply.choices[0].text + suffix)   # the file with the gap filled
 
 ## Rerank and score (Qwen3-Reranker)
 
-Qwen3-Reranker (0.6B and 4B) writes no text, so it has no chat: it takes a query and documents and returns a relevance score
+Qwen3-Reranker (0.6B, 4B and VL-2B) writes no text, so it has no chat: it takes a query and documents and returns a relevance score
 from 0 to 1 for each one (the probability of "yes" against "no" in the prompt Qwen trained it with). It has its own
 paths, without `/v1`: `/rerank` (sorted, with `top_n`) and `/score` (in the order you sent). `/v1/chat/completions`
 and `/v1/completions` are not available. Use plain HTTP; the base URL is the tunnel URL without `/v1`.
@@ -215,7 +215,38 @@ print([item["score"] for item in scores["data"]])  # one score per document, in 
   scores; split very large lists into several requests.
 - **Other paths** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) are the same APIs under other names.
 
-The 0.6B model was tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle and the 4B model have not been tested yet. The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
+The 0.6B model was tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle, the 4B model and Qwen3-VL-Reranker-2B have not been tested yet. The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
+
+### Images and video (Qwen3-VL-Reranker)
+
+Qwen3-VL-Reranker-2B scores pairs in which the query and each document can be text, an image or a screenshot, a video, or a
+mix. Wrap such a query or document as `{"content": [...]}` with the same parts as a chat message, and send media as base64
+`data:` URLs (the server never downloads links: an `https://` or `file://` link is rejected with HTTP 400). A plain string
+still works as text, and both kinds can be mixed in one list.
+
+```python
+import base64
+
+def data_url(path, mime="image/png"):
+    with open(path, "rb") as f:
+        return f"data:{mime};base64," + base64.b64encode(f.read()).decode()
+
+reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-VL-Reranker-2B",
+    "query": "Which page shows the quarterly revenue chart?",
+    "documents": [
+        {"content": [{"type": "image_url", "image_url": {"url": data_url("page1.png")}}]},
+        {"content": [{"type": "text", "text": "Page 2:"},
+                     {"type": "image_url", "image_url": {"url": data_url("page2.png")}}]},   # text and image together
+        "Plain text documents work too.",
+    ],
+}).json()
+```
+
+- A video goes in as `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`. vLLM reads at most 32
+  frames of a video by default. The query can be an image or a video too: `"query": {"content": [...]}`.
+- `mm_processor_kwargs` (a field of both APIs) is passed to the image and video processor.
+- Keep the request body under 32 MiB, and the whole request under 100 seconds.
 
 ## Function calling
 

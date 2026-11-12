@@ -22,12 +22,13 @@ Model đọc và viết văn bản: trò chuyện, có thể suy nghĩ, gọi h�
 
 ## [Model truy hồi](retrieval/README.vi.md)
 
-Model chấm điểm hoặc nhúng văn bản để tìm kiếm: xếp hạng lại danh sách tài liệu theo câu hỏi, và biến văn bản thành vector. Vào văn bản, ra điểm số hoặc vector; không sinh văn bản.
+Model chấm điểm hoặc nhúng nội dung để tìm kiếm: xếp hạng lại danh sách tài liệu theo câu hỏi, và biến nội dung thành vector. Vào văn bản (có model nhận cả ảnh và video), ra điểm số hoặc vector; không sinh văn bản. Server không tự tải media: hãy gửi ảnh và video dạng `data:` base64.
 
 | Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
 | [Qwen3-Reranker-0.6B](retrieval/qwen3_reranker_0_6b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 1,1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 13/11/2026 | [kaggle_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Chưa thử |
 | [Qwen3-Reranker-4B](retrieval/qwen3_reranker_4b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 7,5 GiB | 40 960 | ~13 GB | [colab_qwen3_reranker_4b.ipynb](retrieval/qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb)<br>Chưa thử | [kaggle_qwen3_reranker_4b.ipynb](retrieval/qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb)<br>Chưa thử |
+| [Qwen3-VL-Reranker-2B](retrieval/qwen3_vl_reranker_2b/README.vi.md) | văn bản, ảnh, video (câu hỏi và tài liệu) | 4,0 GiB | 32 768 | ~10 GB | [colab_qwen3_vl_reranker_2b.ipynb](retrieval/qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b.ipynb)<br>Chưa thử | [kaggle_qwen3_vl_reranker_2b.ipynb](retrieval/qwen3_vl_reranker_2b/kaggle_qwen3_vl_reranker_2b.ipynb)<br>Chưa thử |
 
 ## [Model thị giác](vision/README.vi.md)
 

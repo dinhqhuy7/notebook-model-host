@@ -36,10 +36,46 @@ VLLM_TEMPLATE_SHA256 = "e1ee98e69aab7b2da366edf1c50efcef37e34b4a0c50fb816336213e
 _RERANKER_OVERRIDES = {"architectures": ["Qwen3ForSequenceClassification"], "classifier_from_token": ["no", "yes"],
                        "is_original_qwen3_reranker": True}
 
+# The prompt of Qwen3-VL-Reranker as a vLLM chat template for scoring, copied byte for byte from vLLM
+# (examples/pooling/score/template/qwen3_vl_reranker.jinja, v0.33.0, Apache-2.0). It renders Qwen's prompt for the model
+# (system line, `<Instruct>: ...<Query>:...\n<Document>:...`, then `<|im_start|>assistant\n`; no `<think>` block, unlike the text
+# rerankers). vLLM puts the image and video placeholders into the query and document text before the template runs. Here
+# the last newline of the file is the one Jinja drops, so the file renders exactly Qwen's prompt.
+QWEN3_VL_RERANKER_TEMPLATE = '''\
+<|im_start|>system
+Judge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>
+<|im_start|>user
+<Instruct>: {{ instruction | default(instruct | default(messages | selectattr("role", "eq", "system") | map(attribute="content") | first | default("Given a search query, retrieve relevant candidates that answer the query.", true), true), true) }}<Query>:{{
+    messages
+    | selectattr("role", "eq", "query")
+    | map(attribute="content")
+    | first
+}}
+<Document>:{{
+    messages
+    | selectattr("role", "eq", "document")
+    | map(attribute="content")
+    | first
+}}<|im_end|>
+<|im_start|>assistant
+
+'''
+VL_TEMPLATE_SHA256 = "df956086e3ef710a6f792a99ad3f7a7ec717f19114aba061304117fa688dee26"  # of QWEN3_VL_RERANKER_TEMPLATE
+QWEN3_VL_RERANKER_PROMPT = (  # Qwen's prompt for one pair (qwen3_vl_reranker.py of the model card), for the test
+    "<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. "
+    "Note that the answer can only be \"yes\" or \"no\".<|im_end|>\n<|im_start|>user\n"
+    "<Instruct>: {instruction}<Query>:{query}\n<Document>:{document}<|im_end|>\n<|im_start|>assistant\n")
+
+# Same recipe as the text rerankers, on the vision-language model (Qwen3VLForSequenceClassification).
+_VL_RERANKER_OVERRIDES = {"architectures": ["Qwen3VLForSequenceClassification"], "classifier_from_token": ["no", "yes"],
+                          "is_original_qwen3_reranker": True}
+
 # Qwen3-Reranker family (0.6B, 4B): the same serving, the same functions; each model adds its own notes and memory.
 _QWEN3_RERANKER = {
     "kind": "retrieval",
     "task": "rerank",
+    "template_file": "qwen3_reranker.jinja",
+    "template": QWEN3_RERANKER_TEMPLATE,
     "input": ("text (a query and the documents to rank)", "văn bản (câu hỏi và các tài liệu cần xếp hạng)"),
     "context": 40960,
     "flags": ["--runner", "pooling", "--hf-overrides", json.dumps(_RERANKER_OVERRIDES)],
@@ -120,9 +156,85 @@ QWEN3_RERANKER_4B = {
     "extra_gib": 0.7,  # estimate, not measured yet: the classifier head is built from the 151 669 x 2 560 output matrix
 }
 
+# Qwen3-VL-Reranker-2B (28 layers, 8 KV heads x 128, 112 KiB of KV cache per token, 3.96 GiB with the vision encoder). The card says
+# 32K of context; the config says 262 144, so vLLM's `auto` may open more than the card promises where memory allows.
+_QWEN3_VL_RERANKER_FUNCTIONS = [
+    ("Rerank text documents for a text query", "Xếp hạng tài liệu văn bản theo câu hỏi văn bản",
+     "`POST /rerank`, `/v1/rerank`, `/v2/rerank`", True),
+    ("Rerank images and screenshots", "Xếp hạng ảnh và ảnh chụp màn hình",
+     ("`documents`: `{\"content\": [{\"type\": \"image_url\", ...}]}` in `/rerank`, `/score` (a base64 `data:` URL)",
+      "`documents`: `{\"content\": [{\"type\": \"image_url\", ...}]}` trong `/rerank`, `/score` (URL `data:` base64)"), True),
+    ("Rerank videos", "Xếp hạng video",
+     ("`documents`: `{\"content\": [{\"type\": \"video_url\", ...}]}` in `/rerank`, `/score` (a base64 `data:` URL)",
+      "`documents`: `{\"content\": [{\"type\": \"video_url\", ...}]}` trong `/rerank`, `/score` (URL `data:` base64)"), True),
+    ("Mixed documents (text and image together) and image or video queries", "Tài liệu hỗn hợp (văn bản kèm ảnh) và câu hỏi là ảnh hoặc video",
+     ("`query` or `documents` as `{\"content\": [text, image_url, video_url ...]}` in `/rerank`, `/score`",
+      "`query` hoặc `documents` dạng `{\"content\": [text, image_url, video_url ...]}` trong `/rerank`, `/score`"), True),
+    ("Score query-document pairs", "Chấm điểm từng cặp câu hỏi - tài liệu", "`POST /score`, `/v1/score`", True),
+    ("Task instruction per request", "Instruction theo tác vụ trong từng request",
+     ("`instruction` in `/rerank` and `/score`", "`instruction` trong `/rerank` và `/score`"), True),
+    ("Cut long queries and documents", "Cắt câu hỏi và tài liệu dài", "`max_tokens_per_query`, `max_tokens_per_doc` (`/rerank`, `/score`)", True),
+    ("Image and video processor settings", "Thiết lập bộ xử lý ảnh và video",
+     ("`mm_processor_kwargs` in `/rerank`, `/score` (passed to the processor; not tested here yet)",
+      "`mm_processor_kwargs` trong `/rerank`, `/score` (chuyển cho bộ xử lý; chưa thử ở đây)"), True),
+    ("Image and video by http(s) link", "Ảnh và video qua link http(s)", "`image_url` / `video_url` `https://...` / `/rerank`",
+     ("blocked on purpose: the server never downloads links; send base64",
+      "chặn có chủ đích: server không tự tải link; hãy gửi base64")),
+    ("Text generation / chat", "Sinh văn bản / chat", "`/v1/chat/completions`",
+     ("the model does not generate text", "model không sinh văn bản")),
+    ("Embeddings", "Embedding", "`/v1/embeddings`",
+     ("not an embedding model; Qwen3-VL-Embedding is", "không phải model embedding; Qwen3-VL-Embedding mới là")),
+]
+QWEN3_VL_RERANKER_2B = {
+    "kind": "retrieval",
+    "task": "rerank",
+    "template_file": "qwen3_vl_reranker.jinja",
+    "template": QWEN3_VL_RERANKER_TEMPLATE,
+    "input": ("text, images, video (queries and documents)", "văn bản, ảnh, video (câu hỏi và tài liệu)"),
+    "context": 32768,
+    "flags": ["--runner", "pooling", "--hf-overrides", json.dumps(_VL_RERANKER_OVERRIDES),
+              "--allowed-media-domains", "none.invalid"],
+    "flag_notes": """\
+- `--runner pooling`: the model is served for scoring, not for text generation.
+- `--hf-overrides ...`: turns the original `Qwen3VLForConditionalGeneration` checkpoint into a scorer of the `yes` and `no`
+  tokens, the way Qwen defines this reranker. The weights are the official ones.
+- `--chat-template`: the cell below writes the prompt Qwen trained the reranker with (system line, `<Instruct>`,
+  `<Query>`, `<Document>`) to a file. Callers can set the instruction in each request.
+- `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
+  callers send media from their machine as base64 `data:` URLs.
+- No reasoning or tool parser: the model writes no text, so `/v1/chat/completions` does not exist.""",
+    "sampling": "this model generates no text: it returns a relevance score for each query-document pair",
+    "notes": "Multimodal reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one "
+             "(`/rerank` returns them sorted, `/score` in the order you sent). The query and each document can be text, "
+             "an image or a screenshot, a video, or a mix (`{\"content\": [...]}`); media goes in as base64 `data:` URLs. "
+             "Each pair is scored with the prompt Qwen trained it with; set `instruction` in the request to describe your "
+             "task, otherwise the default is \"Given a search query, retrieve relevant candidates that answer the query.\" "
+             "Qwen states 32K of context; vLLM's `auto` may open more where memory allows, the memory table shows what "
+             "fits. vLLM reads at most 32 frames of a video by default; `mm_processor_kwargs` goes to the image and video processor. "
+             "Multilingual (30+ languages). It writes no text (no chat). On Kaggle's 2 × T4 the model is split across "
+             "both GPUs (tensor parallel). License: Apache 2.0. Not tested yet: `float16` on T4, the split across two GPUs "
+             "and video.",
+    "notes_vi": "Reranker đa phương thức: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài "
+                "liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Câu hỏi và từng tài liệu có thể là "
+                "văn bản, ảnh hoặc ảnh chụp màn hình, video, hoặc kết hợp (`{\"content\": [...]}`); media gửi dạng URL "
+                "`data:` base64. Mỗi cặp được chấm bằng đúng prompt Qwen đã huấn luyện; đặt `instruction` trong request để "
+                "mô tả tác vụ của bạn, không gửi thì mặc định là \"Given a search query, retrieve relevant candidates that "
+                "answer the query.\" Qwen ghi context 32K; `auto` của vLLM có thể mở nhiều hơn khi đủ bộ nhớ, bảng bộ nhớ "
+                "cho biết vừa bao nhiêu. vLLM mặc định đọc tối đa 32 khung hình của một video; `mm_processor_kwargs` được chuyển cho bộ xử lý ảnh "
+                "và video. Đa ngôn ngữ (hơn 30 ngôn ngữ). Model không viết văn bản (không chat). Trên 2 × T4 "
+                "của Kaggle model được chia ra cả hai GPU (tensor parallel). Giấy phép: Apache 2.0. Chưa thử: `float16` trên "
+                "T4, chia hai GPU và video.",
+    "extra_gib": 1.5,  # estimate, not measured yet: vision encoder activations and the classifier head built from the vocabulary
+    "rerank_info_extra": "Queries and documents can also be images or videos: {{\"content\": [{{\"type\": \"image_url\", \"image_url\": {{\"url\": \"data:image/png;base64,...\"}}}}]}}",
+    "functions": _QWEN3_VL_RERANKER_FUNCTIONS,
+}
+
+
 MODELS = [
     {"slug": "qwen3_reranker_0_6b", "model_id": "Qwen/Qwen3-Reranker-0.6B", "served_name": "Qwen3-Reranker-0.6B",
      "weights_gib": 1.12, "download_gb": 2, **QWEN3_RERANKER_0_6B},
     {"slug": "qwen3_reranker_4b", "model_id": "Qwen/Qwen3-Reranker-4B", "served_name": "Qwen3-Reranker-4B",
      "weights_gib": 7.49, "download_gb": 8, **QWEN3_RERANKER_4B},
+    {"slug": "qwen3_vl_reranker_2b", "model_id": "Qwen/Qwen3-VL-Reranker-2B", "served_name": "Qwen3-VL-Reranker-2B",
+     "weights_gib": 3.96, "download_gb": 5, **QWEN3_VL_RERANKER_2B},
 ]

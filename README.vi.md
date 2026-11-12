@@ -32,6 +32,7 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 |---|---|---|---|
 | [Qwen3-Reranker-0.6B](notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md) (xếp hạng lại: `/rerank`, `/score`) | 1,1 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) |
 | [Qwen3-Reranker-4B](notebooks/retrieval/qwen3_reranker_4b/README.vi.md) (xếp hạng lại: `/rerank`, `/score`) | 7,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb) |
+| [Qwen3-VL-Reranker-2B](notebooks/retrieval/qwen3_vl_reranker_2b/README.vi.md) (xếp hạng lại văn bản, ảnh, video: `/rerank`, `/score`) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_vl_reranker_2b/kaggle_qwen3_vl_reranker_2b.ipynb) |
 
 ### Model thị giác
 
@@ -70,14 +71,14 @@ context:
 
 **Model truy hồi**
 
-| GPU | Nền tảng | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B |
-|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,3 GiB) | ~3 GiB |
-| T4 x2 | Kaggle | ~22 GiB (chia ra cả hai GPU) | ~15 GiB (chia ra cả hai GPU) |
-| L4 (22,5 GB) | Colab | ~17 GiB | ~10 GiB |
-| A100 40 GB | Colab | ~33 GiB | ~26 GiB |
-| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB |
-| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
+| GPU | Nền tảng | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-VL-Reranker-2B |
+|---|---|---|---|---|
+| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,3 GiB) | ~3 GiB | ~6 GiB |
+| T4 x2 | Kaggle | ~22 GiB (chia ra cả hai GPU) | ~15 GiB (chia ra cả hai GPU) | ~17 GiB (chia ra cả hai GPU) |
+| L4 (22,5 GB) | Colab | ~17 GiB | ~10 GiB | ~13 GiB |
+| A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~28 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB | ~64 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
 **Model thị giác**
 
@@ -207,4 +208,4 @@ python -m unittest discover -s tests
 
 ## Giấy phép
 
-Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen3-Reranker, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B và Qwen2.5-Coder-3B: Qwen Research License, đọc điều khoản trước khi dùng).
+Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen3-Reranker, Qwen3-VL-Reranker, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B và Qwen2.5-Coder-3B: Qwen Research License, đọc điều khoản trước khi dùng).

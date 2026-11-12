@@ -4,7 +4,7 @@
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
 (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`,
-`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`, `Qwen3-Reranker-4B`). Các ví
+`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`, `Qwen3-Reranker-4B`, `Qwen3-VL-Reranker-2B`). Các ví
 dụ dùng thư
 viện `openai` (`pip install openai`):
 
@@ -29,7 +29,7 @@ MODEL = "Qwen3-4B"
 | Gọi hàm | hỗ trợ (`hermes`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`hermes`) | hỗ trợ (`hermes`) | **không hỗ trợ**: chat template không có tool, dùng JSON schema | **không hỗ trợ**: chat template không có tool, dùng JSON schema | hỗ trợ (`hermes`) | không dành cho việc này: model base, dùng `/v1/completions` |
 | Viết code | chưa thử | chưa thử | 9B: tắt suy nghĩ (khi bật, model lặp 30 000 token mà không viết ra code); 4B: chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử |
 
-Qwen3-Reranker-0.6B và 4B không có trong bảng này vì không viết văn bản: xem [Xếp hạng lại và chấm điểm](#xếp-hạng-lại-và-chấm-điểm-qwen3-reranker).
+Các reranker Qwen3 (0,6B, 4B, VL-2B) không có trong bảng này vì không viết văn bản: xem [Xếp hạng lại và chấm điểm](#xếp-hạng-lại-và-chấm-điểm-qwen3-reranker).
 
 ## Chat
 
@@ -177,7 +177,7 @@ print(prefix + reply.choices[0].text + suffix)   # file với chỗ trống đã
 
 ## Xếp hạng lại và chấm điểm (Qwen3-Reranker)
 
-Qwen3-Reranker (0.6B và 4B) không viết văn bản nên không có chat: nó nhận một câu hỏi cùng các tài liệu và trả về điểm liên
+Qwen3-Reranker (0,6B, 4B và VL-2B) không viết văn bản nên không có chat: nó nhận một câu hỏi cùng các tài liệu và trả về điểm liên
 quan từ 0 đến 1 cho từng tài liệu (xác suất "yes" so với "no" trong prompt Qwen đã huấn luyện). Nó có đường dẫn riêng,
 không có `/v1`: `/rerank` (đã sắp xếp, có `top_n`) và `/score` (giữ thứ tự bạn gửi). `/v1/chat/completions` và
 `/v1/completions` không có. Dùng HTTP thường; base URL là URL tunnel không kèm `/v1`.
@@ -217,7 +217,38 @@ print([item["score"] for item in scores["data"]])  # mỗi tài liệu một đi
   lớn nên chia thành nhiều request.
 - **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
 
-Bản 0,6B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle và bản 4B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
+Bản 0,6B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle, bản 4B và Qwen3-VL-Reranker-2B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
+
+### Ảnh và video (Qwen3-VL-Reranker)
+
+Qwen3-VL-Reranker-2B chấm điểm các cặp mà câu hỏi và từng tài liệu có thể là văn bản, ảnh hoặc ảnh chụp màn hình, video,
+hoặc kết hợp. Gói câu hỏi hay tài liệu như vậy thành `{"content": [...]}` với các phần giống một tin nhắn chat, và gửi
+media dạng URL `data:` base64 (server không tự tải link: link `https://` hoặc `file://` bị từ chối với HTTP 400). Chuỗi
+thường vẫn là văn bản, và có thể trộn cả hai loại trong một danh sách.
+
+```python
+import base64
+
+def data_url(path, mime="image/png"):
+    with open(path, "rb") as f:
+        return f"data:{mime};base64," + base64.b64encode(f.read()).decode()
+
+reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-VL-Reranker-2B",
+    "query": "Which page shows the quarterly revenue chart?",
+    "documents": [
+        {"content": [{"type": "image_url", "image_url": {"url": data_url("page1.png")}}]},
+        {"content": [{"type": "text", "text": "Page 2:"},
+                     {"type": "image_url", "image_url": {"url": data_url("page2.png")}}]},   # văn bản kèm ảnh
+        "Tài liệu văn bản thường cũng được.",
+    ],
+}).json()
+```
+
+- Video gửi dạng `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`. vLLM mặc định đọc tối đa 32
+  khung hình của một video. Câu hỏi cũng có thể là ảnh hoặc video: `"query": {"content": [...]}`.
+- `mm_processor_kwargs` (trường của cả hai API) được chuyển cho bộ xử lý ảnh và video.
+- Giữ body dưới 32 MiB, và cả request dưới 100 giây.
 
 ## Gọi hàm
 

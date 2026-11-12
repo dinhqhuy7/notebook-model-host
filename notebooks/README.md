@@ -22,12 +22,13 @@ Models that read and write text: chat, optional thinking, function calling, and 
 
 ## [Retrieval models](retrieval/README.md)
 
-Models that score or embed text for search: reranking a list of documents against a query, and turning text into vectors. Text in, scores or vectors out; they do not generate text.
+Models that score or embed content for search: reranking a list of documents against a query, and turning content into vectors. Text in (some also take images and video), scores or vectors out; they do not generate text. The server never downloads media itself: send images and video as base64 `data:` URLs.
 
 | Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
 | [Qwen3-Reranker-0.6B](retrieval/qwen3_reranker_0_6b/README.md) | text (a query and the documents to rank) | 1.1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 2026-11-13 | [kaggle_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Not tested yet |
 | [Qwen3-Reranker-4B](retrieval/qwen3_reranker_4b/README.md) | text (a query and the documents to rank) | 7.5 GiB | 40 960 | ~13 GB | [colab_qwen3_reranker_4b.ipynb](retrieval/qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb)<br>Not tested yet | [kaggle_qwen3_reranker_4b.ipynb](retrieval/qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb)<br>Not tested yet |
+| [Qwen3-VL-Reranker-2B](retrieval/qwen3_vl_reranker_2b/README.md) | text, images, video (queries and documents) | 4.0 GiB | 32 768 | ~10 GB | [colab_qwen3_vl_reranker_2b.ipynb](retrieval/qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b.ipynb)<br>Not tested yet | [kaggle_qwen3_vl_reranker_2b.ipynb](retrieval/qwen3_vl_reranker_2b/kaggle_qwen3_vl_reranker_2b.ipynb)<br>Not tested yet |
 
 ## [Vision models](vision/README.md)
 

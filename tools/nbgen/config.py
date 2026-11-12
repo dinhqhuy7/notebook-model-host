@@ -30,10 +30,12 @@ TYPES = {
     "retrieval": {
         "profile": "retrieval",
         "name": ("Retrieval models", "Model truy hồi"),
-        "intro": ("Models that score or embed text for search: reranking a list of documents against a query, and "
-                  "turning text into vectors. Text in, scores or vectors out; they do not generate text.",
-                  "Model chấm điểm hoặc nhúng văn bản để tìm kiếm: xếp hạng lại danh sách tài liệu theo câu hỏi, và "
-                  "biến văn bản thành vector. Vào văn bản, ra điểm số hoặc vector; không sinh văn bản."),
+        "intro": ("Models that score or embed content for search: reranking a list of documents against a query, and "
+                  "turning content into vectors. Text in (some also take images and video), scores or vectors out; they do not "
+                  "generate text. The server never downloads media itself: send images and video as base64 `data:` URLs.",
+                  "Model chấm điểm hoặc nhúng nội dung để tìm kiếm: xếp hạng lại danh sách tài liệu theo câu hỏi, và "
+                  "biến nội dung thành vector. Vào văn bản (có model nhận cả ảnh và video), ra điểm số hoặc vector; không sinh "
+                  "văn bản. Server không tự tải media: hãy gửi ảnh và video dạng `data:` base64."),
     },
     "vision": {
         "profile": "chat",

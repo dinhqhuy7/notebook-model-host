@@ -161,11 +161,10 @@ def patch_rerank(cells: list, model: dict, key: str) -> list:
                 text = _replace(text, "TP = len(rows) if len(rows) in (1, 2, 4, 8) else 1", "TP = 1  # a small model: one GPU")
                 text = _replace(text, "GPU_MIB = min(int(r[1]) for r in rows)", "GPU_MIB = int(rows[0][1])")
         elif text.startswith("import json, time, urllib.request"):
-            from .kinds.retrieval import QWEN3_RERANKER_TEMPLATE
             text = _replace(text, 'LOG = f"{WORK}/server.log"\n',
-                            'TEMPLATE_FILE = f"{WORK}/qwen3_reranker.jinja"  # the prompt the reranker was trained with\n'
+                            f'TEMPLATE_FILE = f"{{WORK}}/{model["template_file"]}"  # the prompt the reranker was trained with\n'
                             "with open(TEMPLATE_FILE, \"w\") as f:\n"
-                            "    f.write(r\'\'\'" + QWEN3_RERANKER_TEMPLATE + "\'\'\')\n\n"
+                            "    f.write(r\'\'\'" + model["template"] + "\'\'\')\n\n"
                             'LOG = f"{WORK}/server.log"\n')
             text = _replace(text, "    {{SERVE_FLAGS}},\n]", '    {{SERVE_FLAGS}},\n    "--chat-template", TEMPLATE_FILE,\n]')
             text = _replace(text, '["data"][0]["max_model_len"]', '["data"][0].get("max_model_len", "unknown")')
@@ -180,7 +179,10 @@ def patch_rerank(cells: list, model: dict, key: str) -> list:
                             "generated and is not cut (tested: 124 seconds, 9000 tokens).",
                             "A request that takes more\nthan 100 seconds is cut (error 524): scoring is fast, but send very large lists in several requests.")
         elif text.startswith("import re\n\nCLOUDFLARED"):
-            text = _between(text, "print(f\'\'\'\nBase URL", "\'\'\')", _RERANK_INFO.rstrip("\n"))
+            info = _RERANK_INFO.rstrip("\n")
+            if model.get("rerank_info_extra"):  # one more line under the curl example
+                info = _replace(info, "to describe your task.\n", "to describe your task.\n" + model["rerank_info_extra"] + "\n")
+            text = _between(text, "print(f\'\'\'\nBase URL", "\'\'\')", info)
         out.append((kind, text))
     return out
 

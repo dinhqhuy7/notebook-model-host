@@ -18,8 +18,8 @@ sys.path.insert(0, str(ROOT / "proxy"))
 from nbgen.config import PLATFORMS, TYPES, profile_of  # noqa: E402
 from nbgen.generate import generate, list_models  # noqa: E402
 from nbgen.kinds import MODELS  # noqa: E402
-from nbgen.kinds.retrieval import (QWEN3_RERANKER_PROMPT, QWEN3_RERANKER_TEMPLATE, VLLM_TEMPLATE_SHA256,  # noqa: E402
-                                   _VLLM_TEMPLATE)
+from nbgen.kinds.retrieval import (QWEN3_RERANKER_PROMPT, QWEN3_RERANKER_TEMPLATE, QWEN3_VL_RERANKER_PROMPT,  # noqa: E402
+                                   QWEN3_VL_RERANKER_TEMPLATE, VL_TEMPLATE_SHA256, VLLM_TEMPLATE_SHA256, _VLLM_TEMPLATE)
 from proxy import PROFILES  # noqa: E402
 
 
@@ -182,6 +182,32 @@ class GeneratorTest(unittest.TestCase):
                          QWEN3_RERANKER_PROMPT.format(instruction="INS", query="Q?", document="DOC"))
         self.assertIn("<Instruct>: Given a web search query, retrieve relevant passages that answer the query\n",
                       template.render(messages=messages))  # the default instruction
+
+    def test_vl_reranker_template_is_vllms_and_renders_qwens_prompt(self) -> None:
+        self.assertEqual(hashlib.sha256(QWEN3_VL_RERANKER_TEMPLATE.encode()).hexdigest(), VL_TEMPLATE_SHA256)  # vLLM's file
+        try:
+            from jinja2 import Environment
+        except ImportError:
+            self.skipTest("jinja2 is not installed")
+        template = Environment(trim_blocks=True, lstrip_blocks=True).from_string(QWEN3_VL_RERANKER_TEMPLATE)
+        image = "<|vision_start|><|image_pad|><|vision_end|>"  # what vLLM puts into the text for an image
+        messages = [{"role": "query", "content": "Q?"}, {"role": "document", "content": image + "DOC"}]
+        self.assertEqual(template.render(messages=messages, instruction="INS"),
+                         QWEN3_VL_RERANKER_PROMPT.format(instruction="INS", query="Q?", document=image + "DOC"))
+        self.assertIn("<Instruct>: Given a search query, retrieve relevant candidates that answer the query.<Query>:",
+                      template.render(messages=messages))  # the default instruction
+
+    def test_vl_reranker_serves_scoring_with_media_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            nb = json.loads(generate(Path(tmp), ["qwen3_vl_reranker_2b"], ["colab"])[0].read_text(encoding="utf-8"))
+        text = "\n".join("".join(c["source"]) for c in nb["cells"])
+        self.assertIn("Qwen3VLForSequenceClassification", text)
+        self.assertIn('"--allowed-media-domains", "none.invalid"', text)  # the server never fetches links
+        self.assertIn('"--chat-template", TEMPLATE_FILE', text)
+        self.assertIn("qwen3_vl_reranker.jinja", text)
+        self.assertIn("f.write(r\'\'\'" + QWEN3_VL_RERANKER_TEMPLATE + "\'\'\')", text)
+        self.assertIn('API_KEY, "retrieval"]', text)
+        self.assertNotIn("<think>", QWEN3_VL_RERANKER_TEMPLATE)  # unlike the text rerankers
 
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())
