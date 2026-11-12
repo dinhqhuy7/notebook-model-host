@@ -135,7 +135,8 @@ QWEN3_RERANKER_0_6B = {
 # CMTEB-R 75.94 (71.31), MMTEB-R 72.74 (66.36), MTEB-Code 81.20 (73.42).
 QWEN3_RERANKER_4B = {
     **_QWEN3_RERANKER,
-    "notes": "Reranker, the larger and more accurate one of the family: send a query and a list of documents, get a "
+    # The tested Colab notebook is locked and has its first estimate (about 24 000 tokens on a T4) written in: that notebook stays as it is.
+    "notes_by_platform": {"colab": "Reranker, the larger and more accurate one of the family: send a query and a list of documents, get a "
              "relevance score from 0 to 1 for each one (`/rerank` returns them sorted, `/score` in the order you sent). "
              "Qwen's tables put it ahead of Qwen3-Reranker-0.6B (for example MTEB-R 69.76 against 65.80). Each pair is "
              "scored with the prompt Qwen trained it with; set `instruction` in the request to describe your task, "
@@ -143,16 +144,28 @@ QWEN3_RERANKER_4B = {
              "Multilingual. The KV cache costs 144 KiB per token, so on a single T4 vLLM lowers the context to what fits "
              "(about 24 000 tokens; the model allows 40 960): see the memory table. On Kaggle's 2 × T4 the model is split "
              "across both GPUs (tensor parallel), which leaves room for the full context. It writes no text (no chat). "
-             "License: Apache 2.0. `float16` on T4 and the split across two GPUs have not been tested with this model yet.",
+             "License: Apache 2.0. `float16` on T4 and the split across two GPUs have not been tested with this model yet."},
+    "notes": "Reranker, the larger and more accurate one of the family: send a query and a list of documents, get a "
+             "relevance score from 0 to 1 for each one (`/rerank` returns them sorted, `/score` in the order you sent). "
+             "Qwen's tables put it ahead of Qwen3-Reranker-0.6B (for example MTEB-R 69.76 against 65.80). Each pair is "
+             "scored with the prompt Qwen trained it with; set `instruction` in the request to describe your task, "
+             "otherwise the default is \"Given a web search query, retrieve relevant passages that answer the query\". "
+             "Multilingual. The KV cache costs 144 KiB per token, so on a single T4 vLLM lowers the context to 32 128 "
+             "tokens (measured; the model allows 40 960). Scoring is slower than the 0.6B (about 9 documents of 200 tokens a "
+             "second on a T4): keep each pair well under ~10 000 tokens on a T4, because the tunnel cuts a request after "
+             "100 seconds. On Kaggle's 2 × T4 the model is split across both GPUs (tensor parallel), which leaves room for "
+             "the full context. It writes no text (no chat). License: Apache 2.0. Tested on Colab T4 (`float16`); the split "
+             "across two GPUs on Kaggle has not been tested yet.",
     "notes_vi": "Reranker, cỡ lớn và chính xác hơn của họ này: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ "
                 "0 đến 1 cho từng tài liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Bảng điểm "
                 "của Qwen đặt nó trên Qwen3-Reranker-0.6B (ví dụ MTEB-R 69,76 so với 65,80). Mỗi cặp được chấm bằng đúng "
                 "prompt Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn, không gửi thì mặc "
                 "định là \"Given a web search query, retrieve relevant passages that answer the query\". Đa ngôn ngữ. KV "
-                "cache tốn 144 KiB mỗi token, nên trên một T4 vLLM tự giảm context cho vừa (khoảng 24 000 token; model cho "
-                "phép 40 960): xem bảng bộ nhớ. Trên 2 × T4 của Kaggle model được chia ra cả hai GPU (tensor parallel), đủ chỗ cho "
-                "context đầy đủ. Model không viết văn bản (không chat). Giấy phép: Apache 2.0. `float16` trên T4 và việc "
-                "chia hai GPU chưa thử với model này.",
+                "cache tốn 144 KiB mỗi token, nên trên một T4 vLLM tự giảm context còn 32 128 token (đã đo; "
+                "model cho phép 40 960). Chấm điểm chậm hơn bản 0,6B (khoảng 9 tài liệu 200 token mỗi giây trên T4): trên T4 "
+                "nên giữ mỗi cặp dưới ~10 000 token vì tunnel cắt request sau 100 giây. Trên 2 × T4 của Kaggle model được chia "
+                "ra cả hai GPU (tensor parallel), đủ chỗ cho context đầy đủ. Model không viết văn bản (không chat). Giấy "
+                "phép: Apache 2.0. Đã chạy thử trên Colab T4 (`float16`); việc chia hai GPU trên Kaggle chưa chạy thử.",
     "extra_gib": 0.7,  # estimate, not measured yet: the classifier head is built from the 151 669 x 2 560 output matrix
 }
 

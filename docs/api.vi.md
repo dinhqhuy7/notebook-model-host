@@ -217,7 +217,7 @@ print([item["score"] for item in scores["data"]])  # mỗi tài liệu một đi
   lớn nên chia thành nhiều request.
 - **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
 
-Bản 0,6B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle, các bản 4B, 8B và Qwen3-VL-Reranker-2B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
+Các bản 0,6B và 4B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle, bản 8B và Qwen3-VL-Reranker-2B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
 
 ### Ảnh và video (Qwen3-VL-Reranker)
 

@@ -215,7 +215,7 @@ print([item["score"] for item in scores["data"]])  # one score per document, in 
   scores; split very large lists into several requests.
 - **Other paths** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) are the same APIs under other names.
 
-The 0.6B model was tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle, the 4B and 8B models and Qwen3-VL-Reranker-2B have not been tested yet. The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
+The 0.6B and 4B models were tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle, the 8B model and Qwen3-VL-Reranker-2B have not been tested yet. The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
 
 ### Images and video (Qwen3-VL-Reranker)
 

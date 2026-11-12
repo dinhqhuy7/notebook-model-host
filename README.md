@@ -74,7 +74,7 @@ available. Estimated memory left for context:
 
 | GPU | Platform | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-VL-Reranker-2B | Qwen3-Reranker-8B |
 |---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) | ~3 GiB | ~6 GiB | ✗ not enough memory |
+| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) | ~3 GiB (measured: 4.4 GiB) | ~6 GiB | ✗ not enough memory |
 | T4 x2 | Kaggle | ~22 GiB (split across both GPUs) | ~15 GiB (split across both GPUs) | ~17 GiB (split across both GPUs) | ~7 GiB (split across both GPUs) |
 | L4 (22.5 GB) | Colab | ~17 GiB | ~10 GiB | ~13 GiB | ~2 GiB |
 | A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~28 GiB | ~18 GiB |
