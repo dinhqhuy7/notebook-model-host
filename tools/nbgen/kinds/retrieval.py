@@ -156,6 +156,34 @@ QWEN3_RERANKER_4B = {
     "extra_gib": 0.7,  # estimate, not measured yet: the classifier head is built from the 151 669 x 2 560 output matrix
 }
 
+# Qwen3-Reranker-8B (36 layers, 8 KV heads x 128, 144 KiB of KV cache per token, 15.25 GiB of weights, embeddings NOT tied unlike the
+# 0.6B and 4B). It does not fit one T4, so Kaggle's 2 x T4 need the split across both GPUs. Scores of the model card: MTEB-R 69.02
+# (4B: 69.76), CMTEB-R 77.45 (75.94), MMTEB-R 72.94 (72.74), MLDR 70.19 (69.97), MTEB-Code 81.22 (81.20).
+QWEN3_RERANKER_8B = {
+    **_QWEN3_RERANKER,
+    "notes": "Reranker, the largest of the family: send a query and a list of documents, get a relevance score from 0 to 1 "
+             "for each one (`/rerank` returns them sorted, `/score` in the order you sent). Qwen's tables put it only "
+             "slightly ahead of Qwen3-Reranker-4B (CMTEB-R 77.45 against 75.94, MTEB-R 69.02 against 69.76) for twice the "
+             "memory: try the 4B first. Each pair is scored with the prompt Qwen trained it with; set `instruction` in the "
+             "request to describe your task, otherwise the default is \"Given a web search query, retrieve relevant "
+             "passages that answer the query\". Multilingual. The weights need 15.25 GiB, so **a T4 is not enough**: on "
+             "Colab use an A100 (an L4 leaves only about 2 GiB for the KV cache), on Kaggle's 2 × T4 the model is split "
+             "across both GPUs (tensor parallel) and about 48 000 tokens of context fit. The KV cache costs 144 KiB per "
+             "token. It writes no text (no chat). License: Apache 2.0. Not tested yet: `float16` on T4, the split across two "
+             "GPUs, and this model's separate (not tied) output embeddings.",
+    "notes_vi": "Reranker, cỡ lớn nhất của họ này: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho "
+                "từng tài liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Bảng điểm của Qwen cho "
+                "thấy nó chỉ nhỉnh hơn Qwen3-Reranker-4B một chút (CMTEB-R 77,45 so với 75,94, MTEB-R 69,02 so với 69,76) "
+                "mà tốn gấp đôi bộ nhớ: nên thử bản 4B trước. Mỗi cặp được chấm bằng đúng prompt Qwen đã huấn luyện; đặt "
+                "`instruction` trong request để mô tả tác vụ của bạn, không gửi thì mặc định là \"Given a web search query, "
+                "retrieve relevant passages that answer the query\". Đa ngôn ngữ. Trọng số 15,25 GiB nên **một T4 không "
+                "đủ**: trên Colab dùng A100 (L4 chỉ còn khoảng 2 GiB cho KV cache), trên 2 × T4 của Kaggle model được chia "
+                "ra cả hai GPU (tensor parallel) và đủ khoảng 48 000 token context. KV cache tốn 144 KiB mỗi token. Model "
+                "không viết văn bản (không chat). Giấy phép: Apache 2.0. Chưa thử: `float16` trên T4, chia hai GPU, và đầu ra "
+                "embedding riêng (không gắn chung) của model này.",
+    "extra_gib": 1.2,  # estimate, not measured yet: the classifier head is built from the 151 669 x 4 096 output matrix
+}
+
 # Qwen3-VL-Reranker-2B (28 layers, 8 KV heads x 128, 112 KiB of KV cache per token, 3.96 GiB with the vision encoder). The card says
 # 32K of context; the config says 262 144, so vLLM's `auto` may open more than the card promises where memory allows.
 _QWEN3_VL_RERANKER_FUNCTIONS = [
@@ -235,6 +263,8 @@ MODELS = [
      "weights_gib": 1.12, "download_gb": 2, **QWEN3_RERANKER_0_6B},
     {"slug": "qwen3_reranker_4b", "model_id": "Qwen/Qwen3-Reranker-4B", "served_name": "Qwen3-Reranker-4B",
      "weights_gib": 7.49, "download_gb": 8, **QWEN3_RERANKER_4B},
+    {"slug": "qwen3_reranker_8b", "model_id": "Qwen/Qwen3-Reranker-8B", "served_name": "Qwen3-Reranker-8B",
+     "weights_gib": 15.25, "download_gb": 17, **QWEN3_RERANKER_8B},
     {"slug": "qwen3_vl_reranker_2b", "model_id": "Qwen/Qwen3-VL-Reranker-2B", "served_name": "Qwen3-VL-Reranker-2B",
      "weights_gib": 3.96, "download_gb": 5, **QWEN3_VL_RERANKER_2B},
 ]
