@@ -26,6 +26,12 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | [Qwen2.5-Coder-3B-Instruct](notebooks/language/qwen2_5_coder_3b_instruct/README.md) | 5.8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) |
 | [Qwen2.5-Coder-3B](notebooks/language/qwen2_5_coder_3b/README.md) | 5.8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) |
 
+### Retrieval models
+
+| Model | Weights | Colab | Kaggle |
+|---|---|---|---|
+| [Qwen3-Reranker-0.6B](notebooks/retrieval/qwen3_reranker_0_6b/README.md) (reranking: `/rerank`, `/score`) | 1.1 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) |
+
 ### Vision models
 
 | Model | Weights | Colab | Kaggle |
@@ -61,6 +67,17 @@ available. Estimated memory left for context:
 | A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~64 GiB | ~64 GiB |
 | P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
 
+**Retrieval models**
+
+| GPU | Platform | Qwen3-Reranker-0.6B |
+|---|---|---|
+| T4 (15 GB) | Colab | ~10 GiB |
+| T4 x2 | Kaggle | ~10 GiB (it uses one GPU) |
+| L4 (22.5 GB) | Colab | ~17 GiB |
+| A100 40 GB | Colab | ~33 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB |
+| P100 | Kaggle | ✗ not supported by vLLM |
+
 **Vision models**
 
 | GPU | Platform | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct |
@@ -86,7 +103,7 @@ available. Estimated memory left for context:
 "measured" values come from real runs; the rest are estimates. Other GPUs: step 1 of the notebook
 checks them. Qwen3.5-9B needs ~4.5× less KV cache per token (hybrid attention), so 13 GiB fits its
 native 262 144-token context. Every notebook with its test status: [notebooks/README.md](notebooks/README.md)
-(by type: [language](notebooks/language/README.md), [vision](notebooks/vision/README.md), [multimodal](notebooks/multimodal/README.md)).
+(by type: [language](notebooks/language/README.md), [retrieval](notebooks/retrieval/README.md), [vision](notebooks/vision/README.md), [multimodal](notebooks/multimodal/README.md)).
 Each model has its own folder with its notebooks, GPU table and full test results: open it from the model name there.
 
 ## How to host a model on Google Colab or Kaggle
@@ -118,7 +135,9 @@ print(reply.choices[0].message.content)
 
 The server exposes `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages`
 (Anthropic-style), `/v1/models`, `/tokenize`, `/detokenize`, and supports thinking, function calling,
-JSON schemas, (Qwen3.5, Qwen2.5-VL) images and video, and (Qwen2.5-Omni) audio in and speech out. Full examples: [docs/api.md](docs/api.md).
+JSON schemas, (Qwen3.5, Qwen2.5-VL) images and video, and (Qwen2.5-Omni) audio in and speech out. A retrieval model (Qwen3-Reranker) has no chat: it exposes `/rerank`,
+`/score` (and `/v1/embeddings` for embedding models) instead. Every model is hosted with all its functions, and
+each model's README lists them. Full examples: [docs/api.md](docs/api.md).
 
 ## Security and data
 
@@ -173,9 +192,9 @@ a different `--reasoning-parser` / `--tool-call-parser`.
 ## Development
 
 ```
-notebooks/   sample notebooks grouped by model type (language/, vision/, multimodal/), one folder per model with its
+notebooks/   sample notebooks grouped by model type (language/, retrieval/, vision/, multimodal/), one folder per model with its
              notebooks and a README with the GPU table and test results
-proxy/       key-checking proxy (embedded in every notebook)
+proxy/       key-checking proxy (embedded in every notebook), with a profile of allowed APIs per model type
 tools/       build_notebooks.py and nbgen/: notebook template, platforms and models
 tests/       proxy and generator tests, no GPU needed
 docs/        API guide (api.md, api.vi.md)
@@ -188,4 +207,4 @@ python -m unittest discover -s tests
 
 ## License
 
-Code: [MIT](LICENSE). Models have their own licenses (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B and Qwen2.5-Coder-3B: Qwen Research License, read their terms before use).
+Code: [MIT](LICENSE). Models have their own licenses (Qwen3, Qwen3.5, Qwen3-Reranker, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B and Qwen2.5-Coder-3B: Qwen Research License, read their terms before use).

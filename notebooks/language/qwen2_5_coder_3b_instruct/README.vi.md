@@ -15,6 +15,16 @@ Model code (Instruct): chat, gọi hàm, viết, sửa và giải thích code. K
 | Google Colab | [colab_qwen2_5_coder_3b_instruct.ipynb](colab_qwen2_5_coder_3b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | Chưa thử |
 | Kaggle | [kaggle_qwen2_5_coder_3b_instruct.ipynb](kaggle_qwen2_5_coder_3b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) | Chưa thử |
 
+## Chức năng
+
+Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
+
+| Chức năng | Cách gọi | Host |
+|---|---|---|
+| Gọi hàm | `tools` trong `/v1/chat/completions`; lời gọi trả về trong `tool_calls` | ✓ |
+| Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
+| Hoàn thành văn bản | `prompt` / `/v1/completions` | ✓ |
+
 ## Bộ nhớ ước tính còn cho context
 
 | GPU | Nền tảng | Qwen2.5-Coder-3B-Instruct |

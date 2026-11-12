@@ -15,6 +15,15 @@ Code model (base): code completion and fill-in-the-middle through `/v1/completio
 | Google Colab | [colab_qwen2_5_coder_3b.ipynb](colab_qwen2_5_coder_3b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | Not tested yet |
 | Kaggle | [kaggle_qwen2_5_coder_3b.ipynb](kaggle_qwen2_5_coder_3b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) | Not tested yet |
 
+## Functions
+
+Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
+
+| Function | How to call it | Hosted |
+|---|---|---|
+| Code completion and fill-in-the-middle | `prompt` in `/v1/completions`; fill-in-the-middle with `<|fim_prefix|>…<|fim_suffix|>…<|fim_middle|>` | ✓ |
+| Chat and function calling | `/v1/chat/completions` | ✗ the base model is not tuned for chat or tools; use Qwen2.5-Coder-3B-Instruct |
+
 ## Estimated memory left for context
 
 | GPU | Platform | Qwen2.5-Coder-3B |

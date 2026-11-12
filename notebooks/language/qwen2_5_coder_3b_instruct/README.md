@@ -15,6 +15,16 @@ Code model (Instruct): chat, tool calling and code writing, fixing and explainin
 | Google Colab | [colab_qwen2_5_coder_3b_instruct.ipynb](colab_qwen2_5_coder_3b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | Not tested yet |
 | Kaggle | [kaggle_qwen2_5_coder_3b_instruct.ipynb](kaggle_qwen2_5_coder_3b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) | Not tested yet |
 
+## Functions
+
+Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
+
+| Function | How to call it | Hosted |
+|---|---|---|
+| Function calling | `tools` in `/v1/chat/completions`; calls come back in `tool_calls` | ✓ |
+| Structured output (JSON schema) | `response_format` in `/v1/chat/completions` | ✓ |
+| Text completion | `prompt` / `/v1/completions` | ✓ |
+
 ## Estimated memory left for context
 
 | GPU | Platform | Qwen2.5-Coder-3B-Instruct |

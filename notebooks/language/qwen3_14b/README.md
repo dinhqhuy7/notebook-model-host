@@ -13,6 +13,18 @@ Back to [Language models](../README.md) · [all notebooks](../../README.md) · [
 | Google Colab | [colab_qwen3_14b.ipynb](colab_qwen3_14b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_14b/colab_qwen3_14b.ipynb) | ✓ A100 40 GB, 2026-11-10 |
 | Kaggle | — | needs ~35 GB of GPU memory; Kaggle's 2 × T4 have 30 GB in total |
 
+## Functions
+
+Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
+
+| Function | How to call it | Hosted |
+|---|---|---|
+| Thinking mode, on or off per request | `chat_template_kwargs.enable_thinking` in `/v1/chat/completions`; the thinking comes back in `reasoning` | ✓ |
+| Function calling | `tools` in `/v1/chat/completions`; calls come back in `tool_calls` | ✓ |
+| Structured output (JSON schema) | `response_format` in `/v1/chat/completions` | ✓ |
+| Text completion | `prompt` / `/v1/completions` | ✓ |
+| Longer context with YaRN | rope scaling in the model config | ✗ not given: the notebook serves the native context (a rope-scaling setting is not offered yet) |
+
 ## Estimated memory left for context
 
 | GPU | Platform | Qwen3-14B |

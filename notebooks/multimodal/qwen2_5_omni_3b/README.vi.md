@@ -15,6 +15,21 @@ Nghe và nói được: vào là văn bản, ảnh, âm thanh, video; ra là vă
 | Google Colab | [colab_qwen2_5_omni_3b.ipynb](colab_qwen2_5_omni_3b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | Chưa thử |
 | Kaggle | [kaggle_qwen2_5_omni_3b.ipynb](kaggle_qwen2_5_omni_3b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) | Chưa thử |
 
+## Chức năng
+
+Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
+
+| Chức năng | Cách gọi | Host |
+|---|---|---|
+| Ảnh đầu vào | `image_url` với URL `data:` base64 trong `/v1/chat/completions` | ✓ |
+| Video đầu vào | `video_url` với URL `data:` base64 trong `/v1/chat/completions` | ✓ |
+| Ảnh và video qua link http(s) | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ chặn có chủ đích: server không tự tải link; hãy gửi base64 |
+| Âm thanh đầu vào (giọng nói, âm thanh) | `audio_url` với URL `data:` base64 trong `/v1/chat/completions` | ✓ |
+| Trả lời bằng giọng nói | `modalities: ["text", "audio"]` trong `/v1/chat/completions`; WAV dạng base64 | ✓ |
+| Chọn giọng | `speaker`: `Chelsie` hoặc `Ethan` trong `/v1/chat/completions` | ✓ |
+| Âm thanh của chính video | `mm_processor_kwargs.use_audio_in_video` trong `/v1/chat/completions` | ✓ |
+| Gọi hàm | `tools` / `/v1/chat/completions` | ✗ chat template của model không hỗ trợ tool nên server không bật tool parser |
+
 ## Bộ nhớ ước tính còn cho context
 
 | GPU | Nền tảng | Qwen2.5-Omni-3B |

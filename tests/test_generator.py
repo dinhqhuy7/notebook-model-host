@@ -4,6 +4,7 @@
 """
 
 import ast
+import hashlib
 import json
 import re
 import sys
@@ -13,9 +14,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from nbgen.config import PLATFORMS  # noqa: E402
+sys.path.insert(0, str(ROOT / "proxy"))
+from nbgen.config import PLATFORMS, TYPES, profile_of  # noqa: E402
 from nbgen.generate import generate, list_models  # noqa: E402
 from nbgen.kinds import MODELS  # noqa: E402
+from nbgen.kinds.retrieval import (QWEN3_RERANKER_PROMPT, QWEN3_RERANKER_TEMPLATE, VLLM_TEMPLATE_SHA256,  # noqa: E402
+                                   _VLLM_TEMPLATE)
+from proxy import PROFILES  # noqa: E402
 
 
 class GeneratorTest(unittest.TestCase):
@@ -94,6 +99,62 @@ class GeneratorTest(unittest.TestCase):
         self.assertNotIn("enable-auto-tool-choice", base)
         self.assertNotIn(",\n    ,", base)  # no empty entry left in the serve command
         self.assertIn('"--enable-auto-tool-choice", "--tool-call-parser", "hermes"', instruct)
+
+    def test_every_type_has_a_proxy_profile_that_exists(self) -> None:
+        for kind, info in TYPES.items():
+            self.assertIn(info["profile"], PROFILES, kind)
+        for model in MODELS:
+            self.assertIn(profile_of(model), PROFILES, model["slug"])
+
+    def test_every_model_lists_its_functions_and_the_proxy_lets_them_through(self) -> None:
+        """The host must give a model all its functions: a function that is given needs APIs its profile allows."""
+        for model in MODELS:
+            functions = model.get("functions")
+            self.assertTrue(functions, f"{model['slug']}: list the functions of the model (nbgen/functions.py)")
+            allowed = {path for _, path in PROFILES[profile_of(model)]}
+            for function in functions:
+                self.assertEqual(len(function), 4, function)
+                self.assertTrue(function[0] and function[1] and function[2], function)
+                hosted = function[3]
+                self.assertTrue(hosted is True or (isinstance(hosted, tuple) and len(hosted) == 2 and all(hosted)), function)
+                if hosted is True:
+                    how = function[2][0] if isinstance(function[2], tuple) else function[2]  # the English text
+                    for path in re.findall(r"`(?:POST |GET )?(/[A-Za-z0-9_/.-]+)`", how):
+                        self.assertIn(path, allowed, f"{model['slug']}: {function[0]} needs {path}, which the proxy blocks")
+
+    def test_reranker_is_served_for_scoring_with_the_retrieval_proxy(self) -> None:
+        def source(path: Path) -> str:
+            nb = json.loads(path.read_text(encoding="utf-8"))
+            return "\n".join("".join(c["source"]) for c in nb["cells"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            rerank = source(generate(Path(tmp), ["qwen3_reranker_0_6b"], ["kaggle"])[0])
+            chat = source(generate(Path(tmp), ["qwen3_4b"], ["kaggle"])[0])
+        self.assertEqual(hashlib.sha256(_VLLM_TEMPLATE.encode()).hexdigest(), VLLM_TEMPLATE_SHA256)  # vLLM's file, unchanged
+        self.assertIn("f.write(r'''" + QWEN3_RERANKER_TEMPLATE + "''')", rerank)  # the template, byte for byte
+        self.assertIn('"--runner", "pooling", "--hf-overrides"', rerank)
+        self.assertIn("Qwen3ForSequenceClassification", rerank)
+        self.assertIn('"--chat-template", TEMPLATE_FILE', rerank)
+        self.assertIn('API_KEY, "retrieval"]', rerank)  # the proxy runs with the retrieval profile
+        self.assertIn("TP = 1", rerank)  # a small model uses one GPU even on 2 x T4
+        self.assertIn('"/rerank"', rerank)
+        self.assertNotIn('call(LOCAL, "/v1/chat/completions"', rerank)  # nothing to generate
+        self.assertNotIn('API_KEY, "', chat)  # the other notebooks start the proxy without a profile: chat
+        self.assertIn("str(PORT), API_KEY],", chat)
+        self.assertNotIn("--chat-template", chat)
+
+    def test_reranker_template_renders_the_prompt_qwen_trained_with(self) -> None:
+        try:
+            from jinja2 import Environment
+        except ImportError:
+            self.skipTest("jinja2 is not installed")
+        # the same settings as transformers uses for chat templates (a last newline is dropped)
+        template = Environment(trim_blocks=True, lstrip_blocks=True).from_string(QWEN3_RERANKER_TEMPLATE)
+        messages = [{"role": "query", "content": "Q?"}, {"role": "document", "content": "DOC"}]
+        self.assertEqual(template.render(messages=messages, instruction="INS"),
+                         QWEN3_RERANKER_PROMPT.format(instruction="INS", query="Q?", document="DOC"))
+        self.assertIn("<Instruct>: Given a web search query, retrieve relevant passages that answer the query\n",
+                      template.render(messages=messages))  # the default instruction
 
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())

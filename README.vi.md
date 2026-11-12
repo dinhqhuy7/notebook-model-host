@@ -26,6 +26,12 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 | [Qwen2.5-Coder-3B-Instruct](notebooks/language/qwen2_5_coder_3b_instruct/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) |
 | [Qwen2.5-Coder-3B](notebooks/language/qwen2_5_coder_3b/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) |
 
+### Model truy hồi
+
+| Model | Trọng số | Colab | Kaggle |
+|---|---|---|---|
+| [Qwen3-Reranker-0.6B](notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md) (xếp hạng lại: `/rerank`, `/score`) | 1,1 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) |
+
 ### Model thị giác
 
 | Model | Trọng số | Colab | Kaggle |
@@ -61,6 +67,17 @@ context:
 | A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~64 GiB | ~64 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
+**Model truy hồi**
+
+| GPU | Nền tảng | Qwen3-Reranker-0.6B |
+|---|---|---|
+| T4 (15 GB) | Colab | ~10 GiB |
+| T4 x2 | Kaggle | ~10 GiB (chỉ dùng một GPU) |
+| L4 (22,5 GB) | Colab | ~17 GiB |
+| A100 40 GB | Colab | ~33 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ |
+
 **Model thị giác**
 
 | GPU | Nền tảng | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct |
@@ -86,7 +103,7 @@ context:
 Số ghi "đo thật" lấy từ lần chạy thật; còn lại là ước tính. GPU khác: bước 1 của notebook tự kiểm.
 Qwen3.5-9B tốn KV cache ít hơn ~4,5 lần mỗi token (attention lai), nên 13 GiB đủ cho context gốc
 262 144 token. Mọi notebook kèm trạng thái chạy thử: [notebooks/README.vi.md](notebooks/README.vi.md)
-(theo loại: [ngôn ngữ](notebooks/language/README.vi.md), [thị giác](notebooks/vision/README.vi.md), [đa phương thức](notebooks/multimodal/README.vi.md)).
+(theo loại: [ngôn ngữ](notebooks/language/README.vi.md), [truy hồi](notebooks/retrieval/README.vi.md), [thị giác](notebooks/vision/README.vi.md), [đa phương thức](notebooks/multimodal/README.vi.md)).
 Mỗi model có thư mục riêng chứa notebook, bảng GPU và kết quả chạy thử đầy đủ: mở từ tên model ở đó.
 
 ## Cách host model trên Google Colab hoặc Kaggle
@@ -117,7 +134,9 @@ print(reply.choices[0].message.content)
 
 Server mở `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages` (kiểu
 Anthropic), `/v1/models`, `/tokenize`, `/detokenize`; hỗ trợ suy nghĩ (thinking), gọi hàm, JSON
-schema, (Qwen3.5, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, giọng nói ra. Ví dụ đầy đủ: [docs/api.vi.md](docs/api.vi.md).
+schema, (Qwen3.5, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, giọng nói ra. Model truy hồi (Qwen3-Reranker) không chat: server mở `/rerank`, `/score` (và
+`/v1/embeddings` cho model embedding). Mỗi model được host với đầy đủ chức năng, README của từng model liệt kê
+chúng. Ví dụ đầy đủ: [docs/api.vi.md](docs/api.vi.md).
 
 ## Bảo mật và dữ liệu
 
@@ -172,9 +191,9 @@ vừa một nền tảng thì đặt `platforms` và `unavailable` (lý do). Mod
 ## Phát triển
 
 ```
-notebooks/   notebook mẫu gom theo loại model (language/, vision/, multimodal/), mỗi model một thư mục chứa notebook
+notebooks/   notebook mẫu gom theo loại model (language/, retrieval/, vision/, multimodal/), mỗi model một thư mục chứa notebook
              và README có bảng GPU, kết quả chạy thử
-proxy/       proxy bắt key (được nhúng vào mọi notebook)
+proxy/       proxy bắt key (nhúng vào mọi notebook), mỗi loại model có một profile các API được cho qua
 tools/       build_notebooks.py và nbgen/: khuôn notebook, nền tảng và model
 tests/       test proxy và test bộ sinh, không cần GPU
 docs/        hướng dẫn gọi API (api.md, api.vi.md)
@@ -187,4 +206,4 @@ python -m unittest discover -s tests
 
 ## Giấy phép
 
-Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B và Qwen2.5-Coder-3B: Qwen Research License, đọc điều khoản trước khi dùng).
+Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen3-Reranker, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B và Qwen2.5-Coder-3B: Qwen Research License, đọc điều khoản trước khi dùng).

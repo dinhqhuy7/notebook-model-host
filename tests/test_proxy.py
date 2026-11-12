@@ -12,7 +12,7 @@ from aiohttp import ClientSession, web
 from aiohttp.test_utils import TestServer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "proxy"))
-from proxy import make_app  # noqa: E402
+from proxy import PROFILES, make_app  # noqa: E402
 
 KEY = "test-key"
 
@@ -42,11 +42,15 @@ def fake_vllm() -> web.Application:
     return app
 
 
-class ProxyTest(unittest.IsolatedAsyncioTestCase):
+class ProxyCase(unittest.IsolatedAsyncioTestCase):
+    """The proxy in front of the fake vLLM; `profile` is the proxy profile under test."""
+
+    profile = "chat"
+
     async def asyncSetUp(self) -> None:
         self.upstream = TestServer(fake_vllm())
         await self.upstream.start_server()
-        self.proxy = TestServer(make_app(str(self.upstream.make_url("")).rstrip("/"), KEY))
+        self.proxy = TestServer(make_app(str(self.upstream.make_url("")).rstrip("/"), KEY, self.profile))
         await self.proxy.start_server()
         self.client = ClientSession()
 
@@ -61,6 +65,8 @@ class ProxyTest(unittest.IsolatedAsyncioTestCase):
         ) as reply:
             return reply.status, await reply.read(), reply.headers.get("Content-Type", "")
 
+
+class ProxyTest(ProxyCase):
     async def test_bearer_key_is_forwarded(self) -> None:
         body = json.dumps({"model": "m", "messages": []})
         status, raw, _ = await self.call(
@@ -106,6 +112,57 @@ class ProxyTest(unittest.IsolatedAsyncioTestCase):
         await self.upstream.close()
         status, _, _ = await self.call("GET", "/v1/models", {"Authorization": f"Bearer {KEY}"})
         self.assertEqual(status, 502)
+
+
+class ProfileTest(ProxyCase):
+
+    async def paths_status(self, profile: str, paths: list, headers: dict) -> dict:
+        self.profile = profile
+        await self.asyncTearDown()
+        await self.asyncSetUp()
+        return {(m, p): (await self.call(m, p, headers, "{}"))[0] for m, p in paths}
+
+    async def test_chat_is_the_default_and_keeps_its_paths(self) -> None:
+        self.assertEqual(PROFILES["chat"], {
+            ("GET", "/v1/models"), ("POST", "/v1/chat/completions"), ("POST", "/v1/completions"),
+            ("POST", "/v1/responses"), ("POST", "/v1/messages"), ("POST", "/v1/messages/count_tokens"),
+            ("POST", "/tokenize"), ("POST", "/detokenize")})
+
+    async def test_each_profile_lets_through_only_its_own_apis(self) -> None:
+        auth = {"Authorization": f"Bearer {KEY}"}
+        groups = {
+            "chat": ["/v1/chat/completions", "/v1/completions", "/v1/messages"],
+            "retrieval": ["/score", "/v1/score", "/rerank", "/v1/rerank", "/v2/rerank", "/v1/embeddings", "/pooling"],
+            "audio": ["/v1/audio/transcriptions", "/v1/audio/translations", "/v1/audio/speech"],
+        }
+        for profile, own in groups.items():
+            others = [p for name, paths in groups.items() if name != profile for p in paths]
+            seen = await self.paths_status(profile, [("POST", p) for p in own + others] + [("POST", "/invocations")], auth)
+            for path in own:
+                self.assertEqual(seen[("POST", path)], 200, (profile, path))
+            for path in others + ["/invocations"]:
+                self.assertEqual(seen[("POST", path)], 404, (profile, path))
+
+    async def test_key_is_checked_on_every_profile(self) -> None:
+        for profile, path in (("retrieval", "/rerank"), ("audio", "/v1/audio/transcriptions"), ("retrieval", "/v1/embeddings")):
+            seen = await self.paths_status(profile, [("POST", path)], {"Authorization": "Bearer nope"})
+            self.assertEqual(seen[("POST", path)], 401, (profile, path))
+
+    async def test_multipart_upload_and_binary_reply_pass_through(self) -> None:
+        self.profile = "audio"
+        await self.asyncTearDown()
+        await self.asyncSetUp()
+        boundary = "xyz"
+        body = f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="a.wav"\r\n\r\nRIFF\r\n--{boundary}--\r\n'
+        status, raw, _ = await self.call(
+            "POST", "/v1/audio/transcriptions",
+            {"Authorization": f"Bearer {KEY}", "Content-Type": f"multipart/form-data; boundary={boundary}"}, body)
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(raw)["body"], body)
+
+    def test_unknown_profile_fails_at_start(self) -> None:
+        with self.assertRaises(KeyError):
+            make_app("http://x", KEY, "no_such_profile")
 
 
 if __name__ == "__main__":

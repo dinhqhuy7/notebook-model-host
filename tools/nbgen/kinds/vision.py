@@ -4,10 +4,13 @@ Add a model: a line in MODELS (its "kind" must be "vision"), then
 `python tools/build_notebooks.py --list` shows it.
 """
 
+from ..functions import (IMAGES, JSON_SCHEMA, MEDIA_URL, NO_TOOLS, THINKING_ALWAYS, THINKING_SWITCH, TOOLS, VIDEO)
+
 QWEN3_5 = {
     "kind": "vision",
     "input": ("text, images, video", "văn bản, ảnh, video"),
     "context": 262144,
+    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_SWITCH, TOOLS, JSON_SCHEMA],
     "flags": ["--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "qwen3_coder",
               "--allowed-media-domains", "none.invalid", "--max-num-seqs", "128"],
     "flag_notes": """\
@@ -42,6 +45,7 @@ _VL_NOTES = {
 }
 QWEN3_VL_INSTRUCT = {
     **_VL_NOTES,
+    "functions": [IMAGES, VIDEO, MEDIA_URL, TOOLS, JSON_SCHEMA],
     "flags": _VL_FLAGS,
     "flag_notes": """\
 - `--enable-auto-tool-choice --tool-call-parser hermes`: function calls are returned in `tool_calls`.
@@ -56,6 +60,7 @@ QWEN3_VL_INSTRUCT = {
 }
 QWEN3_VL_THINKING = {
     **_VL_NOTES,
+    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_ALWAYS, TOOLS, JSON_SCHEMA],
     "flags": ["--reasoning-parser", "qwen3", *_VL_FLAGS],
     "flag_notes": """\
 - `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
@@ -76,6 +81,9 @@ QWEN2_5_VL = {
     "kind": "vision",
     "input": ("text, images, video", "văn bản, ảnh, video"),
     "context": 128000,
+    "functions": [IMAGES, VIDEO, MEDIA_URL, NO_TOOLS, JSON_SCHEMA,
+                  ("Visual grounding (boxes in absolute pixels)", "Định vị trong ảnh (hộp theo pixel tuyệt đối)",
+                   ("ask in the prompt, `/v1/chat/completions`; not tested here yet", "hỏi trong prompt, `/v1/chat/completions`; chưa thử ở đây"), True)],
     "flags": ["--allowed-media-domains", "none.invalid"],
     "flag_notes": """\
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;

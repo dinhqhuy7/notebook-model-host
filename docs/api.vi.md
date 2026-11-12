@@ -4,7 +4,7 @@
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
 (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`,
-`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`). Các ví
+`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`). Các ví
 dụ dùng thư
 viện `openai` (`pip install openai`):
 
@@ -28,6 +28,8 @@ MODEL = "Qwen3-4B"
 | `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` | không hỗ trợ: dùng `enable_thinking` | không có | không có | không áp dụng | không áp dụng | không áp dụng | không áp dụng |
 | Gọi hàm | hỗ trợ (`hermes`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`hermes`) | hỗ trợ (`hermes`) | **không hỗ trợ**: chat template không có tool, dùng JSON schema | **không hỗ trợ**: chat template không có tool, dùng JSON schema | hỗ trợ (`hermes`) | không dành cho việc này: model base, dùng `/v1/completions` |
 | Viết code | chưa thử | chưa thử | 9B: tắt suy nghĩ (khi bật, model lặp 30 000 token mà không viết ra code); 4B: chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử |
+
+Qwen3-Reranker-0.6B không có trong bảng này vì không viết văn bản: xem [Xếp hạng lại và chấm điểm](#xếp-hạng-lại-và-chấm-điểm-qwen3-reranker).
 
 ## Chat
 
@@ -173,6 +175,49 @@ print(prefix + reply.choices[0].text + suffix)   # file với chỗ trống đã
   không gửi system, nên hãy gửi system riêng để thay thế.
 - Định dạng FIM theo tài liệu của Qwen; mục này chưa được chạy thử ở đây.
 
+## Xếp hạng lại và chấm điểm (Qwen3-Reranker)
+
+Qwen3-Reranker-0.6B không viết văn bản nên không có chat: nó nhận một câu hỏi cùng các tài liệu và trả về điểm liên
+quan từ 0 đến 1 cho từng tài liệu (xác suất "yes" so với "no" trong prompt Qwen đã huấn luyện). Nó có đường dẫn riêng,
+không có `/v1`: `/rerank` (đã sắp xếp, có `top_n`) và `/score` (giữ thứ tự bạn gửi). `/v1/chat/completions` và
+`/v1/completions` không có. Dùng HTTP thường; base URL là URL tunnel không kèm `/v1`.
+
+```python
+import requests
+
+BASE = "https://xxxx.trycloudflare.com"          # URL không có /v1
+HEADERS = {"Authorization": "Bearer <API key>"}  # hoặc x-api-key
+docs = ["Gravity is a force that attracts two bodies towards each other.",
+        "The capital of China is Beijing.",
+        "Paris is the capital of France."]
+
+reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-Reranker-0.6B",
+    "query": "What is the capital of China?",
+    "documents": docs,
+    "top_n": 2,                                    # tuỳ chọn: giữ 2 tài liệu tốt nhất
+    "instruction": "Given a web search query, retrieve relevant passages that answer the query",  # tuỳ chọn
+}).json()
+for hit in reply["results"]:                       # đã sắp xếp, tốt nhất trước
+    print(hit["index"], round(hit["relevance_score"], 3), hit["document"]["text"])
+
+scores = requests.post(f"{BASE}/score", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-Reranker-0.6B", "queries": "What is the capital of China?", "documents": docs,
+}).json()
+print([item["score"] for item in scores["data"]])  # mỗi tài liệu một điểm, theo thứ tự đã gửi
+```
+
+- **`instruction`** mô tả tác vụ của bạn và được đưa vào prompt của mọi cặp (mặc định `Given a web search query,
+  retrieve relevant passages that answer the query`). Qwen cho biết kết quả tốt hơn 1% đến 5% khi có instruction viết
+  riêng cho tác vụ, bằng tiếng Anh, kể cả với ngôn ngữ khác.
+- **Đầu vào dài:** `max_tokens_per_query` và `max_tokens_per_doc` cắt từng câu hỏi hay tài liệu còn chừng đó token
+  trước khi chấm; cả cặp phải vừa context (40 960 token).
+- **Thời gian:** request bị cắt sau 100 giây (lỗi 524). Notebook in ra số tài liệu chấm được mỗi giây; danh sách rất
+  lớn nên chia thành nhiều request.
+- **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
+
+Mục này theo mã nguồn vLLM và tài liệu của Qwen; notebook chưa được chạy thử.
+
 ## Gọi hàm
 
 Không dùng được với Qwen2.5-VL-7B-Instruct và Qwen2.5-Omni-3B (chat template của các model này không hỗ trợ tool nên server không bật tool parser), cũng như bản base Qwen2.5-Coder-3B. Hãy dùng [JSON theo schema](#json-theo-schema).
@@ -265,7 +310,7 @@ reply = client.chat.completions.create(model=MODEL, messages=messages, max_token
 | Mã | Nghĩa | Xử lý |
 |---|---|---|
 | 401 | Thiếu hoặc sai key | Gửi `Authorization: Bearer <key>` (hoặc `x-api-key`) |
-| 404 | Đường dẫn không được mở | Xem danh sách API ở [README](../README.vi.md) |
+| 404 | Đường dẫn không được mở | Mỗi loại model có API riêng (model chat: `/v1/...`; Qwen3-Reranker: `/rerank`, `/score`), xem [README](../README.vi.md) |
 | 400 | Request sai, thường là vượt context | Rút prompt hoặc giảm `max_tokens`; kiểm bằng `/tokenize` |
 | 502 | vLLM đã tắt hoặc đang khởi động lại | Xem ô Theo dõi trong notebook |
 | 524 | Request không stream chạy quá 100 giây | Dùng `stream=true`, hoặc giảm `max_tokens` |

@@ -15,15 +15,28 @@ MIN_KV_GIB = 1.5    # minimum KV cache to be usable
 # Model types: one folder per type under notebooks/, one folder per model inside it. A type is what the model takes in
 # and gives out, not its field: a code model is a language model.
 # A new kind of model is a new entry here, a module in kinds/ with that name, and MODELS entries with that "kind".
+# "profile" is the set of APIs the proxy lets through for the type (proxy/proxy.py PROFILES); a model can override it.
+# The host must give a model ALL its functions: list them in the model's "functions" and check that its profile has
+# every API they need.
 TYPES = {
     "language": {
+        "profile": "chat",
         "name": ("Language models", "Model ngôn ngữ"),
         "intro": ("Models that read and write text: chat, optional thinking, function calling, and writing or completing "
                   "code. Text in, text out.",
                   "Model đọc và viết văn bản: trò chuyện, có thể suy nghĩ, gọi hàm, viết và hoàn thành code. Vào văn "
                   "bản, ra văn bản."),
     },
+    "retrieval": {
+        "profile": "retrieval",
+        "name": ("Retrieval models", "Model truy hồi"),
+        "intro": ("Models that score or embed text for search: reranking a list of documents against a query, and "
+                  "turning text into vectors. Text in, scores or vectors out; they do not generate text.",
+                  "Model chấm điểm hoặc nhúng văn bản để tìm kiếm: xếp hạng lại danh sách tài liệu theo câu hỏi, và "
+                  "biến văn bản thành vector. Vào văn bản, ra điểm số hoặc vector; không sinh văn bản."),
+    },
     "vision": {
+        "profile": "chat",
         "name": ("Vision models", "Model thị giác"),
         "intro": ("Models that see: they read images and video as well as text. The server never downloads media "
                   "itself: send images and video as base64 `data:` URLs.",
@@ -31,15 +44,18 @@ TYPES = {
                   "video dạng `data:` base64."),
     },
     "audio": {
+        "profile": "audio",
         "name": ("Audio models", "Model âm thanh"),
         "intro": ("Models that hear or speak: speech recognition and speech generation.",
                   "Model nghe hoặc nói: nhận dạng giọng nói và sinh giọng nói."),
     },
     "video": {
+        "profile": "chat",  # placeholder until a video model needs other APIs
         "name": ("Video models", "Model video"),
         "intro": ("Models that work with video.", "Model làm việc với video."),
     },
     "multimodal": {
+        "profile": "chat",
         "name": ("Multimodal models", "Model đa phương thức"),
         "intro": ("Models that take several kinds of input and answer in more than one: text, images, audio and video "
                   "in, text and speech out. They run on vLLM-Omni (a vLLM extension) in several stages, so they need "
@@ -51,6 +67,12 @@ TYPES = {
                   "`data:` base64."),
     },
 }
+
+
+def profile_of(model: dict) -> str:
+    """The proxy profile (which APIs the proxy lets through) of a model: its own, or the one of its type."""
+    return model.get("profile") or TYPES[model["kind"]]["profile"]
+
 
 # gpus: (name, GPU count, MiB per GPU, compute capability) commonly offered on the platform.
 PLATFORMS = {

@@ -3,6 +3,8 @@
 Add a model: a line in MODELS (its "kind" must be "multimodal"), then `python tools/build_notebooks.py --list` shows it.
 """
 
+from ..functions import CHAT, IMAGES, MEDIA_URL, NO_TOOLS, VIDEO
+
 # Qwen2.5-Omni runs on vLLM-Omni, which needs the matching vLLM release (0.32.0 with vLLM-Omni 0.32.0, the stable
 # pair; the other notebooks use the newer vLLM). It loads all three stages: Thinker 8.76 GiB, Talker 0.72 GiB and
 # Token2Wav 1.67 GiB, so the weights below are the whole model, and a single T4 is not enough.
@@ -14,6 +16,16 @@ QWEN2_5_OMNI = {
     "input": ("text, images, audio, video (answers in text and speech)",
               "văn bản, ảnh, âm thanh, video (trả lời bằng văn bản và giọng nói)"),
     "context": 32768,
+    "functions": [
+        IMAGES, VIDEO, MEDIA_URL,
+        ("Audio input (speech, sound)", "Âm thanh đầu vào (giọng nói, âm thanh)",
+         (f"`audio_url` with a base64 `data:` URL in {CHAT}", f"`audio_url` với URL `data:` base64 trong {CHAT}"), True),
+        ("Speech output", "Trả lời bằng giọng nói", (f"`modalities: [\"text\", \"audio\"]` in {CHAT}; a WAV in base64", f"`modalities: [\"text\", \"audio\"]` trong {CHAT}; WAV dạng base64"), True),
+        ("Choice of voice", "Chọn giọng", (f"`speaker`: `Chelsie` or `Ethan` in {CHAT}", f"`speaker`: `Chelsie` hoặc `Ethan` trong {CHAT}"), True),
+        ("A video's own sound", "Âm thanh của chính video",
+         (f"`mm_processor_kwargs.use_audio_in_video` in {CHAT}", f"`mm_processor_kwargs.use_audio_in_video` trong {CHAT}"), True),
+        NO_TOOLS,
+    ],
     "flags": ["--allowed-media-domains", "none.invalid"],
     "flag_notes": """\
 - `--omni`: vLLM-Omni runs the model's three stages (Thinker, Talker, Code2Wav). `--stage-overrides`, built in the cell

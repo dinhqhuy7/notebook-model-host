@@ -3,11 +3,14 @@
 Add a model: a line in MODELS (its "kind" must be "language"), then `python tools/build_notebooks.py --list` shows it.
 """
 
+from ..functions import CODE_COMPLETION, COMPLETION, JSON_SCHEMA, THINKING_SWITCH, TOOLS, YARN
+
 # Model families: serving flags (enable features only) and what to tell the reader about them.
 QWEN3 = {
     "kind": "language",
     "input": ("text", "văn bản"),
     "context": 40960,
+    "functions": [THINKING_SWITCH, TOOLS, JSON_SCHEMA, COMPLETION, YARN],
     "flags": ["--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "hermes"],
     "flag_notes": """\
 - `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
@@ -28,6 +31,7 @@ _CODER_NOTES = {
 }
 QWEN2_5_CODER_INSTRUCT = {
     **_CODER_NOTES,
+    "functions": [TOOLS, JSON_SCHEMA, COMPLETION],
     "flags": ["--enable-auto-tool-choice", "--tool-call-parser", "hermes"],
     "flag_notes": """\
 - `--enable-auto-tool-choice --tool-call-parser hermes`: function calls are returned in `tool_calls`.
@@ -46,6 +50,9 @@ QWEN2_5_CODER_INSTRUCT = {
 }
 QWEN2_5_CODER_BASE = {
     **_CODER_NOTES,
+    "functions": [CODE_COMPLETION, ("Chat and function calling", "Chat và gọi hàm", "`/v1/chat/completions`",
+                               ("the base model is not tuned for chat or tools; use Qwen2.5-Coder-3B-Instruct",
+                                "model base không được tinh chỉnh cho chat hay gọi hàm; dùng Qwen2.5-Coder-3B-Instruct"))],
     "flags": [],
     "flag_notes": """\
 - No tool parser and no reasoning parser: this is the base model, for `/v1/completions` (code completion and

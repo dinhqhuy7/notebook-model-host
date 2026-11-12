@@ -20,7 +20,7 @@ Models that read and write text: chat, optional thinking, function calling, and 
 
 ## Shared settings
 
-vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utilization 0.9`, `--enable-prefix-caching`; dtype `bfloat16` (`float16` on T4); the model is split across all GPUs; per-model parser flags are listed in step 5 of each notebook. The server sets no sampling parameters and logs no prompts or answers.
+vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utilization 0.9`, `--enable-prefix-caching`; dtype `bfloat16` (`float16` on T4); the model is split across all GPUs (a small model such as the reranker uses one); per-model parser flags are listed in step 5 of each notebook. The server sets no sampling parameters and logs no prompts or answers.
 
 ## Estimated memory left for context
 

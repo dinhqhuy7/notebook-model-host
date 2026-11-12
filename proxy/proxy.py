@@ -3,10 +3,14 @@
 vLLM's `--api-key` only protects /v1, /v2, /inference and /cohere; other paths such as
 /invocations (same text generation as /v1) or /sleep stay open. This proxy:
 - checks the key on every path: `Authorization: Bearer <key>` (OpenAI) or `x-api-key: <key>` (Anthropic);
-- lets through only the model APIs, everything else gets 404;
+- lets through only the model APIs of the chosen profile, everything else gets 404;
 - logs nothing and forwards responses chunk by chunk (streaming still works).
 
-    python proxy.py <listen port> <vLLM port> <api key>
+    python proxy.py <listen port> <vLLM port> <api key> [profile]
+
+The profile says which APIs the model has: "chat" (default: language, vision and multimodal models), "retrieval"
+(scoring, reranking and embedding models) or "audio" (speech recognition and generation). A model gets all the APIs
+of its profile; a new kind of model that needs other paths gets a new profile here.
 """
 
 import secrets
@@ -14,15 +18,14 @@ import sys
 
 from aiohttp import ClientSession, ClientTimeout, web
 
-ALLOWED = {
-    ("GET", "/v1/models"),
-    ("POST", "/v1/chat/completions"),
-    ("POST", "/v1/completions"),
-    ("POST", "/v1/responses"),
-    ("POST", "/v1/messages"),
-    ("POST", "/v1/messages/count_tokens"),
-    ("POST", "/tokenize"),
-    ("POST", "/detokenize"),
+COMMON = {("GET", "/v1/models"), ("POST", "/tokenize"), ("POST", "/detokenize")}
+PROFILES = {
+    "chat": COMMON | {("POST", path) for path in (
+        "/v1/chat/completions", "/v1/completions", "/v1/responses", "/v1/messages", "/v1/messages/count_tokens")},
+    "retrieval": COMMON | {("POST", path) for path in (
+        "/score", "/v1/score", "/rerank", "/v1/rerank", "/v2/rerank", "/v1/embeddings", "/v2/embed", "/pooling")},
+    "audio": COMMON | {("POST", path) for path in (
+        "/v1/audio/transcriptions", "/v1/audio/translations", "/v1/audio/speech")},
 }
 # Headers to forward; all others (Host, Cookie...) are dropped.
 FORWARD_UP = ("Content-Type", "Accept", "anthropic-version", "anthropic-beta")
@@ -37,9 +40,11 @@ def given_key(request: web.Request) -> str:
     return request.headers.get("x-api-key", "").strip()
 
 
-def make_app(upstream: str, key: str) -> web.Application:
+def make_app(upstream: str, key: str, profile: str = "chat") -> web.Application:
+    allowed = PROFILES[profile]
+
     async def handle(request: web.Request) -> web.StreamResponse:
-        if (request.method, request.path) not in ALLOWED:
+        if (request.method, request.path) not in allowed:
             return web.json_response({"error": "Not found"}, status=404)
         if not secrets.compare_digest(given_key(request).encode(), key.encode()):
             return web.json_response({"error": "Unauthorized"}, status=401)
@@ -81,5 +86,5 @@ def make_app(upstream: str, key: str) -> web.Application:
 
 if __name__ == "__main__":
     listen, vllm_port, api_key = int(sys.argv[1]), sys.argv[2], sys.argv[3]
-    web.run_app(make_app(f"http://127.0.0.1:{vllm_port}", api_key),
+    web.run_app(make_app(f"http://127.0.0.1:{vllm_port}", api_key, sys.argv[4] if len(sys.argv) > 4 else "chat"),
                 host="127.0.0.1", port=listen, print=None, access_log=None)

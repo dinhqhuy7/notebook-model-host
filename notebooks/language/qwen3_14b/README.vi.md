@@ -13,6 +13,18 @@ Quay lại [Model ngôn ngữ](../README.vi.md) · [mọi notebook](../../README
 | Google Colab | [colab_qwen3_14b.ipynb](colab_qwen3_14b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_14b/colab_qwen3_14b.ipynb) | ✓ A100 40 GB, 10/11/2026 |
 | Kaggle | — | cần ~35 GB bộ nhớ GPU; Kaggle 2 × T4 chỉ có tổng 30 GB |
 
+## Chức năng
+
+Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
+
+| Chức năng | Cách gọi | Host |
+|---|---|---|
+| Chế độ suy nghĩ, bật hoặc tắt theo từng request | `chat_template_kwargs.enable_thinking` trong `/v1/chat/completions`; phần suy nghĩ trả về trong `reasoning` | ✓ |
+| Gọi hàm | `tools` trong `/v1/chat/completions`; lời gọi trả về trong `tool_calls` | ✓ |
+| Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
+| Hoàn thành văn bản | `prompt` / `/v1/completions` | ✓ |
+| Context dài hơn bằng YaRN | rope scaling trong cấu hình model | ✗ chưa mở: notebook phục vụ context gốc (chưa có tuỳ chọn rope scaling) |
+
 ## Bộ nhớ ước tính còn cho context
 
 | GPU | Nền tảng | Qwen3-14B |

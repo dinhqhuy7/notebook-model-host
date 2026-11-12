@@ -15,6 +15,19 @@ Quay lại [Model thị giác](../README.vi.md) · [mọi notebook](../../README
 | Google Colab | [colab_qwen2_5_vl_7b_instruct.ipynb](colab_qwen2_5_vl_7b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | Chưa thử |
 | Kaggle | [kaggle_qwen2_5_vl_7b_instruct.ipynb](kaggle_qwen2_5_vl_7b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) | Chưa thử |
 
+## Chức năng
+
+Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
+
+| Chức năng | Cách gọi | Host |
+|---|---|---|
+| Ảnh đầu vào | `image_url` với URL `data:` base64 trong `/v1/chat/completions` | ✓ |
+| Video đầu vào | `video_url` với URL `data:` base64 trong `/v1/chat/completions` | ✓ |
+| Ảnh và video qua link http(s) | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ chặn có chủ đích: server không tự tải link; hãy gửi base64 |
+| Gọi hàm | `tools` / `/v1/chat/completions` | ✗ chat template của model không hỗ trợ tool nên server không bật tool parser |
+| Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
+| Định vị trong ảnh (hộp theo pixel tuyệt đối) | hỏi trong prompt, `/v1/chat/completions`; chưa thử ở đây | ✓ |
+
 ## Bộ nhớ ước tính còn cho context
 
 | GPU | Nền tảng | Qwen2.5-VL-7B-Instruct |

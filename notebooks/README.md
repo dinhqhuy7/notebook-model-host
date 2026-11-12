@@ -20,6 +20,14 @@ Models that read and write text: chat, optional thinking, function calling, and 
 | [Qwen2.5-Coder-3B-Instruct](language/qwen2_5_coder_3b_instruct/README.md) | text | 5.8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b_instruct.ipynb](language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb)<br>Not tested yet | [kaggle_qwen2_5_coder_3b_instruct.ipynb](language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb)<br>Not tested yet |
 | [Qwen2.5-Coder-3B](language/qwen2_5_coder_3b/README.md) | text | 5.8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b.ipynb](language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb)<br>Not tested yet | [kaggle_qwen2_5_coder_3b.ipynb](language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb)<br>Not tested yet |
 
+## [Retrieval models](retrieval/README.md)
+
+Models that score or embed text for search: reranking a list of documents against a query, and turning text into vectors. Text in, scores or vectors out; they do not generate text.
+
+| Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
+|---|---|---|---|---|---|---|
+| [Qwen3-Reranker-0.6B](retrieval/qwen3_reranker_0_6b/README.md) | text (a query and the documents to rank) | 1.1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>Not tested yet | [kaggle_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Not tested yet |
+
 ## [Vision models](vision/README.md)
 
 Models that see: they read images and video as well as text. The server never downloads media itself: send images and video as base64 `data:` URLs.

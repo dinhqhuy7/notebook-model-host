@@ -4,7 +4,7 @@
 
 The notebook prints the **Base URL** (`https://xxxx.trycloudflare.com/v1`), the **API key** and the
 **model** name (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`,
-`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`).
+`Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`).
 The examples use the `openai` library (`pip install openai`):
 
 ```python
@@ -27,6 +27,8 @@ MODEL = "Qwen3-4B"
 | `/think`, `/no_think` in messages | supported | not supported: use `enable_thinking` | not supported: use `enable_thinking` | n/a | n/a | n/a | n/a | n/a | n/a |
 | Function calling | supported (`hermes`) | supported (`qwen3_coder`) | supported (`qwen3_coder`) | supported (`hermes`) | supported (`hermes`) | **not supported**: its chat template has no tools, use a JSON schema | **not supported**: its chat template has no tools, use a JSON schema | supported (`hermes`) | not meant for it: base model, use `/v1/completions` |
 | Writing code | not tested | not tested | 9B: disable thinking (with it the model looped for 30 000 tokens without writing code); 4B: not tested | not tested | not tested | not tested | not tested | not tested | not tested |
+
+Qwen3-Reranker-0.6B is not in this table because it writes no text: see [Rerank and score](#rerank-and-score-qwen3-reranker).
 
 ## Chat
 
@@ -171,6 +173,49 @@ print(prefix + reply.choices[0].text + suffix)   # the file with the gap filled
   you send none, so send your own system message to replace it.
 - The FIM format follows Qwen's documentation; this section has not been tested here yet.
 
+## Rerank and score (Qwen3-Reranker)
+
+Qwen3-Reranker-0.6B writes no text, so it has no chat: it takes a query and documents and returns a relevance score
+from 0 to 1 for each one (the probability of "yes" against "no" in the prompt Qwen trained it with). It has its own
+paths, without `/v1`: `/rerank` (sorted, with `top_n`) and `/score` (in the order you sent). `/v1/chat/completions`
+and `/v1/completions` are not available. Use plain HTTP; the base URL is the tunnel URL without `/v1`.
+
+```python
+import requests
+
+BASE = "https://xxxx.trycloudflare.com"          # the URL without /v1
+HEADERS = {"Authorization": "Bearer <API key>"}  # or x-api-key
+docs = ["Gravity is a force that attracts two bodies towards each other.",
+        "The capital of China is Beijing.",
+        "Paris is the capital of France."]
+
+reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-Reranker-0.6B",
+    "query": "What is the capital of China?",
+    "documents": docs,
+    "top_n": 2,                                    # optional: keep the best 2
+    "instruction": "Given a web search query, retrieve relevant passages that answer the query",  # optional
+}).json()
+for hit in reply["results"]:                       # sorted, best first
+    print(hit["index"], round(hit["relevance_score"], 3), hit["document"]["text"])
+
+scores = requests.post(f"{BASE}/score", headers=HEADERS, timeout=90, json={
+    "model": "Qwen3-Reranker-0.6B", "queries": "What is the capital of China?", "documents": docs,
+}).json()
+print([item["score"] for item in scores["data"]])  # one score per document, in the order sent
+```
+
+- **`instruction`** describes your task and goes into the prompt of every pair (`Given a web search query, retrieve
+  relevant passages that answer the query` when omitted). Qwen reports 1% to 5% better results with an instruction
+  written for your task, in English, even for other languages.
+- **Long inputs:** `max_tokens_per_query` and `max_tokens_per_doc` cut each query or document to that many tokens
+  before scoring; the whole pair must fit in the context (40 960 tokens).
+- **Time:** a request is cut after 100 seconds (error 524). The notebook prints how many documents per second it
+  scores; split very large lists into several requests.
+- **Other paths** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) are the same APIs under other names.
+
+This section follows vLLM's code and Qwen's documentation; the notebook has not been tested yet.
+
 ## Function calling
 
 Not available with Qwen2.5-VL-7B-Instruct and Qwen2.5-Omni-3B (their chat templates have no tool support, so the server enables no tool parser) nor with the base Qwen2.5-Coder-3B. Use a [JSON schema](#json-schema) instead.
@@ -263,7 +308,7 @@ reply = client.chat.completions.create(model=MODEL, messages=messages, max_token
 | Code | Meaning | What to do |
 |---|---|---|
 | 401 | Missing or wrong key | Send `Authorization: Bearer <key>` (or `x-api-key`) |
-| 404 | Path not exposed | See the API list in the [README](../README.md) |
+| 404 | Path not exposed | Each model type has its own APIs (chat models: `/v1/...`; Qwen3-Reranker: `/rerank`, `/score`), see the [README](../README.md) |
 | 400 | Bad request, usually over the context limit | Shorten the prompt or lower `max_tokens`; check with `/tokenize` |
 | 502 | vLLM is down or restarting | Check the Monitor cell in the notebook |
 | 524 | Non-streaming request took over 100 seconds | Use `stream=true`, or lower `max_tokens` |

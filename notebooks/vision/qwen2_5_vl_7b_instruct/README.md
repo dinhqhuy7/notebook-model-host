@@ -15,6 +15,19 @@ Multimodal (text, images, video), plain attention: the KV cache costs 56 KiB per
 | Google Colab | [colab_qwen2_5_vl_7b_instruct.ipynb](colab_qwen2_5_vl_7b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | Not tested yet |
 | Kaggle | [kaggle_qwen2_5_vl_7b_instruct.ipynb](kaggle_qwen2_5_vl_7b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) | Not tested yet |
 
+## Functions
+
+Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
+
+| Function | How to call it | Hosted |
+|---|---|---|
+| Image input | `image_url` with a base64 `data:` URL in `/v1/chat/completions` | ✓ |
+| Video input | `video_url` with a base64 `data:` URL in `/v1/chat/completions` | ✓ |
+| Image and video by http(s) link | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ blocked on purpose: the server never downloads links; send base64 |
+| Function calling | `tools` / `/v1/chat/completions` | ✗ the model's chat template has no tool support, so the server enables no tool parser |
+| Structured output (JSON schema) | `response_format` in `/v1/chat/completions` | ✓ |
+| Visual grounding (boxes in absolute pixels) | ask in the prompt, `/v1/chat/completions`; not tested here yet | ✓ |
+
 ## Estimated memory left for context
 
 | GPU | Platform | Qwen2.5-VL-7B-Instruct |

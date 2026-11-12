@@ -15,6 +15,21 @@ Hears and speaks: text, images, audio and video in; text and speech out. It runs
 | Google Colab | [colab_qwen2_5_omni_3b.ipynb](colab_qwen2_5_omni_3b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | Not tested yet |
 | Kaggle | [kaggle_qwen2_5_omni_3b.ipynb](kaggle_qwen2_5_omni_3b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) | Not tested yet |
 
+## Functions
+
+Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
+
+| Function | How to call it | Hosted |
+|---|---|---|
+| Image input | `image_url` with a base64 `data:` URL in `/v1/chat/completions` | ✓ |
+| Video input | `video_url` with a base64 `data:` URL in `/v1/chat/completions` | ✓ |
+| Image and video by http(s) link | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ blocked on purpose: the server never downloads links; send base64 |
+| Audio input (speech, sound) | `audio_url` with a base64 `data:` URL in `/v1/chat/completions` | ✓ |
+| Speech output | `modalities: ["text", "audio"]` in `/v1/chat/completions`; a WAV in base64 | ✓ |
+| Choice of voice | `speaker`: `Chelsie` or `Ethan` in `/v1/chat/completions` | ✓ |
+| A video's own sound | `mm_processor_kwargs.use_audio_in_video` in `/v1/chat/completions` | ✓ |
+| Function calling | `tools` / `/v1/chat/completions` | ✗ the model's chat template has no tool support, so the server enables no tool parser |
+
 ## Estimated memory left for context
 
 | GPU | Platform | Qwen2.5-Omni-3B |

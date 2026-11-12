@@ -15,6 +15,15 @@ Model code (base): hoàn thành code và điền vào giữa qua `/v1/completion
 | Google Colab | [colab_qwen2_5_coder_3b.ipynb](colab_qwen2_5_coder_3b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | Chưa thử |
 | Kaggle | [kaggle_qwen2_5_coder_3b.ipynb](kaggle_qwen2_5_coder_3b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) | Chưa thử |
 
+## Chức năng
+
+Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
+
+| Chức năng | Cách gọi | Host |
+|---|---|---|
+| Hoàn thành code và điền vào giữa | `prompt` trong `/v1/completions`; điền vào giữa bằng `<|fim_prefix|>…<|fim_suffix|>…<|fim_middle|>` | ✓ |
+| Chat và gọi hàm | `/v1/chat/completions` | ✗ model base không được tinh chỉnh cho chat hay gọi hàm; dùng Qwen2.5-Coder-3B-Instruct |
+
 ## Bộ nhớ ước tính còn cho context
 
 | GPU | Nền tảng | Qwen2.5-Coder-3B |
