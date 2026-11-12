@@ -343,6 +343,8 @@ def build(key: str, platform: dict, model: dict, proxy_src: str, badge: str | No
     for i, (kind, text) in enumerate(cells_for(model, CELLS)):
         if i == 0 and not badge:
             text = text.replace("{{BADGE}}\n\n", "")
+        if not model["flags"]:  # a model that enables no flag (a base model): no empty entry in the serve command
+            text = text.replace("    {{SERVE_FLAGS}},\n", "")
         source = render(text, values).split("\n")
         cell = {"cell_type": "markdown" if kind == "md" else "code", "id": f"c{i:02d}", "metadata": {},
                 "source": [line + "\n" for line in source[:-1]] + source[-1:]}

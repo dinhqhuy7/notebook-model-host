@@ -24,6 +24,13 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 | [Qwen3-8B](notebooks/text/qwen3_8b/README.vi.md) | 15,3 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_8b/colab_qwen3_8b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_8b/kaggle_qwen3_8b.ipynb) |
 | [Qwen3-14B](notebooks/text/qwen3_14b/README.vi.md) | 27,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_14b/colab_qwen3_14b.ipynb) | — (cần ~35 GB bộ nhớ GPU) |
 
+### Model viết code
+
+| Model | Trọng số | Colab | Kaggle |
+|---|---|---|---|
+| [Qwen2.5-Coder-3B-Instruct](notebooks/code/qwen2_5_coder_3b_instruct/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) |
+| [Qwen2.5-Coder-3B](notebooks/code/qwen2_5_coder_3b/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) |
+
 ### Model ảnh và video
 
 | Model | Trọng số | Colab | Kaggle |
@@ -58,6 +65,17 @@ context:
 | A100 40 GB | Colab | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB (đo thật: 18,5 GiB) | ~6 GiB (đo thật: 5,85 GiB) |
 | A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
+
+**Model viết code**
+
+| GPU | Nền tảng | Qwen2.5-Coder-3B-Instruct | Qwen2.5-Coder-3B |
+|---|---|---|---|
+| T4 (15 GB) | Colab | ~6 GiB | ~6 GiB |
+| T4 x2 | Kaggle | ~17 GiB | ~17 GiB |
+| L4 (22,5 GB) | Colab | ~12 GiB | ~12 GiB |
+| A100 40 GB | Colab | ~28 GiB | ~28 GiB |
+| A100 / H100 80 GB | Colab | ~64 GiB | ~64 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
 **Model ảnh và video**
 
@@ -185,4 +203,4 @@ python -m unittest discover -s tests
 
 ## Giấy phép
 
-Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B: Qwen Research License, đọc điều khoản trước khi dùng).
+Mã: [MIT](LICENSE). Model theo giấy phép riêng (Qwen3, Qwen3.5, Qwen2.5-VL-7B-Instruct: Apache 2.0; Qwen2.5-Omni-3B và Qwen2.5-Coder-3B: Qwen Research License, đọc điều khoản trước khi dùng).

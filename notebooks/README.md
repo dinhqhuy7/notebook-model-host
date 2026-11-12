@@ -18,6 +18,15 @@ Language models that read and write text, with optional thinking and function ca
 | [Qwen3-8B](text/qwen3_8b/README.md) | text | 15.3 GiB | 40 960 | ~21 GB | [colab_qwen3_8b.ipynb](text/qwen3_8b/colab_qwen3_8b.ipynb)<br>✓ A100 40 GB, 2026-11-10 | [kaggle_qwen3_8b.ipynb](text/qwen3_8b/kaggle_qwen3_8b.ipynb)<br>✓ T4 x2, 2026-11-10 |
 | [Qwen3-14B](text/qwen3_14b/README.md) | text | 27.5 GiB | 40 960 | ~35 GB | [colab_qwen3_14b.ipynb](text/qwen3_14b/colab_qwen3_14b.ipynb)<br>✓ A100 40 GB, 2026-11-10 | — (needs ~35 GB of GPU memory; Kaggle's 2 × T4 have 30 GB in total) |
 
+## [Code models](code/README.md)
+
+Language models specialised in code. The Instruct models chat, call tools and write or fix code; the base models complete code and fill in the middle of it (/v1/completions). Text in, text out.
+
+| Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
+|---|---|---|---|---|---|---|
+| [Qwen2.5-Coder-3B-Instruct](code/qwen2_5_coder_3b_instruct/README.md) | text | 5.8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b_instruct.ipynb](code/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb)<br>Not tested yet | [kaggle_qwen2_5_coder_3b_instruct.ipynb](code/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb)<br>Not tested yet |
+| [Qwen2.5-Coder-3B](code/qwen2_5_coder_3b/README.md) | text | 5.8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b.ipynb](code/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb)<br>Not tested yet | [kaggle_qwen2_5_coder_3b.ipynb](code/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb)<br>Not tested yet |
+
 ## [Vision-language models](vision-language/README.md)
 
 Multimodal models that also read images and video. The server never downloads media itself: send images and video as base64 `data:` URLs.

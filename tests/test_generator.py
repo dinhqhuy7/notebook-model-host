@@ -83,6 +83,18 @@ class GeneratorTest(unittest.TestCase):
         row = next(l for l in intro.split("\n") if l.startswith("| T4 |"))
         self.assertIn("not enough memory", row)
 
+    def test_base_model_without_flags_and_instruct_with_tool_parser(self) -> None:
+        def source(path: Path) -> str:
+            nb = json.loads(path.read_text(encoding="utf-8"))
+            return "\n".join("".join(c["source"]) for c in nb["cells"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base = source(generate(Path(tmp), ["qwen2_5_coder_3b"], ["colab"])[0])
+            instruct = source(generate(Path(tmp), ["qwen2_5_coder_3b_instruct"], ["colab"])[0])
+        self.assertNotIn("enable-auto-tool-choice", base)
+        self.assertNotIn(",\n    ,", base)  # no empty entry left in the serve command
+        self.assertIn('"--enable-auto-tool-choice", "--tool-call-parser", "hermes"', instruct)
+
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())
         for model in MODELS:

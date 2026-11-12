@@ -4,7 +4,7 @@
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
 (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`,
-`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`). Các ví
+`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`). Các ví
 dụ dùng thư
 viện `openai` (`pip install openai`):
 
@@ -17,17 +17,17 @@ MODEL = "Qwen3-4B"
 
 ## Khác nhau giữa các model
 
-| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct | Qwen2.5-Omni-3B |
-|---|---|---|---|---|---|---|---|
-| Đầu vào | văn bản | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, âm thanh, video; ra văn bản **và giọng nói** |
-| Context | 40 960 token | tới 262 144 token | tới 262 144 token | tới 262 144 token (cần ~28 GiB KV cache: GPU nhỏ hơn được ít hơn) | như Instruct | tối đa 128 000 token (~7 GiB KV cache) | 32 768 token |
-| Suy nghĩ mặc định | bật | **tắt**: gửi `enable_thinking: true` để bật | bật | **không bao giờ** | **luôn luôn**, không có công tắc | **không bao giờ** | **không bao giờ** |
-| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** | `generation_config.json` của model (temperature 0.7, top_p 0.8, top_k 20) | `generation_config.json` của model (temperature 1.0, top_p 0.95, top_k 20) | `generation_config.json` của model (temperature 0.000001, repetition_penalty 1.05): gần như greedy | mặc định trong cấu hình vLLM-Omni của model (Thinker: temperature 0, repetition_penalty 1.1) |
-| Khuyên dùng khi có suy nghĩ | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | không có | `temperature=1.0, top_p=0.95, top_k=20` | không áp dụng | không áp dụng |
-| Khuyên dùng khi không suy nghĩ | `temperature=0.7, top_p=0.8, top_k=20` | văn bản: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; văn bản: `temperature=1.0, top_p=1.0, top_k=40, presence_penalty=2.0` | không có | Qwen không công bố; mặc định ở trên hợp với câu trả lời thực tế | Qwen không công bố; áp dụng mặc định ở trên |
-| `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` | không hỗ trợ: dùng `enable_thinking` | không có | không có | không áp dụng | không áp dụng |
-| Gọi hàm | hỗ trợ (`hermes`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`hermes`) | hỗ trợ (`hermes`) | **không hỗ trợ**: chat template không có tool, dùng JSON schema | **không hỗ trợ**: chat template không có tool, dùng JSON schema |
-| Viết code | chưa thử | chưa thử | 9B: tắt suy nghĩ (khi bật, model lặp 30 000 token mà không viết ra code); 4B: chưa thử | chưa thử | chưa thử | chưa thử | chưa thử |
+| | Qwen3-0.6B, 1.7B, 4B, 8B, 14B | Qwen3.5-0.8B, 2B | Qwen3.5-4B, 9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct | Qwen2.5-Omni-3B | Qwen2.5-Coder-3B-Instruct | Qwen2.5-Coder-3B |
+|---|---|---|---|---|---|---|---|---|---|
+| Đầu vào | văn bản | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, video | văn bản, ảnh, âm thanh, video; ra văn bản **và giọng nói** | văn bản (code) | văn bản (code) |
+| Context | 40 960 token | tới 262 144 token | tới 262 144 token | tới 262 144 token (cần ~28 GiB KV cache: GPU nhỏ hơn được ít hơn) | như Instruct | tối đa 128 000 token (~7 GiB KV cache) | 32 768 token | 32 768 token | 32 768 token |
+| Suy nghĩ mặc định | bật | **tắt**: gửi `enable_thinking: true` để bật | bật | **không bao giờ** | **luôn luôn**, không có công tắc | **không bao giờ** | **không bao giờ** | **không bao giờ** | **không bao giờ** |
+| Mặc định khi request không gửi tham số sinh | `generation_config.json` của model (temperature 0.6, top_p 0.95, top_k 20) | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** | mặc định của vLLM (temperature 1.0, không top_p/top_k): câu trả lời kém tin cậy (thử: đúng 9/20, so với 20/20 khi gửi tham số khuyên dùng), **luôn gửi tham số** | `generation_config.json` của model (temperature 0.7, top_p 0.8, top_k 20) | `generation_config.json` của model (temperature 1.0, top_p 0.95, top_k 20) | `generation_config.json` của model (temperature 0.000001, repetition_penalty 1.05): gần như greedy | mặc định trong cấu hình vLLM-Omni của model (Thinker: temperature 0, repetition_penalty 1.1) | `generation_config.json` của model (temperature 0.7, top_p 0.8, top_k 20, repetition_penalty 1.05) | mặc định của vLLM (temperature 1.0): **luôn gửi `temperature`** |
+| Khuyên dùng khi có suy nghĩ | `temperature=0.6, top_p=0.95, top_k=20` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5` | không có | `temperature=1.0, top_p=0.95, top_k=20` | không áp dụng | không áp dụng | không áp dụng | không áp dụng |
+| Khuyên dùng khi không suy nghĩ | `temperature=0.7, top_p=0.8, top_k=20` | văn bản: `temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0`; ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5` | ảnh: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; văn bản: `temperature=1.0, top_p=1.0, top_k=40, presence_penalty=2.0` | không có | Qwen không công bố; mặc định ở trên hợp với câu trả lời thực tế | Qwen không công bố; áp dụng mặc định ở trên | Qwen không công bố; mặc định ở trên là điểm khởi đầu tốt | Qwen không công bố; `temperature` thấp (0–0,2) khi hoàn thành code |
+| `/think`, `/no_think` trong tin nhắn | có | không hỗ trợ: dùng `enable_thinking` | không hỗ trợ: dùng `enable_thinking` | không có | không có | không áp dụng | không áp dụng | không áp dụng | không áp dụng |
+| Gọi hàm | hỗ trợ (`hermes`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`hermes`) | hỗ trợ (`hermes`) | **không hỗ trợ**: chat template không có tool, dùng JSON schema | **không hỗ trợ**: chat template không có tool, dùng JSON schema | hỗ trợ (`hermes`) | không dành cho việc này: model base, dùng `/v1/completions` |
+| Viết code | chưa thử | chưa thử | 9B: tắt suy nghĩ (khi bật, model lặp 30 000 token mà không viết ra code); 4B: chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử |
 
 ## Chat
 
@@ -51,7 +51,7 @@ curl https://xxxx.trycloudflare.com/v1/chat/completions \
 
 ## Suy nghĩ và tham số sinh
 
-Qwen3, Qwen3.5-4B và 9B mặc định suy nghĩ trước khi trả lời (Qwen3.5-0.8B và 2B thì không; Qwen3-VL-2B-Instruct, Qwen2.5-VL-7B-Instruct và Qwen2.5-Omni-3B không bao giờ suy nghĩ, Qwen3-VL-2B-Thinking luôn suy nghĩ và không có công tắc). Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
+Qwen3, Qwen3.5-4B và 9B mặc định suy nghĩ trước khi trả lời (Qwen3.5-0.8B và 2B thì không; Qwen3-VL-2B-Instruct, Qwen2.5-VL-7B-Instruct, Qwen2.5-Omni-3B và Qwen2.5-Coder-3B không bao giờ suy nghĩ, Qwen3-VL-2B-Thinking luôn suy nghĩ và không có công tắc). Phần suy nghĩ nằm ở `message.reasoning`, `content` chỉ
 chứa câu trả lời. Server không đặt tham số nào: nên gửi tường minh (giá trị cho từng model ở mục
 [Khác nhau giữa các model](#khác-nhau-giữa-các-model)). Ví dụ với Qwen3:
 
@@ -150,9 +150,32 @@ with open("answer.wav", "wb") as f:        # câu trả lời dạng giọng nó
 
 Mục này theo tài liệu của vLLM-Omni; notebook chưa được chạy thử.
 
+## Hoàn thành code (Qwen2.5-Coder)
+
+Qwen2.5-Coder-3B (bản base) hoàn thành code và điền vào giữa đoạn code qua `/v1/completions`. Đặt code phía trước chỗ
+trống sau `<|fim_prefix|>`, code phía sau sau `<|fim_suffix|>`, và kết thúc prompt bằng `<|fim_middle|>`; model viết
+phần thuộc về chỗ trống.
+
+```python
+prefix = "def is_prime(n):\n    "
+suffix = "\n\nprint(is_prime(7))\n"
+reply = client.completions.create(
+    model="Qwen2.5-Coder-3B",
+    prompt=f"<|fim_prefix|>{prefix}<|fim_suffix|>{suffix}<|fim_middle|>",
+    max_tokens=128, temperature=0.2,
+    stop=["<|endoftext|>", "<|fim_pad|>", "<|file_sep|>"],
+)
+print(prefix + reply.choices[0].text + suffix)   # file với chỗ trống đã điền
+```
+
+- Luôn gửi `temperature`: không gửi thì vLLM lấy mẫu ở 1.0. Qwen2.5-Coder-3B-Instruct là model để chat, gọi hàm và
+  giải thích; nó tự thêm system message "You are Qwen, created by Alibaba Cloud. You are a helpful assistant." khi bạn
+  không gửi system, nên hãy gửi system riêng để thay thế.
+- Định dạng FIM theo tài liệu của Qwen; mục này chưa được chạy thử ở đây.
+
 ## Gọi hàm
 
-Không dùng được với Qwen2.5-VL-7B-Instruct và Qwen2.5-Omni-3B: chat template của các model này không hỗ trợ tool nên server không bật tool parser. Hãy dùng [JSON theo schema](#json-theo-schema).
+Không dùng được với Qwen2.5-VL-7B-Instruct và Qwen2.5-Omni-3B (chat template của các model này không hỗ trợ tool nên server không bật tool parser), cũng như bản base Qwen2.5-Coder-3B. Hãy dùng [JSON theo schema](#json-theo-schema).
 
 ```python
 import json

@@ -18,6 +18,15 @@ Model ngôn ngữ đọc và viết văn bản, có thể suy nghĩ và gọi h�
 | [Qwen3-8B](text/qwen3_8b/README.vi.md) | văn bản | 15,3 GiB | 40 960 | ~21 GB | [colab_qwen3_8b.ipynb](text/qwen3_8b/colab_qwen3_8b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | [kaggle_qwen3_8b.ipynb](text/qwen3_8b/kaggle_qwen3_8b.ipynb)<br>✓ T4 x2, 10/11/2026 |
 | [Qwen3-14B](text/qwen3_14b/README.vi.md) | văn bản | 27,5 GiB | 40 960 | ~35 GB | [colab_qwen3_14b.ipynb](text/qwen3_14b/colab_qwen3_14b.ipynb)<br>✓ A100 40 GB, 10/11/2026 | — (cần ~35 GB bộ nhớ GPU; Kaggle 2 × T4 chỉ có tổng 30 GB) |
 
+## [Model viết code](code/README.vi.md)
+
+Model ngôn ngữ chuyên cho code. Bản Instruct trò chuyện, gọi hàm, viết và sửa code; bản base hoàn thành code và điền vào giữa đoạn code (/v1/completions). Vào văn bản, ra văn bản.
+
+| Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
+|---|---|---|---|---|---|---|
+| [Qwen2.5-Coder-3B-Instruct](code/qwen2_5_coder_3b_instruct/README.vi.md) | văn bản | 5,8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b_instruct.ipynb](code/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb)<br>Chưa thử | [kaggle_qwen2_5_coder_3b_instruct.ipynb](code/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb)<br>Chưa thử |
+| [Qwen2.5-Coder-3B](code/qwen2_5_coder_3b/README.vi.md) | văn bản | 5,8 GiB | 32 768 | ~11 GB | [colab_qwen2_5_coder_3b.ipynb](code/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb)<br>Chưa thử | [kaggle_qwen2_5_coder_3b.ipynb](code/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb)<br>Chưa thử |
+
 ## [Model ảnh và video](vision-language/README.vi.md)
 
 Model đa phương thức, đọc được cả ảnh và video. Server không tự tải media: hãy gửi ảnh và video dạng `data:` base64.

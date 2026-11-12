@@ -20,6 +20,13 @@ TYPES = {
         "intro": ("Language models that read and write text, with optional thinking and function calling.",
                   "Model ngôn ngữ đọc và viết văn bản, có thể suy nghĩ và gọi hàm."),
     },
+    "code": {
+        "name": ("Code models", "Model viết code"),
+        "intro": ("Language models specialised in code. The Instruct models chat, call tools and write or fix code; "
+                  "the base models complete code and fill in the middle of it (/v1/completions). Text in, text out.",
+                  "Model ngôn ngữ chuyên cho code. Bản Instruct trò chuyện, gọi hàm, viết và sửa code; bản base "
+                  "hoàn thành code và điền vào giữa đoạn code (/v1/completions). Vào văn bản, ra văn bản."),
+    },
     "vision-language": {
         "name": ("Vision-language models", "Model ảnh và video"),
         "intro": ("Multimodal models that also read images and video. The server never downloads media itself: "
