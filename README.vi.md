@@ -14,40 +14,35 @@ người dùng ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (bắ
 
 ## Model có sẵn
 
-### Model văn bản
+### Model ngôn ngữ
 
 | Model | Trọng số | Colab | Kaggle |
 |---|---|---|---|
-| [Qwen3-0.6B](notebooks/text/qwen3_0_6b/README.vi.md) | 1,4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_0_6b/colab_qwen3_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_0_6b/kaggle_qwen3_0_6b.ipynb) |
-| [Qwen3-1.7B](notebooks/text/qwen3_1_7b/README.vi.md) | 3,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_1_7b/colab_qwen3_1_7b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_1_7b/kaggle_qwen3_1_7b.ipynb) |
-| [Qwen3-4B](notebooks/text/qwen3_4b/README.vi.md) | 7,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_4b/colab_qwen3_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_4b/kaggle_qwen3_4b.ipynb) |
-| [Qwen3-8B](notebooks/text/qwen3_8b/README.vi.md) | 15,3 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_8b/colab_qwen3_8b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_8b/kaggle_qwen3_8b.ipynb) |
-| [Qwen3-14B](notebooks/text/qwen3_14b/README.vi.md) | 27,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/text/qwen3_14b/colab_qwen3_14b.ipynb) | — (cần ~35 GB bộ nhớ GPU) |
+| [Qwen3-0.6B](notebooks/language/qwen3_0_6b/README.vi.md) | 1,4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_0_6b/colab_qwen3_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_0_6b/kaggle_qwen3_0_6b.ipynb) |
+| [Qwen3-1.7B](notebooks/language/qwen3_1_7b/README.vi.md) | 3,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_1_7b/colab_qwen3_1_7b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_1_7b/kaggle_qwen3_1_7b.ipynb) |
+| [Qwen3-4B](notebooks/language/qwen3_4b/README.vi.md) | 7,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_4b/colab_qwen3_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_4b/kaggle_qwen3_4b.ipynb) |
+| [Qwen3-8B](notebooks/language/qwen3_8b/README.vi.md) | 15,3 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_8b/colab_qwen3_8b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_8b/kaggle_qwen3_8b.ipynb) |
+| [Qwen3-14B](notebooks/language/qwen3_14b/README.vi.md) | 27,5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen3_14b/colab_qwen3_14b.ipynb) | — (cần ~35 GB bộ nhớ GPU) |
+| [Qwen2.5-Coder-3B-Instruct](notebooks/language/qwen2_5_coder_3b_instruct/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) |
+| [Qwen2.5-Coder-3B](notebooks/language/qwen2_5_coder_3b/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/language/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) |
 
-### Model viết code
-
-| Model | Trọng số | Colab | Kaggle |
-|---|---|---|---|
-| [Qwen2.5-Coder-3B-Instruct](notebooks/code/qwen2_5_coder_3b_instruct/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b_instruct/colab_qwen2_5_coder_3b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b_instruct/kaggle_qwen2_5_coder_3b_instruct.ipynb) |
-| [Qwen2.5-Coder-3B](notebooks/code/qwen2_5_coder_3b/README.vi.md) | 5,8 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b/colab_qwen2_5_coder_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/code/qwen2_5_coder_3b/kaggle_qwen2_5_coder_3b.ipynb) |
-
-### Model ảnh và video
+### Model thị giác
 
 | Model | Trọng số | Colab | Kaggle |
 |---|---|---|---|
-| [Qwen3.5-0.8B](notebooks/vision-language/qwen3_5_0_8b/README.vi.md) (ảnh, video) | 1,6 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_0_8b/colab_qwen3_5_0_8b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_0_8b/kaggle_qwen3_5_0_8b.ipynb) |
-| [Qwen3.5-2B](notebooks/vision-language/qwen3_5_2b/README.vi.md) (ảnh, video) | 4,2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_2b/colab_qwen3_5_2b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_2b/kaggle_qwen3_5_2b.ipynb) |
-| [Qwen3.5-4B](notebooks/vision-language/qwen3_5_4b/README.vi.md) (ảnh, video) | 8,7 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_4b/colab_qwen3_5_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_4b/kaggle_qwen3_5_4b.ipynb) |
-| [Qwen3.5-9B](notebooks/vision-language/qwen3_5_9b/README.vi.md) (ảnh, video) | 18,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_9b/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_5_9b/kaggle_qwen3_5_9b.ipynb) |
-| [Qwen3-VL-2B-Instruct](notebooks/vision-language/qwen3_vl_2b_instruct/README.vi.md) (ảnh, video) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb) |
-| [Qwen3-VL-2B-Thinking](notebooks/vision-language/qwen3_vl_2b_thinking/README.vi.md) (ảnh, video) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb) |
-| [Qwen2.5-VL-7B-Instruct](notebooks/vision-language/qwen2_5_vl_7b_instruct/README.vi.md) (ảnh, video) | 15,4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision-language/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) |
+| [Qwen3.5-0.8B](notebooks/vision/qwen3_5_0_8b/README.vi.md) (ảnh, video) | 1,6 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_0_8b/colab_qwen3_5_0_8b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_0_8b/kaggle_qwen3_5_0_8b.ipynb) |
+| [Qwen3.5-2B](notebooks/vision/qwen3_5_2b/README.vi.md) (ảnh, video) | 4,2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_2b/colab_qwen3_5_2b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_2b/kaggle_qwen3_5_2b.ipynb) |
+| [Qwen3.5-4B](notebooks/vision/qwen3_5_4b/README.vi.md) (ảnh, video) | 8,7 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_4b/colab_qwen3_5_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_4b/kaggle_qwen3_5_4b.ipynb) |
+| [Qwen3.5-9B](notebooks/vision/qwen3_5_9b/README.vi.md) (ảnh, video) | 18,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/colab_qwen3_5_9b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/kaggle_qwen3_5_9b.ipynb) |
+| [Qwen3-VL-2B-Instruct](notebooks/vision/qwen3_vl_2b_instruct/README.vi.md) (ảnh, video) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb) |
+| [Qwen3-VL-2B-Thinking](notebooks/vision/qwen3_vl_2b_thinking/README.vi.md) (ảnh, video) | 4,0 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_thinking/colab_qwen3_vl_2b_thinking.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_thinking/kaggle_qwen3_vl_2b_thinking.ipynb) |
+| [Qwen2.5-VL-7B-Instruct](notebooks/vision/qwen2_5_vl_7b_instruct/README.vi.md) (ảnh, video) | 15,4 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/colab_qwen2_5_vl_7b_instruct.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen2_5_vl_7b_instruct/kaggle_qwen2_5_vl_7b_instruct.ipynb) |
 
-### Model đa phương thức đầy đủ
+### Model đa phương thức
 
 | Model | Trọng số | Colab | Kaggle |
 |---|---|---|---|
-| [Qwen2.5-Omni-3B](notebooks/omni/qwen2_5_omni_3b/README.vi.md) (ảnh, âm thanh, video; giọng nói ra) | 11,2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/omni/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) |
+| [Qwen2.5-Omni-3B](notebooks/multimodal/qwen2_5_omni_3b/README.vi.md) (ảnh, âm thanh, video; giọng nói ra) | 11,2 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/colab_qwen2_5_omni_3b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/multimodal/qwen2_5_omni_3b/kaggle_qwen2_5_omni_3b.ipynb) |
 
 Chọn GPU trước khi bấm **Run all** cho phù hợp nhu cầu; GPU phải đủ bộ nhớ cho model (✗ trong bảng
 dưới là không đủ). Repo mới đo trên các GPU ghi "đo thật". Mỗi model được đo trên GPU tại thời điểm chạy
@@ -55,29 +50,18 @@ thử, thường là loại khiêm tốn (T4, 2 × T4), nên tốc độ ghi tro
 hơn sẽ trả lời nhanh hơn, và một số model chưa được đo trên GPU tốt nhất hiện có. Bộ nhớ ước tính còn cho
 context:
 
-**Model văn bản**
+**Model ngôn ngữ**
 
-| GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B |
-|---|---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,1 GiB) | ~8 GiB (đo thật: 8,7 GiB) | ~4 GiB (đo thật: 4,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ |
-| T4 x2 | Kaggle | ~22 GiB (đo thật: 23,5 GiB) | ~19 GiB (đo thật: 21,4 GiB) | ~16 GiB (đo thật: 16,8 GiB) | ~8 GiB (đo thật: 9,2 GiB) | ✗ thiếu bộ nhớ |
-| L4 (22,5 GB) | Colab | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ thiếu bộ nhớ |
-| A100 40 GB | Colab | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB (đo thật: 18,5 GiB) | ~6 GiB (đo thật: 5,85 GiB) |
-| A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB |
-| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
+| GPU | Nền tảng | Qwen3-0.6B | Qwen3-1.7B | Qwen3-4B | Qwen3-8B | Qwen3-14B | Qwen2.5-Coder-3B-Instruct | Qwen2.5-Coder-3B |
+|---|---|---|---|---|---|---|---|---|
+| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,1 GiB) | ~8 GiB (đo thật: 8,7 GiB) | ~4 GiB (đo thật: 4,2 GiB) | ✗ thiếu bộ nhớ | ✗ thiếu bộ nhớ | ~6 GiB | ~6 GiB |
+| T4 x2 | Kaggle | ~22 GiB (đo thật: 23,5 GiB) | ~19 GiB (đo thật: 21,4 GiB) | ~16 GiB (đo thật: 16,8 GiB) | ~8 GiB (đo thật: 9,2 GiB) | ✗ thiếu bộ nhớ | ~17 GiB | ~17 GiB |
+| L4 (22,5 GB) | Colab | ~17 GiB | ~14 GiB | ~11 GiB | ~3 GiB | ✗ thiếu bộ nhớ | ~12 GiB | ~12 GiB |
+| A100 40 GB | Colab | ~33 GiB | ~30 GiB | ~27 GiB | ~19 GiB (đo thật: 18,5 GiB) | ~6 GiB (đo thật: 5,85 GiB) | ~28 GiB | ~28 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB | ~66 GiB | ~62 GiB | ~54 GiB | ~42 GiB | ~64 GiB | ~64 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
-**Model viết code**
-
-| GPU | Nền tảng | Qwen2.5-Coder-3B-Instruct | Qwen2.5-Coder-3B |
-|---|---|---|---|
-| T4 (15 GB) | Colab | ~6 GiB | ~6 GiB |
-| T4 x2 | Kaggle | ~17 GiB | ~17 GiB |
-| L4 (22,5 GB) | Colab | ~12 GiB | ~12 GiB |
-| A100 40 GB | Colab | ~28 GiB | ~28 GiB |
-| A100 / H100 80 GB | Colab | ~64 GiB | ~64 GiB |
-| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
-
-**Model ảnh và video**
+**Model thị giác**
 
 | GPU | Nền tảng | Qwen3.5-0.8B | Qwen3.5-2B | Qwen3.5-4B | Qwen3.5-9B | Qwen3-VL-2B-Instruct | Qwen3-VL-2B-Thinking | Qwen2.5-VL-7B-Instruct |
 |---|---|---|---|---|---|---|---|---|
@@ -88,7 +72,7 @@ context:
 | A100 / H100 80 GB | Colab | ~65 GiB | ~62 GiB | ~58 GiB | ~49 GiB (đo thật A100 80 GB: 49,3 GiB) | ~65 GiB | ~65 GiB | ~54 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
-**Model đa phương thức đầy đủ**
+**Model đa phương thức**
 
 | GPU | Nền tảng | Qwen2.5-Omni-3B |
 |---|---|---|
@@ -102,7 +86,7 @@ context:
 Số ghi "đo thật" lấy từ lần chạy thật; còn lại là ước tính. GPU khác: bước 1 của notebook tự kiểm.
 Qwen3.5-9B tốn KV cache ít hơn ~4,5 lần mỗi token (attention lai), nên 13 GiB đủ cho context gốc
 262 144 token. Mọi notebook kèm trạng thái chạy thử: [notebooks/README.vi.md](notebooks/README.vi.md)
-(theo loại: [văn bản](notebooks/text/README.vi.md), [ảnh và video](notebooks/vision-language/README.vi.md)).
+(theo loại: [ngôn ngữ](notebooks/language/README.vi.md), [thị giác](notebooks/vision/README.vi.md), [đa phương thức](notebooks/multimodal/README.vi.md)).
 Mỗi model có thư mục riêng chứa notebook, bảng GPU và kết quả chạy thử đầy đủ: mở từ tên model ở đó.
 
 ## Cách host model trên Google Colab hoặc Kaggle
@@ -145,8 +129,8 @@ schema, (Qwen3.5, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, gi
 - **Không lưu nội dung:** server không thêm system prompt, không đặt tham số sinh (request không
   gửi thì dùng mặc định của chính model nếu model có, xem
   [Khác nhau giữa các model](docs/api.vi.md#khác-nhau-giữa-các-model)), không ghi prompt hay câu trả lời vào log.
-- **Server không tự tải gì:** Qwen3.5 chỉ nhận ảnh và video dạng URL `data:` base64 do người gọi gửi;
-  link `http(s)` bị từ chối thay vì được server tải về.
+- **Server không tự tải gì:** model đọc ảnh, video hoặc âm thanh chỉ nhận chúng dạng URL `data:` base64 do người
+  gọi gửi; link `http(s)` bị từ chối thay vì được server tải về.
 - **Nội dung vẫn đi qua** Cloudflare (HTTPS được giải mã ở đó) và bộ nhớ máy notebook. Chỉ dùng
   server của người bạn tin.
 - **Prefix cache dùng chung:** khi gửi dữ liệu nhạy cảm, thêm `cache_salt` để không chia cache với
@@ -188,7 +172,7 @@ vừa một nền tảng thì đặt `platforms` và `unavailable` (lý do). Mod
 ## Phát triển
 
 ```
-notebooks/   notebook mẫu gom theo loại model (text/, vision-language/), mỗi model một thư mục chứa notebook
+notebooks/   notebook mẫu gom theo loại model (language/, vision/, multimodal/), mỗi model một thư mục chứa notebook
              và README có bảng GPU, kết quả chạy thử
 proxy/       proxy bắt key (được nhúng vào mọi notebook)
 tools/       build_notebooks.py và nbgen/: khuôn notebook, nền tảng và model

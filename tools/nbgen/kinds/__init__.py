@@ -1,9 +1,9 @@
 """Every model type: one module per type holds its models. A new type = a new module + a TYPES entry."""
 
 from ..config import TYPES
-from . import code, omni, text, vision_language
+from . import audio, language, multimodal, video, vision
 
-_BY_KIND = {"text": text, "code": code, "vision-language": vision_language, "omni": omni}
+_BY_KIND = {"language": language, "vision": vision, "audio": audio, "video": video, "multimodal": multimodal}
 assert set(_BY_KIND) == set(TYPES), "every entry of TYPES needs a module in nbgen/kinds, and the other way round"
 
 MODELS = [model for kind in TYPES for model in _BY_KIND[kind].MODELS]  # README order: type, then list order

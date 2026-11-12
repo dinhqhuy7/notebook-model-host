@@ -12,37 +12,43 @@ GPU_MEMORY = 0.90   # fraction of GPU memory given to vLLM
 OVERHEAD_GIB = 2.0  # per GPU: activations, CUDA graphs... (measured ~1.9 GiB on A100)
 MIN_KV_GIB = 1.5    # minimum KV cache to be usable
 
-# Model types: one folder per type under notebooks/, one folder per model inside it.
-# A new kind of model (embedding, speech...) is a new entry here plus MODELS entries with that "kind".
+# Model types: one folder per type under notebooks/, one folder per model inside it. A type is what the model takes in
+# and gives out, not its field: a code model is a language model.
+# A new kind of model is a new entry here, a module in kinds/ with that name, and MODELS entries with that "kind".
 TYPES = {
-    "text": {
-        "name": ("Text models", "Model văn bản"),
-        "intro": ("Language models that read and write text, with optional thinking and function calling.",
-                  "Model ngôn ngữ đọc và viết văn bản, có thể suy nghĩ và gọi hàm."),
+    "language": {
+        "name": ("Language models", "Model ngôn ngữ"),
+        "intro": ("Models that read and write text: chat, optional thinking, function calling, and writing or completing "
+                  "code. Text in, text out.",
+                  "Model đọc và viết văn bản: trò chuyện, có thể suy nghĩ, gọi hàm, viết và hoàn thành code. Vào văn "
+                  "bản, ra văn bản."),
     },
-    "code": {
-        "name": ("Code models", "Model viết code"),
-        "intro": ("Language models specialised in code. The Instruct models chat, call tools and write or fix code; "
-                  "the base models complete code and fill in the middle of it (/v1/completions). Text in, text out.",
-                  "Model ngôn ngữ chuyên cho code. Bản Instruct trò chuyện, gọi hàm, viết và sửa code; bản base "
-                  "hoàn thành code và điền vào giữa đoạn code (/v1/completions). Vào văn bản, ra văn bản."),
+    "vision": {
+        "name": ("Vision models", "Model thị giác"),
+        "intro": ("Models that see: they read images and video as well as text. The server never downloads media "
+                  "itself: send images and video as base64 `data:` URLs.",
+                  "Model nhìn được: đọc ảnh và video cùng với văn bản. Server không tự tải media: hãy gửi ảnh và "
+                  "video dạng `data:` base64."),
     },
-    "vision-language": {
-        "name": ("Vision-language models", "Model ảnh và video"),
-        "intro": ("Multimodal models that also read images and video. The server never downloads media itself: "
-                  "send images and video as base64 `data:` URLs.",
-                  "Model đa phương thức, đọc được cả ảnh và video. Server không tự tải media: hãy gửi ảnh và video "
-                  "dạng `data:` base64."),
+    "audio": {
+        "name": ("Audio models", "Model âm thanh"),
+        "intro": ("Models that hear or speak: speech recognition and speech generation.",
+                  "Model nghe hoặc nói: nhận dạng giọng nói và sinh giọng nói."),
     },
-    "omni": {
-        "name": ("Omni models", "Model đa phương thức đầy đủ"),
-        "intro": ("Models that hear and speak as well as read: text, images, audio and video in, text and speech out. "
-                  "They run on vLLM-Omni (a vLLM extension) in several stages, so they need more GPU memory than their "
-                  "size suggests. The server never downloads media itself: send images, audio and video as base64 "
-                  "`data:` URLs.",
-                  "Model nghe và nói được, không chỉ đọc: vào là văn bản, ảnh, âm thanh, video; ra là văn bản và giọng "
-                  "nói. Chạy trên vLLM-Omni (phần mở rộng của vLLM) qua nhiều giai đoạn nên cần nhiều bộ nhớ GPU hơn "
-                  "kích thước model. Server không tự tải media: hãy gửi ảnh, âm thanh, video dạng `data:` base64."),
+    "video": {
+        "name": ("Video models", "Model video"),
+        "intro": ("Models that work with video.", "Model làm việc với video."),
+    },
+    "multimodal": {
+        "name": ("Multimodal models", "Model đa phương thức"),
+        "intro": ("Models that take several kinds of input and answer in more than one: text, images, audio and video "
+                  "in, text and speech out. They run on vLLM-Omni (a vLLM extension) in several stages, so they need "
+                  "more GPU memory than their size suggests. The server never downloads media itself: send images, "
+                  "audio and video as base64 `data:` URLs.",
+                  "Model nhận nhiều loại đầu vào và trả lời bằng nhiều dạng: vào là văn bản, ảnh, âm thanh, video; ra "
+                  "là văn bản và giọng nói. Chạy trên vLLM-Omni (phần mở rộng của vLLM) qua nhiều giai đoạn nên cần "
+                  "nhiều bộ nhớ GPU hơn kích thước model. Server không tự tải media: hãy gửi ảnh, âm thanh, video dạng "
+                  "`data:` base64."),
     },
 }
 

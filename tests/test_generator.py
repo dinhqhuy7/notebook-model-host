@@ -50,7 +50,7 @@ class GeneratorTest(unittest.TestCase):
             self.assertNotRegex(text, r"\{\{[A-Z_]+\}\}")
 
     def test_never_writes_into_the_sample_notebooks(self) -> None:
-        for target in (ROOT / "notebooks", ROOT / "notebooks" / "text", ROOT / "notebooks" / "new"):
+        for target in (ROOT / "notebooks", ROOT / "notebooks" / "language", ROOT / "notebooks" / "new"):
             with self.assertRaises(SystemExit):
                 generate(target, ["qwen3_4b"], ["colab"])
         self.assertFalse((ROOT / "notebooks" / "new").exists())

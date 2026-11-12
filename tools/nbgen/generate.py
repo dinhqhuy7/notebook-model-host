@@ -27,11 +27,11 @@ def check_out_dir(out: Path) -> Path:
 
 
 def list_models() -> list:
-    lines = [f"{'slug':24} {'model':26} {'type':16} {'min GPU memory':15} platforms"]
+    lines = [f"{'slug':26} {'model':26} {'type':11} {'min GPU memory':15} platforms"]
     for model in MODELS:
         platforms = ", ".join(k for k in PLATFORMS if available(model, k))
         memory = f"~{-(-min_gpu_mib(model) // 1024)} GB"
-        lines.append(f"{model['slug']:24} {model['served_name']:26} {model['kind']:16} {memory:15} {platforms}")
+        lines.append(f"{model['slug']:26} {model['served_name']:26} {model['kind']:11} {memory:15} {platforms}")
     return lines
 
 
