@@ -4,7 +4,7 @@
 
 Notebook in ra **Base URL** (`https://xxxx.trycloudflare.com/v1`), **API key** và tên **model**
 (`Qwen3-0.6B`, `Qwen3-1.7B`, `Qwen3-4B`, `Qwen3-8B`, `Qwen3-14B`, `Qwen3.5-0.8B`, `Qwen3.5-2B`, `Qwen3.5-4B`,
-`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`). Các ví
+`Qwen3.5-9B`, `Qwen3-VL-2B-Instruct`, `Qwen3-VL-2B-Thinking`, `Qwen2.5-VL-7B-Instruct`, `Qwen2.5-Omni-3B`, `Qwen2.5-Coder-3B-Instruct`, `Qwen2.5-Coder-3B`, `Qwen3-Reranker-0.6B`, `Qwen3-Reranker-4B`). Các ví
 dụ dùng thư
 viện `openai` (`pip install openai`):
 
@@ -29,7 +29,7 @@ MODEL = "Qwen3-4B"
 | Gọi hàm | hỗ trợ (`hermes`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`qwen3_coder`) | hỗ trợ (`hermes`) | hỗ trợ (`hermes`) | **không hỗ trợ**: chat template không có tool, dùng JSON schema | **không hỗ trợ**: chat template không có tool, dùng JSON schema | hỗ trợ (`hermes`) | không dành cho việc này: model base, dùng `/v1/completions` |
 | Viết code | chưa thử | chưa thử | 9B: tắt suy nghĩ (khi bật, model lặp 30 000 token mà không viết ra code); 4B: chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử | chưa thử |
 
-Qwen3-Reranker-0.6B không có trong bảng này vì không viết văn bản: xem [Xếp hạng lại và chấm điểm](#xếp-hạng-lại-và-chấm-điểm-qwen3-reranker).
+Qwen3-Reranker-0.6B và 4B không có trong bảng này vì không viết văn bản: xem [Xếp hạng lại và chấm điểm](#xếp-hạng-lại-và-chấm-điểm-qwen3-reranker).
 
 ## Chat
 
@@ -177,7 +177,7 @@ print(prefix + reply.choices[0].text + suffix)   # file với chỗ trống đã
 
 ## Xếp hạng lại và chấm điểm (Qwen3-Reranker)
 
-Qwen3-Reranker-0.6B không viết văn bản nên không có chat: nó nhận một câu hỏi cùng các tài liệu và trả về điểm liên
+Qwen3-Reranker (0.6B và 4B) không viết văn bản nên không có chat: nó nhận một câu hỏi cùng các tài liệu và trả về điểm liên
 quan từ 0 đến 1 cho từng tài liệu (xác suất "yes" so với "no" trong prompt Qwen đã huấn luyện). Nó có đường dẫn riêng,
 không có `/v1`: `/rerank` (đã sắp xếp, có `top_n`) và `/score` (giữ thứ tự bạn gửi). `/v1/chat/completions` và
 `/v1/completions` không có. Dùng HTTP thường; base URL là URL tunnel không kèm `/v1`.
@@ -217,7 +217,7 @@ print([item["score"] for item in scores["data"]])  # mỗi tài liệu một đi
   lớn nên chia thành nhiều request.
 - **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
 
-Đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle chưa chạy thử.
+Bản 0,6B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle và bản 4B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
 
 ## Gọi hàm
 

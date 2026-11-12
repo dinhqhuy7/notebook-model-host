@@ -6,7 +6,7 @@ Back to [Retrieval models](../README.md) · [all notebooks](../../README.md) · 
 
 [Qwen/Qwen3-Reranker-0.6B](https://huggingface.co/Qwen/Qwen3-Reranker-0.6B) · text (a query and the documents to rank) · weights 1.1 GiB (download ~2 GB) · context 40 960 tokens · needs at least ~6 GB of total GPU memory
 
-Reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one (`/rerank` returns them sorted, `/score` in the order you sent). Each pair is scored with the prompt Qwen trained it with; set `instruction` in the request to describe your task (Qwen reports 1% to 5% better results with a task-specific instruction, in English); without it the default is "Given a web search query, retrieve relevant passages that answer the query". Multilingual. The model is small, so the notebook uses one GPU, even on Kaggle's 2 × T4. It writes no text (no chat). License: Apache 2.0. `float16` on T4 has not been tested with this model yet.
+Reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one (`/rerank` returns them sorted, `/score` in the order you sent). Each pair is scored with the prompt Qwen trained it with; set `instruction` in the request to describe your task (Qwen reports 1% to 5% better results with a task-specific instruction, in English); without it the default is "Given a web search query, retrieve relevant passages that answer the query". Multilingual. On Kaggle's 2 × T4 the model is split across both GPUs (Kaggle counts both against your quota). It writes no text (no chat). License: Apache 2.0. Tested on Colab T4 (`float16`); the split across two GPUs on Kaggle has not been tested yet.
 
 ## Notebooks
 
@@ -37,7 +37,7 @@ Everything the model can do, and whether the notebook hosts it. Whether it was r
 | A100 40 GB | Google Colab | ~33 GiB |
 | A100 80 GB | Google Colab | ~69 GiB |
 | H100 80 GB | Google Colab | ~68 GiB |
-| T4 x2 | Kaggle | ~10 GiB |
+| T4 x2 | Kaggle | ~22 GiB |
 | P100 | Kaggle | ✗ not supported by vLLM |
 
 ## Test results

@@ -6,7 +6,7 @@ import json
 import re
 from .catalog import gpu_table, min_gpu_mib, runnable
 from .config import CLOUDFLARED_VERSION, GPU_MEMORY, REPO
-from .engines import cells_for, pip_packages, vllm_version
+from .engines import cells_for, notes_for, pip_packages, vllm_version
 
 
 # Notebook template: ("md" | "code", text). {{NAME}} is substituted at build time.
@@ -335,12 +335,12 @@ def build(key: str, platform: dict, model: dict, proxy_src: str, badge: str | No
         "SLUG": model["slug"], "MODEL_ID": model["model_id"], "SERVED_NAME": model["served_name"],
         "WEIGHTS_GIB": f"{model['weights_gib']:.1f}", "FLAG_NOTES": model["flag_notes"],
         "SAMPLING": model["sampling"], "SERVE_FLAGS": ", ".join(json.dumps(f) for f in model["flags"]),
-        "MODEL_NOTES": model["notes"] + "\n\n" if model["notes"] else "",
+        "MODEL_NOTES": notes_for(model, key) + "\n\n" if notes_for(model, key) else "",
         "DOWNLOAD_GB": model["download_gb"], "MIN_GPU_MIB": min_gpu_mib(model), "GPU_MEMORY": GPU_MEMORY,
         "PROXY_SRC": proxy_src,  # last: nothing inside the proxy source gets substituted
     }
     cells = []
-    for i, (kind, text) in enumerate(cells_for(model, CELLS)):
+    for i, (kind, text) in enumerate(cells_for(model, CELLS, key)):
         if i == 0 and not badge:
             text = text.replace("{{BADGE}}\n\n", "")
         if not model["flags"]:  # a model that enables no flag (a base model): no empty entry in the serve command

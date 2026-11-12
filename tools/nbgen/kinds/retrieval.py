@@ -36,10 +36,10 @@ VLLM_TEMPLATE_SHA256 = "e1ee98e69aab7b2da366edf1c50efcef37e34b4a0c50fb816336213e
 _RERANKER_OVERRIDES = {"architectures": ["Qwen3ForSequenceClassification"], "classifier_from_token": ["no", "yes"],
                        "is_original_qwen3_reranker": True}
 
-QWEN3_RERANKER = {
+# Qwen3-Reranker family (0.6B, 4B): the same serving, the same functions; each model adds its own notes and memory.
+_QWEN3_RERANKER = {
     "kind": "retrieval",
     "task": "rerank",
-    "single_gpu": True,  # a 0.6B model gains nothing from splitting across GPUs
     "input": ("text (a query and the documents to rank)", "văn bản (câu hỏi và các tài liệu cần xếp hạng)"),
     "context": 40960,
     "flags": ["--runner", "pooling", "--hf-overrides", json.dumps(_RERANKER_OVERRIDES)],
@@ -51,21 +51,6 @@ QWEN3_RERANKER = {
   `<Query>`, `<Document>`) to a file. Callers can set the instruction in each request.
 - No reasoning or tool parser: the model writes no text, so `/v1/chat/completions` does not exist.""",
     "sampling": "this model generates no text: it returns a relevance score for each query-document pair",
-    "notes": "Reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one "
-             "(`/rerank` returns them sorted, `/score` in the order you sent). Each pair is scored with the prompt Qwen "
-             "trained it with; set `instruction` in the request to describe your task (Qwen reports 1% to 5% better "
-             "results with a task-specific instruction, in English); without it the default is \"Given a web search "
-             "query, retrieve relevant passages that answer the query\". Multilingual. The model is small, so the "
-             "notebook uses one GPU, even on Kaggle's 2 × T4. It writes no text (no chat). License: Apache 2.0. "
-             "`float16` on T4 has not been tested with this model yet.",
-    "notes_vi": "Reranker: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài liệu "
-                "(`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Mỗi cặp được chấm bằng đúng prompt "
-                "Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn (Qwen cho biết kết quả tốt "
-                "hơn 1% đến 5% khi có instruction riêng cho tác vụ, viết bằng tiếng Anh); không gửi thì mặc định là "
-                "\"Given a web search query, retrieve relevant passages that answer the query\". Đa ngôn ngữ. Model "
-                "nhỏ nên notebook chỉ dùng một GPU, kể cả trên 2 × T4 của Kaggle. Model không viết văn bản (không "
-                "chat). Giấy phép: Apache 2.0. `float16` trên T4 chưa thử với model này.",
-    "extra_gib": 0.3,  # estimate, not measured yet: the classifier head is built from the full-vocabulary output matrix
     # What the model can do, and whether this host gives it: (function, function in Vietnamese, API, True or
     # (reason, reason in Vietnamese)). Every function of the model card must be listed.
     "functions": [
@@ -80,7 +65,64 @@ QWEN3_RERANKER = {
     ],
 }
 
+QWEN3_RERANKER_0_6B = {
+    **_QWEN3_RERANKER,
+    # The tested Colab notebook has "one GPU" and its notes written in, and is locked: keep that notebook as it is. Kaggle
+    # always gives 2 x T4 and counts both against the quota, so the Kaggle notebook uses both.
+    "one_gpu_on": ("colab",),
+    "notes_by_platform": {"colab": "Reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one "
+             "(`/rerank` returns them sorted, `/score` in the order you sent). Each pair is scored with the prompt Qwen "
+             "trained it with; set `instruction` in the request to describe your task (Qwen reports 1% to 5% better "
+             "results with a task-specific instruction, in English); without it the default is \"Given a web search "
+             "query, retrieve relevant passages that answer the query\". Multilingual. The model is small, so the "
+             "notebook uses one GPU, even on Kaggle's 2 × T4. It writes no text (no chat). License: Apache 2.0. "
+             "`float16` on T4 has not been tested with this model yet."},
+    "notes": "Reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one "
+             "(`/rerank` returns them sorted, `/score` in the order you sent). Each pair is scored with the prompt Qwen "
+             "trained it with; set `instruction` in the request to describe your task (Qwen reports 1% to 5% better "
+             "results with a task-specific instruction, in English); without it the default is \"Given a web search "
+             "query, retrieve relevant passages that answer the query\". Multilingual. On Kaggle's 2 × T4 the model is "
+             "split across both GPUs (Kaggle counts both against your quota). It writes no text (no chat). License: Apache 2.0. "
+             "Tested on Colab T4 (`float16`); the split across two GPUs on Kaggle has not been tested yet.",
+    "notes_vi": "Reranker: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài liệu "
+                "(`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Mỗi cặp được chấm bằng đúng prompt "
+                "Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn (Qwen cho biết kết quả tốt "
+                "hơn 1% đến 5% khi có instruction riêng cho tác vụ, viết bằng tiếng Anh); không gửi thì mặc định là "
+                "\"Given a web search query, retrieve relevant passages that answer the query\". Đa ngôn ngữ. Trên 2 × T4 của "
+                "Kaggle model được chia ra cả hai GPU (Kaggle tính quota cho cả hai). Model không viết văn bản (không "
+                "chat). Giấy phép: Apache 2.0. Đã chạy thử trên Colab T4 (`float16`); việc chia hai GPU trên Kaggle chưa chạy thử.",
+    "extra_gib": 0.3,  # estimate, not measured yet: the classifier head is built from the full-vocabulary output matrix
+}
+
+# Qwen3-Reranker-4B (36 layers, 8 KV heads x 128): the KV cache costs 144 KiB per token, so a T4 (~3 GiB left) gets ~24 000
+# tokens of context and the notebook lowers the context to what fits. Scores of the model card: MTEB-R 69.76 (0.6B: 65.80),
+# CMTEB-R 75.94 (71.31), MMTEB-R 72.74 (66.36), MTEB-Code 81.20 (73.42).
+QWEN3_RERANKER_4B = {
+    **_QWEN3_RERANKER,
+    "notes": "Reranker, the larger and more accurate one of the family: send a query and a list of documents, get a "
+             "relevance score from 0 to 1 for each one (`/rerank` returns them sorted, `/score` in the order you sent). "
+             "Qwen's tables put it ahead of Qwen3-Reranker-0.6B (for example MTEB-R 69.76 against 65.80). Each pair is "
+             "scored with the prompt Qwen trained it with; set `instruction` in the request to describe your task, "
+             "otherwise the default is \"Given a web search query, retrieve relevant passages that answer the query\". "
+             "Multilingual. The KV cache costs 144 KiB per token, so on a single T4 vLLM lowers the context to what fits "
+             "(about 24 000 tokens; the model allows 40 960): see the memory table. On Kaggle's 2 × T4 the model is split "
+             "across both GPUs (tensor parallel), which leaves room for the full context. It writes no text (no chat). "
+             "License: Apache 2.0. `float16` on T4 and the split across two GPUs have not been tested with this model yet.",
+    "notes_vi": "Reranker, cỡ lớn và chính xác hơn của họ này: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ "
+                "0 đến 1 cho từng tài liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Bảng điểm "
+                "của Qwen đặt nó trên Qwen3-Reranker-0.6B (ví dụ MTEB-R 69,76 so với 65,80). Mỗi cặp được chấm bằng đúng "
+                "prompt Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn, không gửi thì mặc "
+                "định là \"Given a web search query, retrieve relevant passages that answer the query\". Đa ngôn ngữ. KV "
+                "cache tốn 144 KiB mỗi token, nên trên một T4 vLLM tự giảm context cho vừa (khoảng 24 000 token; model cho "
+                "phép 40 960): xem bảng bộ nhớ. Trên 2 × T4 của Kaggle model được chia ra cả hai GPU (tensor parallel), đủ chỗ cho "
+                "context đầy đủ. Model không viết văn bản (không chat). Giấy phép: Apache 2.0. `float16` trên T4 và việc "
+                "chia hai GPU chưa thử với model này.",
+    "extra_gib": 0.7,  # estimate, not measured yet: the classifier head is built from the 151 669 x 2 560 output matrix
+}
+
 MODELS = [
     {"slug": "qwen3_reranker_0_6b", "model_id": "Qwen/Qwen3-Reranker-0.6B", "served_name": "Qwen3-Reranker-0.6B",
-     "weights_gib": 1.12, "download_gb": 2, **QWEN3_RERANKER},
+     "weights_gib": 1.12, "download_gb": 2, **QWEN3_RERANKER_0_6B},
+    {"slug": "qwen3_reranker_4b", "model_id": "Qwen/Qwen3-Reranker-4B", "served_name": "Qwen3-Reranker-4B",
+     "weights_gib": 7.49, "download_gb": 8, **QWEN3_RERANKER_4B},
 ]

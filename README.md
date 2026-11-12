@@ -31,6 +31,7 @@ caller ──HTTPS──▶ xxxx.trycloudflare.com ──▶ proxy (checks key) 
 | Model | Weights | Colab | Kaggle |
 |---|---|---|---|
 | [Qwen3-Reranker-0.6B](notebooks/retrieval/qwen3_reranker_0_6b/README.md) (reranking: `/rerank`, `/score`) | 1.1 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) |
+| [Qwen3-Reranker-4B](notebooks/retrieval/qwen3_reranker_4b/README.md) (reranking: `/rerank`, `/score`) | 7.5 GiB | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb) | [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb) |
 
 ### Vision models
 
@@ -69,14 +70,14 @@ available. Estimated memory left for context:
 
 **Retrieval models**
 
-| GPU | Platform | Qwen3-Reranker-0.6B |
-|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) |
-| T4 x2 | Kaggle | ~10 GiB (it uses one GPU) |
-| L4 (22.5 GB) | Colab | ~17 GiB |
-| A100 40 GB | Colab | ~33 GiB |
-| A100 / H100 80 GB | Colab | ~68 GiB |
-| P100 | Kaggle | ✗ not supported by vLLM |
+| GPU | Platform | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B |
+|---|---|---|---|
+| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) | ~3 GiB |
+| T4 x2 | Kaggle | ~22 GiB (split across both GPUs) | ~15 GiB (split across both GPUs) |
+| L4 (22.5 GB) | Colab | ~17 GiB | ~10 GiB |
+| A100 40 GB | Colab | ~33 GiB | ~26 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB |
+| P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM |
 
 **Vision models**
 

@@ -136,12 +136,39 @@ class GeneratorTest(unittest.TestCase):
         self.assertIn("Qwen3ForSequenceClassification", rerank)
         self.assertIn('"--chat-template", TEMPLATE_FILE', rerank)
         self.assertIn('API_KEY, "retrieval"]', rerank)  # the proxy runs with the retrieval profile
-        self.assertIn("TP = 1", rerank)  # a small model uses one GPU even on 2 x T4
+        self.assertIn("TP = len(rows) if len(rows) in (1, 2, 4, 8) else 1", rerank)  # Kaggle: both T4 are counted, both are used
         self.assertIn('"/rerank"', rerank)
         self.assertNotIn('call(LOCAL, "/v1/chat/completions"', rerank)  # nothing to generate
         self.assertNotIn('API_KEY, "', chat)  # the other notebooks start the proxy without a profile: chat
         self.assertIn("str(PORT), API_KEY],", chat)
         self.assertNotIn("--chat-template", chat)
+
+    def test_kaggle_notebooks_use_every_gpu(self) -> None:
+        """Kaggle always gives 2 x T4 and counts both against the quota: no Kaggle notebook may leave one idle."""
+        with tempfile.TemporaryDirectory() as tmp:
+            for path in generate(Path(tmp), None, ["kaggle"]):
+                nb = json.loads(path.read_text(encoding="utf-8"))
+                text = "\n".join("".join(c["source"]) for c in nb["cells"])
+                if "--omni" in text:  # vLLM-Omni lays its stages out over both GPUs itself
+                    self.assertIn("two GPUs: the Thinker has the first", text, path.name)
+                else:
+                    self.assertIn("TP = len(rows) if len(rows) in (1, 2, 4, 8) else 1", text, path.name)
+                    self.assertIn("GPU_MIB = min(int(r[1]) for r in rows)", text, path.name)
+
+    def test_colab_reranker_keeps_its_tested_one_gpu_text(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            nb = json.loads(generate(Path(tmp), ["qwen3_reranker_0_6b"], ["colab"])[0].read_text(encoding="utf-8"))
+        text = "\n".join("".join(c["source"]) for c in nb["cells"])
+        self.assertIn("TP = 1  # a small model: one GPU", text)  # the locked, tested notebook
+        self.assertIn("even on Kaggle's 2 × T4", text)
+
+    def test_reranker_4b_serves_like_the_small_one(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            for slug in ("qwen3_reranker_4b", "qwen3_reranker_0_6b"):
+                nb = json.loads(generate(Path(tmp), [slug], ["kaggle"])[0].read_text(encoding="utf-8"))
+                text = "\n".join("".join(c["source"]) for c in nb["cells"])
+                self.assertIn('"--runner", "pooling", "--hf-overrides"', text)
+                self.assertIn('API_KEY, "retrieval"]', text)
 
     def test_reranker_template_renders_the_prompt_qwen_trained_with(self) -> None:
         try:

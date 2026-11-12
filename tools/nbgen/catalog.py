@@ -9,10 +9,7 @@ from .kinds import MODELS
 
 
 def kv_gib(model: dict, count: int, mib: int) -> float:
-    """Estimated memory left for the KV cache when running the model on `count` GPUs of `mib` MiB.
-    A model with "single_gpu" uses one GPU even when there are several."""
-    if model.get("single_gpu"):
-        count = 1
+    """Estimated memory left for the KV cache when running the model on `count` GPUs of `mib` MiB."""
     return count * (mib / 1024 * GPU_MEMORY - OVERHEAD_GIB) - model["weights_gib"] - model["extra_gib"]
 
 

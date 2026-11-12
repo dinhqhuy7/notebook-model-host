@@ -6,7 +6,7 @@ Quay lại [Model truy hồi](../README.vi.md) · [mọi notebook](../../README.
 
 [Qwen/Qwen3-Reranker-0.6B](https://huggingface.co/Qwen/Qwen3-Reranker-0.6B) · văn bản (câu hỏi và các tài liệu cần xếp hạng) · trọng số 1,1 GiB (tải ~2 GB) · context 40 960 token · cần ít nhất ~6 GB tổng bộ nhớ GPU
 
-Reranker: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Mỗi cặp được chấm bằng đúng prompt Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn (Qwen cho biết kết quả tốt hơn 1% đến 5% khi có instruction riêng cho tác vụ, viết bằng tiếng Anh); không gửi thì mặc định là "Given a web search query, retrieve relevant passages that answer the query". Đa ngôn ngữ. Model nhỏ nên notebook chỉ dùng một GPU, kể cả trên 2 × T4 của Kaggle. Model không viết văn bản (không chat). Giấy phép: Apache 2.0. `float16` trên T4 chưa thử với model này.
+Reranker: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Mỗi cặp được chấm bằng đúng prompt Qwen đã huấn luyện; đặt `instruction` trong request để mô tả tác vụ của bạn (Qwen cho biết kết quả tốt hơn 1% đến 5% khi có instruction riêng cho tác vụ, viết bằng tiếng Anh); không gửi thì mặc định là "Given a web search query, retrieve relevant passages that answer the query". Đa ngôn ngữ. Trên 2 × T4 của Kaggle model được chia ra cả hai GPU (Kaggle tính quota cho cả hai). Model không viết văn bản (không chat). Giấy phép: Apache 2.0. Đã chạy thử trên Colab T4 (`float16`); việc chia hai GPU trên Kaggle chưa chạy thử.
 
 ## Notebook
 
@@ -37,7 +37,7 @@ Mọi thứ model làm được, và notebook có host hay không. Đã chạy t
 | A100 40 GB | Google Colab | ~33 GiB |
 | A100 80 GB | Google Colab | ~69 GiB |
 | H100 80 GB | Google Colab | ~68 GiB |
-| T4 x2 | Kaggle | ~10 GiB |
+| T4 x2 | Kaggle | ~22 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ |
 
 ## Kết quả chạy thử

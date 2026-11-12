@@ -11,6 +11,7 @@ Model chấm điểm hoặc nhúng văn bản để tìm kiếm: xếp hạng l�
 | Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
 | [Qwen3-Reranker-0.6B](qwen3_reranker_0_6b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 1,1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 13/11/2026 | [kaggle_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Chưa thử |
+| [Qwen3-Reranker-4B](qwen3_reranker_4b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 7,5 GiB | 40 960 | ~13 GB | [colab_qwen3_reranker_4b.ipynb](qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb)<br>Chưa thử | [kaggle_qwen3_reranker_4b.ipynb](qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb)<br>Chưa thử |
 
 ## Thông số chung
 
@@ -20,12 +21,12 @@ vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utiliz
 
 Chọn GPU trước khi Run all; GPU cần ít nhất "Tổng bộ nhớ GPU tối thiểu" của model. Chi tiết và kết quả chạy thử nằm trong README của từng model.
 
-| GPU | Nền tảng | Qwen3-Reranker-0.6B |
-|---|---|---|
-| T4 | Google Colab | ~10 GiB |
-| L4 | Google Colab | ~17 GiB |
-| A100 40 GB | Google Colab | ~33 GiB |
-| A100 80 GB | Google Colab | ~69 GiB |
-| H100 80 GB | Google Colab | ~68 GiB |
-| T4 x2 | Kaggle | ~10 GiB |
-| P100 | Kaggle | ✗ vLLM không hỗ trợ |
+| GPU | Nền tảng | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B |
+|---|---|---|---|
+| T4 | Google Colab | ~10 GiB | ~3 GiB |
+| L4 | Google Colab | ~17 GiB | ~10 GiB |
+| A100 40 GB | Google Colab | ~33 GiB | ~26 GiB |
+| A100 80 GB | Google Colab | ~69 GiB | ~62 GiB |
+| H100 80 GB | Google Colab | ~68 GiB | ~61 GiB |
+| T4 x2 | Kaggle | ~22 GiB | ~15 GiB |
+| P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |

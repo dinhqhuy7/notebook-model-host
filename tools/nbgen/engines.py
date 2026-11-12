@@ -139,7 +139,13 @@ Also POST /score (scores in the order you send). Both accept "instruction" to de
 \'\'\')'''
 
 
-def patch_rerank(cells: list, model: dict) -> list:
+def notes_for(model: dict, key: str) -> str:
+    """The notes of the notebook intro. "notes_by_platform" pins the text of a platform whose notebook is already tested
+    and locked, so improving `notes` (the README text, the other platforms) does not change that notebook."""
+    return model.get("notes_by_platform", {}).get(key, model["notes"])
+
+
+def patch_rerank(cells: list, model: dict, key: str) -> list:
     """The template for a model that scores text: no chat request, a rerank speed test, the prompt template file."""
     out = []
     for kind, text in cells:
@@ -147,10 +153,11 @@ def patch_rerank(cells: list, model: dict) -> list:
             text = _replace(text, "as a key-protected, OpenAI-compatible API.",
                             "as a key-protected reranking API (`/rerank` and `/score`).")
         elif text.startswith("## 1. Check the GPU"):
-            text = _replace(text, "and splits the model across all GPUs\nwhen there are several.",
-                            "and uses one GPU: the model is small.")
+            if key in model.get("one_gpu_on", ()):
+                text = _replace(text, "and splits the model across all GPUs\nwhen there are several.",
+                                "and uses one GPU: the model is small.")
         elif text.startswith("import os, secrets") or text.startswith("import socket, subprocess"):
-            if "TP = len(rows)" in text:
+            if "TP = len(rows)" in text and key in model.get("one_gpu_on", ()):
                 text = _replace(text, "TP = len(rows) if len(rows) in (1, 2, 4, 8) else 1", "TP = 1  # a small model: one GPU")
                 text = _replace(text, "GPU_MIB = min(int(r[1]) for r in rows)", "GPU_MIB = int(rows[0][1])")
         elif text.startswith("import json, time, urllib.request"):
@@ -178,12 +185,12 @@ def patch_rerank(cells: list, model: dict) -> list:
     return out
 
 
-def cells_for(model: dict, cells: list) -> list:
+def cells_for(model: dict, cells: list, key: str) -> list:
     """The template cells for this model's engine, task and proxy profile."""
     if model.get("engine") == "vllm-omni":
         cells = patch_omni(cells)
     if model.get("task") == "rerank":
-        cells = patch_rerank(cells, model)
+        cells = patch_rerank(cells, model, key)
     if profile_of(model) != "chat":
         cells = patch_profile(cells, profile_of(model))
     return cells
