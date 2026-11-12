@@ -10,7 +10,7 @@ Model chấm điểm hoặc nhúng văn bản để tìm kiếm: xếp hạng l�
 
 | Model | Đầu vào | Trọng số | Context | Tổng bộ nhớ GPU tối thiểu | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
-| [Qwen3-Reranker-0.6B](qwen3_reranker_0_6b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 1,1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>Chưa thử | [kaggle_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Chưa thử |
+| [Qwen3-Reranker-0.6B](qwen3_reranker_0_6b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 1,1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 13/11/2026 | [kaggle_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Chưa thử |
 
 ## Thông số chung
 

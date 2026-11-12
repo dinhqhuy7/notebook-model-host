@@ -207,14 +207,15 @@ print([item["score"] for item in scores["data"]])  # one score per document, in 
 
 - **`instruction`** describes your task and goes into the prompt of every pair (`Given a web search query, retrieve
   relevant passages that answer the query` when omitted). Qwen reports 1% to 5% better results with an instruction
-  written for your task, in English, even for other languages.
+  written for your task, in English, even for other languages. This small model moves its scores very little when
+  the instruction changes (in a test a different instruction changed the best score from 0.9995 to 0.9979).
 - **Long inputs:** `max_tokens_per_query` and `max_tokens_per_doc` cut each query or document to that many tokens
   before scoring; the whole pair must fit in the context (40 960 tokens).
 - **Time:** a request is cut after 100 seconds (error 524). The notebook prints how many documents per second it
   scores; split very large lists into several requests.
 - **Other paths** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) are the same APIs under other names.
 
-This section follows vLLM's code and Qwen's documentation; the notebook has not been tested yet.
+Tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle has not been tested yet.
 
 ## Function calling
 

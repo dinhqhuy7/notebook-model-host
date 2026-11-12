@@ -26,7 +26,7 @@ Models that score or embed text for search: reranking a list of documents agains
 
 | Model | Input | Weights | Context | Min. total GPU memory | Google Colab | Kaggle |
 |---|---|---|---|---|---|---|
-| [Qwen3-Reranker-0.6B](retrieval/qwen3_reranker_0_6b/README.md) | text (a query and the documents to rank) | 1.1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>Not tested yet | [kaggle_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Not tested yet |
+| [Qwen3-Reranker-0.6B](retrieval/qwen3_reranker_0_6b/README.md) | text (a query and the documents to rank) | 1.1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 2026-11-13 | [kaggle_qwen3_reranker_0_6b.ipynb](retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Not tested yet |
 
 ## [Vision models](vision/README.md)
 

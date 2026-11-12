@@ -209,14 +209,15 @@ print([item["score"] for item in scores["data"]])  # mỗi tài liệu một đi
 
 - **`instruction`** mô tả tác vụ của bạn và được đưa vào prompt của mọi cặp (mặc định `Given a web search query,
   retrieve relevant passages that answer the query`). Qwen cho biết kết quả tốt hơn 1% đến 5% khi có instruction viết
-  riêng cho tác vụ, bằng tiếng Anh, kể cả với ngôn ngữ khác.
+  riêng cho tác vụ, bằng tiếng Anh, kể cả với ngôn ngữ khác. Model nhỏ này đổi điểm rất ít khi đổi instruction (khi thử,
+  một instruction khác làm điểm cao nhất đổi từ 0,9995 sang 0,9979).
 - **Đầu vào dài:** `max_tokens_per_query` và `max_tokens_per_doc` cắt từng câu hỏi hay tài liệu còn chừng đó token
   trước khi chấm; cả cặp phải vừa context (40 960 token).
 - **Thời gian:** request bị cắt sau 100 giây (lỗi 524). Notebook in ra số tài liệu chấm được mỗi giây; danh sách rất
   lớn nên chia thành nhiều request.
 - **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
 
-Mục này theo mã nguồn vLLM và tài liệu của Qwen; notebook chưa được chạy thử.
+Đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle chưa chạy thử.
 
 ## Gọi hàm
 

@@ -12,7 +12,7 @@ Reranker: send a query and a list of documents, get a relevance score from 0 to 
 
 | Platform | Notebook | Test status |
 |---|---|---|
-| Google Colab | [colab_qwen3_reranker_0_6b.ipynb](colab_qwen3_reranker_0_6b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | Not tested yet |
+| Google Colab | [colab_qwen3_reranker_0_6b.ipynb](colab_qwen3_reranker_0_6b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | ✓ T4, 2026-11-13 |
 | Kaggle | [kaggle_qwen3_reranker_0_6b.ipynb](kaggle_qwen3_reranker_0_6b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) | Not tested yet |
 
 ## Functions
@@ -46,7 +46,16 @@ Speeds come from the GPU used for each run, often a modest one; a stronger GPU i
 
 ### Google Colab
 
-Not tested yet.
+| Item | Result |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB), driver 580.82.07 |
+| vLLM / dtype / GPUs | 0.33.0 / float16 / 1 |
+| Context (`auto`) | 40 960 tokens (the model maximum) |
+| KV cache | 11.35 GiB = 106 240 tokens, 2.59 full-length requests at once |
+| GPU memory | weights 1.12 GiB (1.18 GiB with the rest of the non-torch memory), peak activations 0.57 GiB, CUDA graphs 0.05 GiB |
+| Time | server start ~2 min (weights 3 s, torch.compile 30 s, CUDA graphs 11 + 5 s) |
+| Speed | ~45 documents/second with 200-token documents (~12 000 tokens/second); 100 documents in 2.3 s; 8 requests of 16 documents at once in 0.8 s. Two documents totalling ~22 000 tokens took 30 s the first time (and 1.6 s when repeated, from the prefix cache) |
+| Checked through the public URL | 11/11 checks: no or wrong key → 401 on `/rerank` and `/score`; `/invocations`, `/sleep` and `/v1/chat/completions` → 404; `/rerank` puts the right document first (score 0.999 against 0.0) and `top_n` cuts the list; `/score` gives the same scores in the order sent; a Vietnamese query ranked correctly; `instruction` reaches the prompt (the prompt grows with it, and the default text gives identical scores) but moves this small model's score very little (0.9995 → 0.9979 for a different instruction); `max_tokens_per_doc` cut 1 285 tokens to 108; the right document found among ~22 000 tokens (0.645 against 0.002). The server log shows the chat template was loaded (no missing-template warning), `float16` was used on T4 and `--max-model-len auto` worked with the pooling runner |
 
 ### Kaggle
 

@@ -12,7 +12,7 @@ Reranker: gửi một câu hỏi và danh sách tài liệu, nhận điểm liê
 
 | Nền tảng | Notebook | Chạy thử |
 |---|---|---|
-| Google Colab | [colab_qwen3_reranker_0_6b.ipynb](colab_qwen3_reranker_0_6b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | Chưa thử |
+| Google Colab | [colab_qwen3_reranker_0_6b.ipynb](colab_qwen3_reranker_0_6b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb) | ✓ T4, 13/11/2026 |
 | Kaggle | [kaggle_qwen3_reranker_0_6b.ipynb](kaggle_qwen3_reranker_0_6b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/retrieval/qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb) | Chưa thử |
 
 ## Chức năng
@@ -46,7 +46,16 @@ Tốc độ là của GPU dùng lúc chạy thử, thường khiêm tốn; GPU m
 
 ### Google Colab
 
-Chưa thử.
+| Mục | Kết quả |
+|---|---|
+| GPU | 1 × Tesla T4 (15 GB), driver 580.82.07 |
+| vLLM / dtype / số GPU | 0.33.0 / float16 / 1 |
+| Context (`auto`) | 40 960 token (tối đa của model) |
+| KV cache | 11,35 GiB = 106 240 token, 2,59 request dài tối đa cùng lúc |
+| Bộ nhớ GPU | trọng số 1,12 GiB (1,18 GiB cùng phần non-torch khác), activation đỉnh 0,57 GiB, CUDA graph 0,05 GiB |
+| Thời gian | bật server ~2 phút (trọng số 3 giây, torch.compile 30 giây, CUDA graph 11 + 5 giây) |
+| Tốc độ | ~45 tài liệu/giây với tài liệu 200 token (~12 000 token/giây); 100 tài liệu trong 2,3 giây; 8 request, mỗi request 16 tài liệu, cùng lúc trong 0,8 giây. Hai tài liệu tổng ~22 000 token mất 30 giây lần đầu (1,6 giây khi lặp lại, nhờ cache prefix) |
+| Đã kiểm qua URL công khai | 11/11 phép thử: không key hoặc sai key → 401 ở `/rerank` và `/score`; `/invocations`, `/sleep` và `/v1/chat/completions` → 404; `/rerank` xếp tài liệu đúng lên đầu (điểm 0,999 so với 0,0) và `top_n` cắt danh sách; `/score` cho cùng điểm theo thứ tự gửi; câu hỏi tiếng Việt xếp đúng; `instruction` đi vào prompt (prompt dài ra theo nó, và gửi đúng văn bản mặc định thì điểm giống hệt) nhưng làm điểm của model nhỏ này đổi rất ít (0,9995 → 0,9979 với instruction khác); `max_tokens_per_doc` cắt 1 285 token còn 108; tìm đúng tài liệu giữa ~22 000 token (0,645 so với 0,002). Log server cho thấy chat template đã nạp (không có cảnh báo thiếu template), `float16` chạy được trên T4 và `--max-model-len auto` chạy được với runner pooling |
 
 ### Kaggle
 

@@ -71,7 +71,7 @@ context:
 
 | GPU | Nền tảng | Qwen3-Reranker-0.6B |
 |---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB |
+| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,3 GiB) |
 | T4 x2 | Kaggle | ~10 GiB (chỉ dùng một GPU) |
 | L4 (22,5 GB) | Colab | ~17 GiB |
 | A100 40 GB | Colab | ~33 GiB |
