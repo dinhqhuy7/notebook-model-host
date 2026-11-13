@@ -15,6 +15,15 @@ Quay lại [Model thị giác](../README.vi.md) · [mọi notebook](../../README
 | Google Colab | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/colab_qwen3_5_9b.ipynb) | ✓ A100 40 GB 10/11/2026, A100 80 GB 11/11/2026 |
 | Kaggle | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/kaggle_qwen3_5_9b.ipynb) | ✓ T4 x2, 11/11/2026 |
 
+## Bản cập nhật chưa chạy thử
+
+Các notebook này mới hơn bản đã chạy thử. Chúng chưa được chạy nên chưa có số đo. Dùng bản đã chạy thử, trừ khi bạn muốn thử bản cập nhật; khi bản cập nhật được chạy thử, nó thay cho bản đã chạy thử.
+
+| Bản cập nhật (chưa chạy thử) | Thay cho |
+|---|---|
+| ⚠ [colab_qwen3_5_9b_update.ipynb](colab_qwen3_5_9b_update.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/colab_qwen3_5_9b_update.ipynb) | [colab_qwen3_5_9b.ipynb](colab_qwen3_5_9b.ipynb) |
+| ⚠ [kaggle_qwen3_5_9b_update.ipynb](kaggle_qwen3_5_9b_update.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_5_9b/kaggle_qwen3_5_9b_update.ipynb) | [kaggle_qwen3_5_9b.ipynb](kaggle_qwen3_5_9b.ipynb) |
+
 ## Chức năng
 
 Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
@@ -27,6 +36,7 @@ Mọi thứ model làm được, và notebook có host hay không. Đã chạy t
 | Chế độ suy nghĩ, bật hoặc tắt theo từng request | `chat_template_kwargs.enable_thinking` trong `/v1/chat/completions`; phần suy nghĩ trả về trong `reasoning` | ✓ |
 | Gọi hàm | `tools` trong `/v1/chat/completions`; lời gọi trả về trong `tool_calls` | ✓ |
 | Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
+| Thiết lập bộ xử lý ảnh và video theo từng request | `mm_processor_kwargs` in `/v1/chat/completions` (needs `--trust-request-mm-kwargs`) | ✗ chưa có trong notebook đã chạy thử: bản `_update` của nó bật cờ cho server, chưa chạy thử; vLLM 0.33 từ chối trường này nếu thiếu cờ |
 
 ## Bộ nhớ ước tính còn cho context
 

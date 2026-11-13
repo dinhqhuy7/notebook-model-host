@@ -28,6 +28,11 @@ VIDEO = ("Video input", "Video đầu vào",
 MEDIA_URL = ("Image and video by http(s) link", "Ảnh và video qua link http(s)", f"`image_url` / `video_url` `https://...` / {CHAT}",
              ("blocked on purpose: the server never downloads links; send base64",
               "chặn có chủ đích: server không tự tải link; hãy gửi base64"))
+PROCESSOR_SETTINGS_IN_UPDATE = (
+    "Image and video processor settings per request", "Thiết lập bộ xử lý ảnh và video theo từng request",
+    f"`mm_processor_kwargs` in {CHAT} (needs `--trust-request-mm-kwargs`)",
+    ("not in the tested notebook: its update (`_update`) starts the server with the flag, not tested yet; vLLM 0.33 refuses the field without it",
+     "chưa có trong notebook đã chạy thử: bản `_update` của nó bật cờ cho server, chưa chạy thử; vLLM 0.33 từ chối trường này nếu thiếu cờ"))
 YARN = ("Longer context with YaRN", "Context dài hơn bằng YaRN", ("rope scaling in the model config", "rope scaling trong cấu hình model"),
         ("not given: the notebook serves the native context (a rope-scaling setting is not offered yet)",
          "chưa mở: notebook phục vụ context gốc (chưa có tuỳ chọn rope scaling)"))

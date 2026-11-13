@@ -13,7 +13,9 @@ Model chấm điểm hoặc nhúng nội dung để tìm kiếm: xếp hạng l�
 | [Qwen3-Reranker-0.6B](qwen3_reranker_0_6b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 1,1 GiB | 40 960 | ~6 GB | [colab_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/colab_qwen3_reranker_0_6b.ipynb)<br>✓ T4, 13/11/2026 | [kaggle_qwen3_reranker_0_6b.ipynb](qwen3_reranker_0_6b/kaggle_qwen3_reranker_0_6b.ipynb)<br>Chưa thử |
 | [Qwen3-Reranker-4B](qwen3_reranker_4b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 7,5 GiB | 40 960 | ~13 GB | [colab_qwen3_reranker_4b.ipynb](qwen3_reranker_4b/colab_qwen3_reranker_4b.ipynb)<br>✓ T4, 13/11/2026 | [kaggle_qwen3_reranker_4b.ipynb](qwen3_reranker_4b/kaggle_qwen3_reranker_4b.ipynb)<br>Chưa thử |
 | [Qwen3-Reranker-8B](qwen3_reranker_8b/README.vi.md) | văn bản (câu hỏi và các tài liệu cần xếp hạng) | 15,2 GiB | 40 960 | ~23 GB | [colab_qwen3_reranker_8b.ipynb](qwen3_reranker_8b/colab_qwen3_reranker_8b.ipynb)<br>Chưa thử | [kaggle_qwen3_reranker_8b.ipynb](qwen3_reranker_8b/kaggle_qwen3_reranker_8b.ipynb)<br>Chưa thử |
-| [Qwen3-VL-Reranker-2B](qwen3_vl_reranker_2b/README.vi.md) | văn bản, ảnh, video (câu hỏi và tài liệu) | 4,0 GiB | 32 768 | ~10 GB | [colab_qwen3_vl_reranker_2b.ipynb](qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b.ipynb)<br>Chưa thử | [kaggle_qwen3_vl_reranker_2b.ipynb](qwen3_vl_reranker_2b/kaggle_qwen3_vl_reranker_2b.ipynb)<br>Chưa thử |
+| [Qwen3-VL-Reranker-2B](qwen3_vl_reranker_2b/README.vi.md) | văn bản, ảnh, video (câu hỏi và tài liệu) | 4,0 GiB | 32 768 | ~10 GB | [colab_qwen3_vl_reranker_2b.ipynb](qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b.ipynb)<br>✓ T4, 13/11/2026<br>⚠ [colab_qwen3_vl_reranker_2b_update.ipynb](qwen3_vl_reranker_2b/colab_qwen3_vl_reranker_2b_update.ipynb) (bản cập nhật, chưa chạy thử) | [kaggle_qwen3_vl_reranker_2b.ipynb](qwen3_vl_reranker_2b/kaggle_qwen3_vl_reranker_2b.ipynb)<br>Chưa thử |
+
+⚠ đánh dấu notebook bản cập nhật chưa chạy thử. Notebook đã chạy thử đứng cạnh vẫn là bản chính thức cho tới khi bản cập nhật được chạy thử và thay thế.
 
 ## Thông số chung
 

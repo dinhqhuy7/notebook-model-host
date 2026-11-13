@@ -217,7 +217,7 @@ print([item["score"] for item in scores["data"]])  # mỗi tài liệu một đi
   lớn nên chia thành nhiều request.
 - **Đường dẫn khác** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) là cùng các API dưới tên khác.
 
-Các bản 0,6B và 4B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle, bản 8B và Qwen3-VL-Reranker-2B chưa chạy thử. Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
+Các bản 0,6B và 4B đã chạy thử trên Colab T4 (mọi lời gọi ở trên, xem [README của model](../notebooks/retrieval/qwen3_reranker_0_6b/README.vi.md)); Kaggle và bản 8B chưa chạy thử; Qwen3-VL-Reranker-2B đã chạy thử trên Colab T4 (văn bản, ảnh và video). Các ví dụ dùng `Qwen3-Reranker-0.6B`; bản 4B nhận đúng các lời gọi này.
 
 ### Ảnh và video (Qwen3-VL-Reranker)
 
@@ -247,7 +247,9 @@ reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
 
 - Video gửi dạng `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`. vLLM mặc định đọc tối đa 32
   khung hình của một video. Câu hỏi cũng có thể là ảnh hoặc video: `"query": {"content": [...]}`.
-- `mm_processor_kwargs` (trường của cả hai API) được chuyển cho bộ xử lý ảnh và video.
+- `mm_processor_kwargs` (trường của cả hai API) đặt cách xử lý ảnh và video. vLLM từ chối nếu server không chạy với
+  `--trust-request-mm-kwargs`; `colab_qwen3_vl_reranker_2b_update.ipynb` và notebook Kaggle đã bật cờ này (chưa chạy thử); notebook
+  Colab đã chạy thử trước đó không bật nên trả HTTP 400.
 - Giữ body dưới 32 MiB, và cả request dưới 100 giây.
 
 ## Gọi hàm

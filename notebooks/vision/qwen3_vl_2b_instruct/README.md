@@ -15,6 +15,15 @@ Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB pe
 | Google Colab | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb) | ✓ T4 & A100 40 GB, 2026-11-11 |
 | Kaggle | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb) | ✓ T4 x2, 2026-11-11 |
 
+## Updates not yet tested
+
+These notebooks are newer than the tested ones. They have not been run yet, so no measurement applies to them. Use the tested notebook unless you want to try the update; once an update is tested it replaces the tested notebook.
+
+| Update (not tested) | Replaces |
+|---|---|
+| ⚠ [colab_qwen3_vl_2b_instruct_update.ipynb](colab_qwen3_vl_2b_instruct_update.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct_update.ipynb) | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) |
+| ⚠ [kaggle_qwen3_vl_2b_instruct_update.ipynb](kaggle_qwen3_vl_2b_instruct_update.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct_update.ipynb) | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) |
+
 ## Functions
 
 Everything the model can do, and whether the notebook hosts it. Whether it was run is in the test results below.
@@ -26,6 +35,7 @@ Everything the model can do, and whether the notebook hosts it. Whether it was r
 | Image and video by http(s) link | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ blocked on purpose: the server never downloads links; send base64 |
 | Function calling | `tools` in `/v1/chat/completions`; calls come back in `tool_calls` | ✓ |
 | Structured output (JSON schema) | `response_format` in `/v1/chat/completions` | ✓ |
+| Image and video processor settings per request | `mm_processor_kwargs` in `/v1/chat/completions` (needs `--trust-request-mm-kwargs`) | ✗ not in the tested notebook: its update (`_update`) starts the server with the flag, not tested yet; vLLM 0.33 refuses the field without it |
 
 ## Estimated memory left for context
 

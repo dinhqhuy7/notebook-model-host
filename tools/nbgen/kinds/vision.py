@@ -4,20 +4,23 @@ Add a model: a line in MODELS (its "kind" must be "vision"), then
 `python tools/build_notebooks.py --list` shows it.
 """
 
-from ..functions import (IMAGES, JSON_SCHEMA, MEDIA_URL, NO_TOOLS, THINKING_ALWAYS, THINKING_SWITCH, TOOLS, VIDEO)
+from ..functions import (IMAGES, JSON_SCHEMA, MEDIA_URL, NO_TOOLS, PROCESSOR_SETTINGS_IN_UPDATE, THINKING_ALWAYS, THINKING_SWITCH,
+                         TOOLS, VIDEO)
 
 QWEN3_5 = {
     "kind": "vision",
     "input": ("text, images, video", "văn bản, ảnh, video"),
     "context": 262144,
-    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_SWITCH, TOOLS, JSON_SCHEMA],
+    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_SWITCH, TOOLS, JSON_SCHEMA, PROCESSOR_SETTINGS_IN_UPDATE],
     "flags": ["--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "qwen3_coder",
-              "--allowed-media-domains", "none.invalid", "--max-num-seqs", "128"],
+              "--allowed-media-domains", "none.invalid", "--trust-request-mm-kwargs", "--max-num-seqs", "128"],
     "flag_notes": """\
 - `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
 - `--enable-auto-tool-choice --tool-call-parser qwen3_coder`: function calls are returned in `tool_calls`.
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
   callers send media from their machine as base64 `data:` URLs.
+- `--trust-request-mm-kwargs`: a request may set how images and video are processed (`mm_processor_kwargs`), for example
+  the frame rate of a video. vLLM refuses these by default; here every caller holds the API key.
 - `--max-num-seqs 128`: at most 128 requests are generated at once. Each one needs its own
   linear-attention state, and small GPUs (Kaggle 2 × T4) fit only ~180 of them, below vLLM's default 256.""",
     "sampling": "the model ships no `generation_config.json`: requests that omit them get vLLM's defaults, "
@@ -35,7 +38,8 @@ QWEN3_5 = {
 }
 
 # Qwen3-VL (dense attention, vision): the full 262 144 context needs ~28 GiB of KV cache, so small GPUs get less.
-_VL_FLAGS = ["--enable-auto-tool-choice", "--tool-call-parser", "hermes", "--allowed-media-domains", "none.invalid"]
+_VL_FLAGS = ["--enable-auto-tool-choice", "--tool-call-parser", "hermes", "--allowed-media-domains", "none.invalid",
+             "--trust-request-mm-kwargs"]
 _VL_NOTES = {
     "kind": "vision",
     "input": ("text, images, video", "văn bản, ảnh, video"),
@@ -45,12 +49,14 @@ _VL_NOTES = {
 }
 QWEN3_VL_INSTRUCT = {
     **_VL_NOTES,
-    "functions": [IMAGES, VIDEO, MEDIA_URL, TOOLS, JSON_SCHEMA],
+    "functions": [IMAGES, VIDEO, MEDIA_URL, TOOLS, JSON_SCHEMA, PROCESSOR_SETTINGS_IN_UPDATE],
     "flags": _VL_FLAGS,
     "flag_notes": """\
 - `--enable-auto-tool-choice --tool-call-parser hermes`: function calls are returned in `tool_calls`.
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
-  callers send media from their machine as base64 `data:` URLs.""",
+  callers send media from their machine as base64 `data:` URLs.
+- `--trust-request-mm-kwargs`: a request may set how images and video are processed (`mm_processor_kwargs`), for example
+  the frame rate of a video. vLLM refuses these by default; here every caller holds the API key.""",
     "notes": "Multimodal (text, images, video), plain attention: the KV cache costs 112 KiB per token, so the full "
              "262 144-token context needs ~28 GiB of KV cache and fits only on A100-class GPUs; on smaller GPUs "
              "vLLM lowers the context to what fits (see the memory table). **It never thinks** (no reasoning).",
@@ -60,7 +66,7 @@ QWEN3_VL_INSTRUCT = {
 }
 QWEN3_VL_THINKING = {
     **_VL_NOTES,
-    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_ALWAYS, TOOLS, JSON_SCHEMA],
+    "functions": [IMAGES, VIDEO, MEDIA_URL, THINKING_ALWAYS, TOOLS, JSON_SCHEMA, PROCESSOR_SETTINGS_IN_UPDATE],
     "flags": ["--reasoning-parser", "qwen3", *_VL_FLAGS],
     "flag_notes": """\
 - `--reasoning-parser qwen3`: thinking is returned in the `reasoning` field, separate from `content`.
@@ -83,11 +89,16 @@ QWEN2_5_VL = {
     "context": 128000,
     "functions": [IMAGES, VIDEO, MEDIA_URL, NO_TOOLS, JSON_SCHEMA,
                   ("Visual grounding (boxes in absolute pixels)", "Định vị trong ảnh (hộp theo pixel tuyệt đối)",
-                   ("ask in the prompt, `/v1/chat/completions`; not tested here yet", "hỏi trong prompt, `/v1/chat/completions`; chưa thử ở đây"), True)],
-    "flags": ["--allowed-media-domains", "none.invalid"],
+                   ("ask in the prompt, `/v1/chat/completions`; not tested here yet", "hỏi trong prompt, `/v1/chat/completions`; chưa thử ở đây"), True),
+                  ("Image and video processor settings per request", "Thiết lập bộ xử lý ảnh và video theo từng request",
+                   ("`mm_processor_kwargs` in `/v1/chat/completions` (needs `--trust-request-mm-kwargs`, which the notebook sets; not tested here yet)",
+                    "`mm_processor_kwargs` trong `/v1/chat/completions` (cần `--trust-request-mm-kwargs`, notebook đã bật; chưa thử ở đây)"), True)],
+    "flags": ["--allowed-media-domains", "none.invalid", "--trust-request-mm-kwargs"],
     "flag_notes": """\
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
   callers send media from their machine as base64 `data:` URLs.
+- `--trust-request-mm-kwargs`: a request may set how images and video are processed (`mm_processor_kwargs`), for example
+  the frame rate of a video. vLLM refuses these by default; here every caller holds the API key.
 - No tool parser and no reasoning parser: the model's chat template has no tool support and the model never thinks.""",
     "sampling": "requests that omit sampling parameters get the model's `generation_config.json` "
                 "(temperature 0.000001 and repetition_penalty 1.05: almost greedy)",

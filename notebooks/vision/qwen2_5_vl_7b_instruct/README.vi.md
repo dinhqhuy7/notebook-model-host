@@ -27,6 +27,7 @@ Mọi thứ model làm được, và notebook có host hay không. Đã chạy t
 | Gọi hàm | `tools` / `/v1/chat/completions` | ✗ chat template của model không hỗ trợ tool nên server không bật tool parser |
 | Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
 | Định vị trong ảnh (hộp theo pixel tuyệt đối) | hỏi trong prompt, `/v1/chat/completions`; chưa thử ở đây | ✓ |
+| Thiết lập bộ xử lý ảnh và video theo từng request | `mm_processor_kwargs` trong `/v1/chat/completions` (cần `--trust-request-mm-kwargs`, notebook đã bật; chưa thử ở đây) | ✓ |
 
 ## Bộ nhớ ước tính còn cho context
 

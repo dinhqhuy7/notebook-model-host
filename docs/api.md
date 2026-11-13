@@ -215,7 +215,7 @@ print([item["score"] for item in scores["data"]])  # one score per document, in 
   scores; split very large lists into several requests.
 - **Other paths** (`/v1/rerank`, `/v2/rerank`, `/v1/score`) are the same APIs under other names.
 
-The 0.6B and 4B models were tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle, the 8B model and Qwen3-VL-Reranker-2B have not been tested yet. The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
+The 0.6B and 4B models were tested on Colab T4 (all the calls above, see the [model's README](../notebooks/retrieval/qwen3_reranker_0_6b/README.md)); Kaggle and the 8B model have not been tested yet; Qwen3-VL-Reranker-2B was tested on Colab T4 (text, images and video). The examples use `Qwen3-Reranker-0.6B`; the 4B model takes the same calls.
 
 ### Images and video (Qwen3-VL-Reranker)
 
@@ -245,7 +245,9 @@ reply = requests.post(f"{BASE}/rerank", headers=HEADERS, timeout=90, json={
 
 - A video goes in as `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`. vLLM reads at most 32
   frames of a video by default. The query can be an image or a video too: `"query": {"content": [...]}`.
-- `mm_processor_kwargs` (a field of both APIs) is passed to the image and video processor.
+- `mm_processor_kwargs` (a field of both APIs) sets how images and video are processed. vLLM refuses it unless the server runs
+  with `--trust-request-mm-kwargs`, which `colab_qwen3_vl_reranker_2b_update.ipynb` and the Kaggle notebook set (not tested yet); the
+  Colab notebook tested so far does not set it and answers HTTP 400.
 - Keep the request body under 32 MiB, and the whole request under 100 seconds.
 
 ## Function calling

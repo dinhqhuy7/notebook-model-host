@@ -216,8 +216,8 @@ _QWEN3_VL_RERANKER_FUNCTIONS = [
      ("`instruction` in `/rerank` and `/score`", "`instruction` trong `/rerank` và `/score`"), True),
     ("Cut long queries and documents", "Cắt câu hỏi và tài liệu dài", "`max_tokens_per_query`, `max_tokens_per_doc` (`/rerank`, `/score`)", True),
     ("Image and video processor settings", "Thiết lập bộ xử lý ảnh và video",
-     ("`mm_processor_kwargs` in `/rerank`, `/score` (passed to the processor; not tested here yet)",
-      "`mm_processor_kwargs` trong `/rerank`, `/score` (chuyển cho bộ xử lý; chưa thử ở đây)"), True),
+     ("`mm_processor_kwargs` in `/rerank`, `/score` (needs `--trust-request-mm-kwargs`, which the notebook sets; not tested here yet)",
+      "`mm_processor_kwargs` trong `/rerank`, `/score` (cần `--trust-request-mm-kwargs`, notebook đã bật; chưa thử ở đây)"), True),
     ("Image and video by http(s) link", "Ảnh và video qua link http(s)", "`image_url` / `video_url` `https://...` / `/rerank`",
      ("blocked on purpose: the server never downloads links; send base64",
       "chặn có chủ đích: server không tự tải link; hãy gửi base64")),
@@ -234,7 +234,7 @@ QWEN3_VL_RERANKER_2B = {
     "input": ("text, images, video (queries and documents)", "văn bản, ảnh, video (câu hỏi và tài liệu)"),
     "context": 32768,
     "flags": ["--runner", "pooling", "--hf-overrides", json.dumps(_VL_RERANKER_OVERRIDES),
-              "--allowed-media-domains", "none.invalid"],
+              "--allowed-media-domains", "none.invalid", "--trust-request-mm-kwargs"],
     "flag_notes": """\
 - `--runner pooling`: the model is served for scoring, not for text generation.
 - `--hf-overrides ...`: turns the original `Qwen3VLForConditionalGeneration` checkpoint into a scorer of the `yes` and `no`
@@ -243,6 +243,8 @@ QWEN3_VL_RERANKER_2B = {
   `<Query>`, `<Document>`) to a file. Callers can set the instruction in each request.
 - `--allowed-media-domains none.invalid`: the server never downloads image/video URLs itself;
   callers send media from their machine as base64 `data:` URLs.
+- `--trust-request-mm-kwargs`: a request may set how images and video are processed (`mm_processor_kwargs`), for example
+  the frame rate of a video. vLLM refuses these by default; here every caller holds the API key.
 - No reasoning or tool parser: the model writes no text, so `/v1/chat/completions` does not exist.""",
     "sampling": "this model generates no text: it returns a relevance score for each query-document pair",
     "notes": "Multimodal reranker: send a query and a list of documents, get a relevance score from 0 to 1 for each one "
@@ -251,20 +253,20 @@ QWEN3_VL_RERANKER_2B = {
              "Each pair is scored with the prompt Qwen trained it with; set `instruction` in the request to describe your "
              "task, otherwise the default is \"Given a search query, retrieve relevant candidates that answer the query.\" "
              "Qwen states 32K of context; vLLM's `auto` may open more where memory allows, the memory table shows what "
-             "fits. vLLM reads at most 32 frames of a video by default; `mm_processor_kwargs` goes to the image and video processor. "
+             "fits. vLLM reads at most 32 frames of a video by default; a request can set how images and video are processed with `mm_processor_kwargs` (the notebook starts the server with `--trust-request-mm-kwargs`, which vLLM needs for that). "
              "Multilingual (30+ languages). It writes no text (no chat). On Kaggle's 2 × T4 the model is split across "
-             "both GPUs (tensor parallel). License: Apache 2.0. Not tested yet: `float16` on T4, the split across two GPUs "
-             "and video.",
+             "both GPUs (tensor parallel). License: Apache 2.0. Tested on Colab T4 (`float16`) without the `--trust-request-mm-kwargs` flag; not tested yet: that flag "
+             "and the split across two GPUs.",
     "notes_vi": "Reranker đa phương thức: gửi một câu hỏi và danh sách tài liệu, nhận điểm liên quan từ 0 đến 1 cho từng tài "
                 "liệu (`/rerank` trả về đã sắp xếp, `/score` giữ nguyên thứ tự bạn gửi). Câu hỏi và từng tài liệu có thể là "
                 "văn bản, ảnh hoặc ảnh chụp màn hình, video, hoặc kết hợp (`{\"content\": [...]}`); media gửi dạng URL "
                 "`data:` base64. Mỗi cặp được chấm bằng đúng prompt Qwen đã huấn luyện; đặt `instruction` trong request để "
                 "mô tả tác vụ của bạn, không gửi thì mặc định là \"Given a search query, retrieve relevant candidates that "
                 "answer the query.\" Qwen ghi context 32K; `auto` của vLLM có thể mở nhiều hơn khi đủ bộ nhớ, bảng bộ nhớ "
-                "cho biết vừa bao nhiêu. vLLM mặc định đọc tối đa 32 khung hình của một video; `mm_processor_kwargs` được chuyển cho bộ xử lý ảnh "
-                "và video. Đa ngôn ngữ (hơn 30 ngôn ngữ). Model không viết văn bản (không chat). Trên 2 × T4 "
-                "của Kaggle model được chia ra cả hai GPU (tensor parallel). Giấy phép: Apache 2.0. Chưa thử: `float16` trên "
-                "T4, chia hai GPU và video.",
+                "cho biết vừa bao nhiêu. vLLM mặc định đọc tối đa 32 khung hình của một video; request có thể đặt cách xử lý ảnh và video bằng "
+                "`mm_processor_kwargs` (notebook bật `--trust-request-mm-kwargs` cho server, vLLM cần cờ này). Đa ngôn ngữ (hơn 30 ngôn ngữ). Model không viết văn bản (không chat). Trên 2 × T4 "
+                "của Kaggle model được chia ra cả hai GPU (tensor parallel). Giấy phép: Apache 2.0. Đã chạy thử trên Colab T4 (`float16`) khi chưa có cờ "
+                "`--trust-request-mm-kwargs`; chưa thử: cờ đó và chia hai GPU.",
     "extra_gib": 1.5,  # estimate, not measured yet: vision encoder activations and the classifier head built from the vocabulary
     "rerank_info_extra": "Queries and documents can also be images or videos: {{\"content\": [{{\"type\": \"image_url\", \"image_url\": {{\"url\": \"data:image/png;base64,...\"}}}}]}}",
     "functions": _QWEN3_VL_RERANKER_FUNCTIONS,

@@ -15,6 +15,15 @@ Quay lại [Model thị giác](../README.vi.md) · [mọi notebook](../../README
 | Google Colab | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct.ipynb) | ✓ T4 & A100 40 GB, 11/11/2026 |
 | Kaggle | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct.ipynb) | ✓ T4 x2, 11/11/2026 |
 
+## Bản cập nhật chưa chạy thử
+
+Các notebook này mới hơn bản đã chạy thử. Chúng chưa được chạy nên chưa có số đo. Dùng bản đã chạy thử, trừ khi bạn muốn thử bản cập nhật; khi bản cập nhật được chạy thử, nó thay cho bản đã chạy thử.
+
+| Bản cập nhật (chưa chạy thử) | Thay cho |
+|---|---|
+| ⚠ [colab_qwen3_vl_2b_instruct_update.ipynb](colab_qwen3_vl_2b_instruct_update.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/colab_qwen3_vl_2b_instruct_update.ipynb) | [colab_qwen3_vl_2b_instruct.ipynb](colab_qwen3_vl_2b_instruct.ipynb) |
+| ⚠ [kaggle_qwen3_vl_2b_instruct_update.ipynb](kaggle_qwen3_vl_2b_instruct_update.ipynb) [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/dinhqhuy7/notebook-model-host/blob/main/notebooks/vision/qwen3_vl_2b_instruct/kaggle_qwen3_vl_2b_instruct_update.ipynb) | [kaggle_qwen3_vl_2b_instruct.ipynb](kaggle_qwen3_vl_2b_instruct.ipynb) |
+
 ## Chức năng
 
 Mọi thứ model làm được, và notebook có host hay không. Đã chạy thử hay chưa nằm ở kết quả chạy thử bên dưới.
@@ -26,6 +35,7 @@ Mọi thứ model làm được, và notebook có host hay không. Đã chạy t
 | Ảnh và video qua link http(s) | `image_url` / `video_url` `https://...` / `/v1/chat/completions` | ✗ chặn có chủ đích: server không tự tải link; hãy gửi base64 |
 | Gọi hàm | `tools` trong `/v1/chat/completions`; lời gọi trả về trong `tool_calls` | ✓ |
 | Dữ liệu có cấu trúc (JSON schema) | `response_format` trong `/v1/chat/completions` | ✓ |
+| Thiết lập bộ xử lý ảnh và video theo từng request | `mm_processor_kwargs` in `/v1/chat/completions` (needs `--trust-request-mm-kwargs`) | ✗ chưa có trong notebook đã chạy thử: bản `_update` của nó bật cờ cho server, chưa chạy thử; vLLM 0.33 từ chối trường này nếu thiếu cờ |
 
 ## Bộ nhớ ước tính còn cho context
 

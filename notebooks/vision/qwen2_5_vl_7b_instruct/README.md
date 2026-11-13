@@ -27,6 +27,7 @@ Everything the model can do, and whether the notebook hosts it. Whether it was r
 | Function calling | `tools` / `/v1/chat/completions` | ✗ the model's chat template has no tool support, so the server enables no tool parser |
 | Structured output (JSON schema) | `response_format` in `/v1/chat/completions` | ✓ |
 | Visual grounding (boxes in absolute pixels) | ask in the prompt, `/v1/chat/completions`; not tested here yet | ✓ |
+| Image and video processor settings per request | `mm_processor_kwargs` in `/v1/chat/completions` (needs `--trust-request-mm-kwargs`, which the notebook sets; not tested here yet) | ✓ |
 
 ## Estimated memory left for context
 

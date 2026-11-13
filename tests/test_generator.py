@@ -203,11 +203,33 @@ class GeneratorTest(unittest.TestCase):
         text = "\n".join("".join(c["source"]) for c in nb["cells"])
         self.assertIn("Qwen3VLForSequenceClassification", text)
         self.assertIn('"--allowed-media-domains", "none.invalid"', text)  # the server never fetches links
+        self.assertIn('"--trust-request-mm-kwargs"', text)  # vLLM refuses mm_processor_kwargs in a request without it
         self.assertIn('"--chat-template", TEMPLATE_FILE', text)
         self.assertIn("qwen3_vl_reranker.jinja", text)
         self.assertIn("f.write(r\'\'\'" + QWEN3_VL_RERANKER_TEMPLATE + "\'\'\')", text)
         self.assertIn('API_KEY, "retrieval"]', text)
         self.assertNotIn("<think>", QWEN3_VL_RERANKER_TEMPLATE)  # unlike the text rerankers
+
+    def test_models_that_list_per_request_media_settings_start_the_server_with_the_flag(self) -> None:
+        """A function that vLLM refuses by default needs its flag: `mm_processor_kwargs` needs --trust-request-mm-kwargs.
+        That check and flag exist since vLLM 0.33 (checked in the sources of v0.32.0 and v0.33.0): a model on vLLM-Omni 0.32
+        accepts the field without it, and the flag would be an unknown argument there."""
+        with tempfile.TemporaryDirectory() as tmp:
+            for model in MODELS:
+                if model.get("vllm_version", "0.33.0") != "0.33.0":
+                    continue
+                if not any("mm_processor_kwargs" in (f[2][0] if isinstance(f[2], tuple) else f[2]) and f[3] is True
+                           for f in model["functions"]):
+                    continue
+                for path in generate(Path(tmp), [model["slug"]]):
+                    nb = json.loads(path.read_text(encoding="utf-8"))
+                    text = "\n".join("".join(c["source"]) for c in nb["cells"])
+                    self.assertIn('"--trust-request-mm-kwargs"', text, path.name)
+
+    def test_every_vision_model_on_vllm_0_33_enables_request_media_settings(self) -> None:
+        for model in MODELS:
+            if model["kind"] == "vision":
+                self.assertIn("--trust-request-mm-kwargs", model["flags"], model["slug"])
 
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())
