@@ -36,7 +36,7 @@ Everything the model can do, and whether the notebook hosts it. Whether it was r
 | Score query-document pairs | `POST /score`, `/v1/score` | ✓ |
 | Task instruction per request | `instruction` in `/rerank` and `/score` | ✓ |
 | Cut long queries and documents | `max_tokens_per_query`, `max_tokens_per_doc` (`/rerank`, `/score`) | ✓ |
-| Image and video processor settings | `mm_processor_kwargs` in `/rerank`, `/score` (needs `--trust-request-mm-kwargs`, which the notebook sets; not tested here yet) | ✓ |
+| Image and video processor settings | `mm_processor_kwargs` in `/rerank`, `/score` (needs `--trust-request-mm-kwargs`: set in the Colab `_update` and Kaggle notebooks, not in the tested Colab notebook yet) | ✓ |
 | Image and video by http(s) link | `image_url` / `video_url` `https://...` / `/rerank` | ✗ blocked on purpose: the server never downloads links; send base64 |
 | Text generation / chat | `/v1/chat/completions` | ✗ the model does not generate text |
 | Embeddings | `/v1/embeddings` | ✗ not an embedding model; Qwen3-VL-Embedding is |
