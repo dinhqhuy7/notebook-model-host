@@ -36,7 +36,7 @@ Mọi thứ model làm được, và notebook có host hay không. Đã chạy t
 | Chấm điểm từng cặp câu hỏi - tài liệu | `POST /score`, `/v1/score` | ✓ |
 | Instruction theo tác vụ trong từng request | `instruction` trong `/rerank` và `/score` | ✓ |
 | Cắt câu hỏi và tài liệu dài | `max_tokens_per_query`, `max_tokens_per_doc` (`/rerank`, `/score`) | ✓ |
-| Thiết lập bộ xử lý ảnh và video | `mm_processor_kwargs` trong `/rerank`, `/score` (cần `--trust-request-mm-kwargs`, notebook đã bật; chưa thử ở đây) | ✓ |
+| Thiết lập bộ xử lý ảnh và video | `mm_processor_kwargs` trong `/rerank`, `/score` (cần `--trust-request-mm-kwargs`: đã bật ở bản `_update` Colab và bản Kaggle, chưa có ở bản Colab đã chạy thử) | ✓ |
 | Ảnh và video qua link http(s) | `image_url` / `video_url` `https://...` / `/rerank` | ✗ chặn có chủ đích: server không tự tải link; hãy gửi base64 |
 | Sinh văn bản / chat | `/v1/chat/completions` | ✗ model không sinh văn bản |
 | Embedding | `/v1/embeddings` | ✗ không phải model embedding; Qwen3-VL-Embedding mới là |

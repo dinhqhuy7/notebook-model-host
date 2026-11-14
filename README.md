@@ -72,13 +72,13 @@ available. Estimated memory left for context:
 
 **Retrieval models**
 
-| GPU | Platform | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-VL-Reranker-2B | Qwen3-Reranker-8B |
+| GPU | Platform | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-Reranker-8B | Qwen3-VL-Reranker-2B |
 |---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) | ~3 GiB (measured: 4.4 GiB) | ~6 GiB | ✗ not enough memory |
-| T4 x2 | Kaggle | ~22 GiB (split across both GPUs) | ~15 GiB (split across both GPUs) | ~17 GiB (split across both GPUs) | ~7 GiB (split across both GPUs) |
-| L4 (22.5 GB) | Colab | ~17 GiB | ~10 GiB | ~13 GiB | ~2 GiB |
-| A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~28 GiB | ~18 GiB |
-| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB | ~64 GiB | ~53 GiB |
+| T4 (15 GB) | Colab | ~10 GiB (measured: 11.3 GiB) | ~3 GiB (measured: 4.4 GiB) | ✗ not enough memory | ~6 GiB (measured: 7.3 GiB) |
+| T4 x2 | Kaggle | ~22 GiB (split across both GPUs) | ~15 GiB (split across both GPUs) | ~7 GiB (split across both GPUs) | ~17 GiB (split across both GPUs) |
+| L4 (22.5 GB) | Colab | ~17 GiB | ~10 GiB | ~2 GiB | ~13 GiB |
+| A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~18 GiB | ~28 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB | ~53 GiB | ~64 GiB |
 | P100 | Kaggle | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM | ✗ not supported by vLLM |
 
 **Vision models**
@@ -138,7 +138,7 @@ print(reply.choices[0].message.content)
 
 The server exposes `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages`
 (Anthropic-style), `/v1/models`, `/tokenize`, `/detokenize`, and supports thinking, function calling,
-JSON schemas, (Qwen3.5, Qwen2.5-VL) images and video, and (Qwen2.5-Omni) audio in and speech out. A retrieval model (Qwen3-Reranker) has no chat: it exposes `/rerank`,
+JSON schemas, (Qwen3.5, Qwen3-VL, Qwen2.5-VL) images and video, and (Qwen2.5-Omni) audio in and speech out. A retrieval model (Qwen3-Reranker) has no chat: it exposes `/rerank`,
 `/score` (and `/v1/embeddings` for embedding models) instead. Every model is hosted with all its functions, and
 each model's README lists them. Full examples: [docs/api.md](docs/api.md).
 

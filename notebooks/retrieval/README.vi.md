@@ -19,7 +19,7 @@ Model chấm điểm hoặc nhúng nội dung để tìm kiếm: xếp hạng l�
 
 ## Thông số chung
 
-vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utilization 0.9`, `--enable-prefix-caching`; dtype `bfloat16` (`float16` trên T4); model chia ra mọi GPU (model nhỏ như reranker chỉ dùng một); cờ parser riêng của từng model ghi ở bước 5 trong notebook. Server không đặt tham số sinh, không ghi prompt hay câu trả lời.
+vLLM 0.33.0, cloudflared 2026.10.7. `--max-model-len auto`, `--gpu-memory-utilization 0.9`, `--enable-prefix-caching`; dtype `bfloat16` (`float16` trên T4); model chia ra mọi GPU khi có nhiều GPU; cờ riêng của từng model ghi ở bước 5 trong notebook. Server không đặt tham số sinh, không ghi prompt hay câu trả lời.
 
 ## Bộ nhớ ước tính còn cho context
 

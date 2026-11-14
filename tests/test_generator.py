@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "proxy"))
+from nbgen.catalog import min_gpu_mib, runnable  # noqa: E402
 from nbgen.config import PLATFORMS, TYPES, profile_of  # noqa: E402
 from nbgen.generate import generate, list_models  # noqa: E402
 from nbgen.kinds import MODELS  # noqa: E402
@@ -230,6 +231,17 @@ class GeneratorTest(unittest.TestCase):
         for model in MODELS:
             if model["kind"] == "vision":
                 self.assertIn("--trust-request-mm-kwargs", model["flags"], model["slug"])
+
+    def test_step_1_memory_check_agrees_with_gpu_table(self) -> None:
+        """Step 1 checks `GPU_MIB * TP < min_gpu_mib(model)`, while the GPU table checks `kv_gib >= MIN_KV_GIB`."""
+        for model in MODELS:
+            need = min_gpu_mib(model)
+            for key, platform in PLATFORMS.items():
+                for gpu in platform["gpus"]:
+                    _, count, mib, cc = gpu
+                    if cc >= 7.0:
+                        self.assertEqual(mib * count >= need, runnable(model, gpu),
+                                         f"{model['slug']} on {key} {gpu[0]}: step 1 check disagrees with GPU table")
 
     def test_list_mentions_every_model(self) -> None:
         text = "\n".join(list_models())

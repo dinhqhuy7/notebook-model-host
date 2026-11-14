@@ -118,6 +118,11 @@ print(reply.choices[0].message.content)
 Video làm tương tự với `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`.
 Mỗi request tối đa 32 MiB, nên giữ ảnh và video nhỏ.
 
+- `extra_body={"mm_processor_kwargs": ...}` đặt cách xử lý ảnh và video (ví dụ tốc độ khung hình của video). vLLM 0.33 từ
+  chối trường này nếu server không chạy với `--trust-request-mm-kwargs`; các notebook `Qwen2.5-VL-7B-Instruct` và các bản
+  `_update` của `Qwen3.5`, `Qwen3-VL` đã bật cờ này (chưa chạy thử); các bản `Qwen3.5` và `Qwen3-VL` đã chạy thử trước đó
+  không bật nên trả HTTP 400.
+
 ## Âm thanh và giọng nói (Qwen2.5-Omni)
 
 Qwen2.5-Omni-3B còn nghe được âm thanh và trả lời bằng giọng nói. Gửi âm thanh dạng `data:` URL base64 (server không tự

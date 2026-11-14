@@ -72,13 +72,13 @@ context:
 
 **Model truy hồi**
 
-| GPU | Nền tảng | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-VL-Reranker-2B | Qwen3-Reranker-8B |
+| GPU | Nền tảng | Qwen3-Reranker-0.6B | Qwen3-Reranker-4B | Qwen3-Reranker-8B | Qwen3-VL-Reranker-2B |
 |---|---|---|---|---|---|
-| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,3 GiB) | ~3 GiB (đo thật: 4,4 GiB) | ~6 GiB | ✗ thiếu bộ nhớ |
-| T4 x2 | Kaggle | ~22 GiB (chia ra cả hai GPU) | ~15 GiB (chia ra cả hai GPU) | ~17 GiB (chia ra cả hai GPU) | ~7 GiB (chia ra cả hai GPU) |
-| L4 (22,5 GB) | Colab | ~17 GiB | ~10 GiB | ~13 GiB | ~2 GiB |
-| A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~28 GiB | ~18 GiB |
-| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB | ~64 GiB | ~53 GiB |
+| T4 (15 GB) | Colab | ~10 GiB (đo thật: 11,3 GiB) | ~3 GiB (đo thật: 4,4 GiB) | ✗ thiếu bộ nhớ | ~6 GiB (đo thật: 7,3 GiB) |
+| T4 x2 | Kaggle | ~22 GiB (chia ra cả hai GPU) | ~15 GiB (chia ra cả hai GPU) | ~7 GiB (chia ra cả hai GPU) | ~17 GiB (chia ra cả hai GPU) |
+| L4 (22,5 GB) | Colab | ~17 GiB | ~10 GiB | ~2 GiB | ~13 GiB |
+| A100 40 GB | Colab | ~33 GiB | ~26 GiB | ~18 GiB | ~28 GiB |
+| A100 / H100 80 GB | Colab | ~68 GiB | ~61 GiB | ~53 GiB | ~64 GiB |
 | P100 | Kaggle | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ | ✗ vLLM không hỗ trợ |
 
 **Model thị giác**
@@ -137,7 +137,7 @@ print(reply.choices[0].message.content)
 
 Server mở `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/messages` (kiểu
 Anthropic), `/v1/models`, `/tokenize`, `/detokenize`; hỗ trợ suy nghĩ (thinking), gọi hàm, JSON
-schema, (Qwen3.5, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, giọng nói ra. Model truy hồi (Qwen3-Reranker) không chat: server mở `/rerank`, `/score` (và
+schema, (Qwen3.5, Qwen3-VL, Qwen2.5-VL) ảnh, video và (Qwen2.5-Omni) âm thanh vào, giọng nói ra. Model truy hồi (Qwen3-Reranker) không chat: server mở `/rerank`, `/score` (và
 `/v1/embeddings` cho model embedding). Mỗi model được host với đầy đủ chức năng, README của từng model liệt kê
 chúng. Ví dụ đầy đủ: [docs/api.vi.md](docs/api.vi.md).
 

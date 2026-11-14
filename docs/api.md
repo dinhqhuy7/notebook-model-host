@@ -116,6 +116,11 @@ print(reply.choices[0].message.content)
 Videos work the same way with `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,..."}}`.
 A request body is limited to 32 MiB, so keep images and videos small.
 
+- `extra_body={"mm_processor_kwargs": ...}` sets how images and video are processed (for example the frame rate of a video).
+  vLLM 0.33 refuses this field unless the server runs with `--trust-request-mm-kwargs`, which the `Qwen2.5-VL-7B-Instruct`
+  notebooks and the `_update` notebooks of `Qwen3.5` and `Qwen3-VL` set (not tested yet); the `Qwen3.5` and `Qwen3-VL`
+  notebooks tested earlier do not set it and answer HTTP 400.
+
 ## Audio and speech (Qwen2.5-Omni)
 
 Qwen2.5-Omni-3B also hears audio and can answer with speech. Send audio as a base64 `data:` URL (the server never
